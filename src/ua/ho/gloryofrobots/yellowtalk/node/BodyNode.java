@@ -20,13 +20,21 @@ public class BodyNode extends Node {
     protected List<String> mLiterals;
     protected List<StatementNode> mStatements;
     
+    public List<StatementNode> getStatements() {
+        return mStatements;
+    }
+    
     @Override
     void writeRepresentation(StringWriter writer) {
         for(StatementNode node : mStatements) {
-            writer.writeln("++++++++++++++++++++++");
+            //writer.writeln("++++++++++++++++++++++");
             node.writeRepresentation(writer);
             
         }
         //writer.writeln("");
+    }
+    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

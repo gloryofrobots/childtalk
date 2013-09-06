@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
-public class MessageNode2 extends Node {
+public class MessageNode extends Node {
     
     StatementNode mStatement;
     public StatementNode getStatement() {
@@ -20,5 +20,9 @@ public class MessageNode2 extends Node {
     @Override
     void writeRepresentation(StringWriter writer) {
         writer.write("%s %s", mStatement, mSelector);
+    }
+    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

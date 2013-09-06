@@ -8,11 +8,15 @@ public class StatementNode extends Node {
     public StatementNode() {
         mNodes = new ArrayList<Node>();
     }
-
+    
     public void addNode(Node node) {
         mNodes.add(node);
     }
-
+    
+    public List<Node> getNodes() {
+        return mNodes;
+    }
+    
     public void onCascade() {
         Node firstNode = mNodes.get(0);
         mNodes.add(firstNode);
@@ -31,4 +35,12 @@ public class StatementNode extends Node {
     }
 
     private List<Node> mNodes;
+
+    public int getSize() {
+        return mNodes.size();
+    }
+    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

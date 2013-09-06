@@ -16,5 +16,9 @@ public class NameTermNode extends Node {
         writer.write("%s", mName);
     }
 
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
     private String mName;
 }

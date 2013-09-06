@@ -2,6 +2,8 @@ package ua.ho.gloryofrobots.yellowtalk.node;
 
 import java.util.List;
 
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
+
 public abstract class Node {
     protected class StringWriter {
         protected int getLevel() {
@@ -82,6 +84,11 @@ public abstract class Node {
    
     abstract void writeRepresentation(StringWriter writer);
     
+    public void accept(Visitor visitor) {
+        onAccept(visitor);
+    }
+    
+     public abstract void onAccept(Visitor visitor);
     
   //PRINTING ////////////////////////////////////////////////////////////// 
 }

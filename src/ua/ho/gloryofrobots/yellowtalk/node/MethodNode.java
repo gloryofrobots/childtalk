@@ -44,8 +44,36 @@ public class MethodNode extends Node implements NodeWithMetaData {
         mTemporaries.add(temporary);
     }
 
+    public List<String> getTemporaries() {
+        return mTemporaries;
+    }
+
     public BodyNode getBody() {
         return mBody;
+    }
+
+    public String getComment() {
+        return mComment;
+    }
+
+    public void setComment(String mComment) {
+        this.mComment = mComment;
+    }
+
+    public String getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(String mCategory) {
+        this.mCategory = mCategory;
+    }
+
+    public String getPrimitiveName() {
+        return mPrimitiveName;
+    }
+
+    public void setPrimitiveName(String mPrimitiveName) {
+        this.mPrimitiveName = mPrimitiveName;
     }
 
     // /PRINTING
@@ -73,30 +101,10 @@ public class MethodNode extends Node implements NodeWithMetaData {
         writer.writeln("]");
     }
 
-    public String getComment() {
-        return mComment;
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
     }
-
-    public void setComment(String mComment) {
-        this.mComment = mComment;
-    }
-
-    public String getCategory() {
-        return mCategory;
-    }
-
-    public void setCategory(String mCategory) {
-        this.mCategory = mCategory;
-    }
-
-    public String getPrimitiveName() {
-        return mPrimitiveName;
-    }
-
-    public void setPrimitiveName(String mPrimitiveName) {
-        this.mPrimitiveName = mPrimitiveName;
-    }
-
+    
     BodyNode mBody;
     protected String mComment = new String();
     protected String mCategory = new String();
@@ -104,4 +112,5 @@ public class MethodNode extends Node implements NodeWithMetaData {
     protected String mPrimitiveName = new String();
     protected List<String> mArguments;
     protected List<String> mTemporaries;
+
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ua.ho.gloryofrobots.yellowtalk.node.ClassNode.VariableNames;
 import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
 
 public class ClassNode extends Node implements NodeWithMetaData {
@@ -30,6 +31,10 @@ public class ClassNode extends Node implements NodeWithMetaData {
         m_poolDictionaries = new VariableNames();
     }
 
+    public String getClassName() {
+        return m_superclassName;
+    }
+    
     public void seClassName(String name) {
         m_superclassName = name;
     }
@@ -37,7 +42,27 @@ public class ClassNode extends Node implements NodeWithMetaData {
     public void setSuperclassName(String name) {
         m_superclassName = name;
     }
+    
+    public String getSuperclassName() {
+        return m_superclassName;
+    }
+    
+    public String getComment() {
+        return m_comment;
+    }
+    
+    public void setComment(String comment) {
+        m_comment = comment;
+    }
 
+    public void setCategory(String category) {
+        m_category = category;
+    }
+    
+    public String getCategory() {
+        return m_category;
+    }
+    
     public void setMetaData(String label, String value)
             throws NodeWithMetaData.UnknownMetaDataException {
         if (label.equals("comment:")) {
@@ -61,14 +86,6 @@ public class ClassNode extends Node implements NodeWithMetaData {
         for (String varName : dataArray) {
             vars.add(varName);
         }
-    }
-
-    public void setComment(String comment) {
-        m_comment = comment;
-    }
-
-    public void setCategory(String category) {
-        m_category = category;
     }
 
     public void addMethod(MethodNode node) {
@@ -97,6 +114,21 @@ public class ClassNode extends Node implements NodeWithMetaData {
         writer.writeln("-----------------");
     }
 
+    public VariableNames getInstanceVariableNames() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public VariableNames getClassVariableNames() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<MethodNode> getMethods() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     /*
      * public void setInstanceVariable(String varName) {
      * 
@@ -110,4 +142,8 @@ public class ClassNode extends Node implements NodeWithMetaData {
      * 
      * }
      */
+    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

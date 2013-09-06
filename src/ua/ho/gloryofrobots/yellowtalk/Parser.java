@@ -333,11 +333,12 @@ public class Parser implements ParserInterface {
             token = m_lexer.current();
             
             if(token.type == Token.Type.CLOSING && token.equalValue(']')) {
-                return;
+                break;
             }
             
             token = m_lexer.next();
         }
+        
         //
         // if (m_in_block)
         // {
@@ -434,10 +435,8 @@ public class Parser implements ParserInterface {
         }
         
         statement.addNode(messageStatement);
-        MessageSelectorNode messageSelector();
-        MessageNode message = new MessageNode();
+        MessageSelectorNode message = new MessageSelectorNode();
         message.setSelector(selector);
-        message.setStatement(messageStatement);
         statement.addNode(message);
     }
 
@@ -457,11 +456,10 @@ public class Parser implements ParserInterface {
             messageStatement.addNode(term);
 
             parseUnaryContinuation(messageStatement);
-
-            MessageNode message = new MessageNode();
+            statement.addNode(messageStatement);
+            MessageSelectorNode message = new MessageSelectorNode();
             message.setSelector(selector);
-            message.setStatement(messageStatement);
-
+            message.setCountArguments(messageStatement.getSize());
             statement.addNode(message);
             //token = m_lexer.next();
             token = m_lexer.current();
@@ -473,9 +471,8 @@ public class Parser implements ParserInterface {
         Token token = m_lexer.current();
 
         while (token.type == Token.Type.NAME_CONST) {
-            MessageNode message = new MessageNode();
+            MessageSelectorNode message = new MessageSelectorNode();
             message.setSelector(token.stringValue());
-            message.setStatement(null);
             messageStatement.addNode(message);
             token = m_lexer.next();
         }
@@ -692,7 +689,7 @@ public class Parser implements ParserInterface {
         FileInputStream fileStream = null;
         try {
             fileStream = new FileInputStream(
-                    "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/parser_test.st");
+                    "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/tests/parser_test.st");
             ProgramTextStreamInterface programStream = new ProgramTextStream(
                     fileStream);
             LexerInterface lexer = new Lexer(programStream);

@@ -324,12 +324,8 @@ public class Lexer implements LexerInterface {
             throws FileEvalException {
         String str = new String();
 
-        int stop = 0;
         int radix = 10;
         boolean sign = false;
-        boolean noFloat = false;
-        long tol;
-        BigDecimal largeInteger;
 
         do {
             str += lastChar;
@@ -417,6 +413,9 @@ public class Lexer implements LexerInterface {
                 }
 
             }
+        }
+        else {
+            pushBackChar(1);
         }
     }
 

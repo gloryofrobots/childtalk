@@ -14,10 +14,17 @@ public class ProgramNode extends Node {
             writer.write("%s\n", node.toString());
         }
     }
-
+    
+    public List<Node> getNodes() {
+        return mNodes;
+    }
+    
     public void addNode(Node node) {
         mNodes.add(node);
     }
 
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
     protected List<Node> mNodes;
 }

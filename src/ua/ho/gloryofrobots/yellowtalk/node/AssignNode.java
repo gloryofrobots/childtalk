@@ -8,7 +8,7 @@ public class AssignNode extends Node {
     public void setAssignName(String mAssignName) {
         this.mAssignName = mAssignName;
     }
-    public Node getValue() {
+    public StatementNode getValue() {
         return mValue;
     }
     public void setValue(StatementNode mValue) {
@@ -23,4 +23,7 @@ public class AssignNode extends Node {
         writer.write("%s (:= %s)",mValue.toString(), mAssignName);
     }
    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

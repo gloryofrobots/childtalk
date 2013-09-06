@@ -38,4 +38,8 @@ public class BlockNode extends Node {
         
         writer.write("]");
     }
+    
+    public void onAccept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }
