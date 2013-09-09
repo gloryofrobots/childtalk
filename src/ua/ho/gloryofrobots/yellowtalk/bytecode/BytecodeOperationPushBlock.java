@@ -11,7 +11,7 @@ public class BytecodeOperationPushBlock extends BytecodeOperation {
         STExecutableObject executable = mRoutine.getExecutable();
         STContext context = mRoutine.getContext();
         STBlock block = (STBlock) executable.getLiteral(argument);
-        block.attachToContext(context);
+        block.attachToRoutine(mRoutine);
     }
 
 }

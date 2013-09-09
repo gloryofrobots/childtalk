@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class STSymbol extends STObject {
     private static final long serialVersionUID = 1L;
-    private static HashMap<String, STSymbol> mStorage;
+    private static HashMap<String, STSymbol> mStorage = new HashMap<String, STSymbol>();
     
-    public static STSymbol create(String str) {
+    public static STSymbol unique(String str) {
         STSymbol symbol = mStorage.get(str);
         if(symbol == null) {
             symbol = new STSymbol(str);

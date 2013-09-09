@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
-import ua.ho.gloryofrobots.yellowtalk.stobject.STFloat;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 

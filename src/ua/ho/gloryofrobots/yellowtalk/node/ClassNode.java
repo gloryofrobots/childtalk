@@ -18,6 +18,8 @@ public class ClassNode extends Node implements NodeWithMetaData {
     protected String m_className = new String();
     protected String m_comment = new String();
     protected String m_category = new String();
+    protected String m_metaClassName = null;
+    
     protected VariableNames m_instanceVariableNames;
     protected VariableNames m_classVariableNames;
     protected VariableNames m_poolDictionaries;
@@ -30,7 +32,11 @@ public class ClassNode extends Node implements NodeWithMetaData {
         m_classVariableNames = new VariableNames();
         m_poolDictionaries = new VariableNames();
     }
-
+    
+    public String getMetaClassName() {
+        return m_metaClassName;
+    }
+    
     public String getClassName() {
         return m_superclassName;
     }

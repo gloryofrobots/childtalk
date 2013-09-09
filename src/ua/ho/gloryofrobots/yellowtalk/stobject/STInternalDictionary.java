@@ -1,44 +1,44 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ua.ho.gloryofrobots.yellowtalk.InternalDictionaryInterface;
 
 public class STInternalDictionary extends STObject implements
         InternalDictionaryInterface<STObject, STObject> {
-
+    
     private static final long serialVersionUID = 1L;
 
-    protected HashMap<STObject, STObject> mData;
-
+    protected HashMap<STObject, Integer> mBinding;
+    protected ArrayList<STObject> mData;
+    
     @Override
     public STObject at(STObject name) {
-        // TODO Auto-generated method stub
-        return null;
+        Integer index = mBinding.get(name);
+        return mData.get(index);
     }
 
     @Override
     public boolean has(STObject name) {
-        // TODO Auto-generated method stub
-        return false;
+        return mBinding.containsKey(name);
     }
 
     @Override
     public void put(STObject name, STObject object) {
-        // TODO Auto-generated method stub
-
+        mData.add(object);
+        int index = mData.size() - 1;
+        mBinding.put(name, index);
     }
 
     @Override
     public STObject at(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return mData.get(index);
     }
 
     @Override
     public int getIndex(STObject name) {
-        // TODO Auto-generated method stub
-        return 0;
+        Integer index = mBinding.get(name);
+        return index;
     }
-
 }

@@ -52,10 +52,9 @@ public class STScope extends STInternalDictionary {
 
     public STScope copySelf() {
         STScope clone = new STScope();
-
-        for (Map.Entry<STObject, STObject> item : mData.entrySet()) {
+        for (Map.Entry<STObject, Integer> item : mBinding.entrySet()) {
             STObject key = item.getKey();
-            STObject value = item.getValue();
+            STObject value = mData.get(item.getValue());
             clone.put(key, value);
         }
         

@@ -2,7 +2,7 @@ package ua.ho.gloryofrobots.yellowtalk.node;
 
 import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STCharacter;
-import ua.ho.gloryofrobots.yellowtalk.stobject.STFloat;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
 public class FloatNode extends Node implements NodeFactory{
@@ -24,7 +24,7 @@ public class FloatNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return new STFloat(mData);
+        return new STFloating(mData);
     }
     
     public void onAccept(Visitor visitor) {

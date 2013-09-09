@@ -13,13 +13,13 @@ public class BytecodeOperationPushConstant extends BytecodeOperation {
         STStack stack = mRoutine.getStack();
         switch(constant) {
         case FALSE:
-            stack.push(Universe.objects.FALSE);
+            stack.push(Universe.objects().FALSE);
             break;
         case NIL:
-            stack.push(Universe.objects.NIL);
+            stack.push(Universe.objects().NIL);
             break;
         case TRUE:
-            stack.push(Universe.objects.TRUE);
+            stack.push(Universe.objects().TRUE);
             break;
         default:
             runtimeError("Unsopported constant %s", constant.toString());

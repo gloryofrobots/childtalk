@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
-import ua.ho.gloryofrobots.yellowtalk.stobject.STFloat;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
@@ -18,7 +18,7 @@ public class SymbolNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return  STSymbol.create(mData);
+        return  STSymbol.unique(mData);
     }
     
     

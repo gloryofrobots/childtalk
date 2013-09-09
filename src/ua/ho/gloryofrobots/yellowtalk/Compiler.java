@@ -67,7 +67,7 @@ public class Compiler {
             statement.accept(this);
 
             String assignString = node.getAssignName();
-            STSymbol assignName = STSymbol.create(assignString);
+            STSymbol assignName = STSymbol.unique(assignString);
             
             int index = mExecutable.placeLiteral(assignName);
 
@@ -109,7 +109,7 @@ public class Compiler {
             } else if (name.equals("nil")) {
                 mBytecode.pushConstant(BytecodeType.Constant.NIL);
             }  else {
-                STSymbol symbol = STSymbol.create(name);
+                STSymbol symbol = STSymbol.unique(name);
                 int index = mExecutable.placeLiteral(symbol);
 
                 mBytecode.append(BytecodeType.PUSH_OBJECT, index);
@@ -124,7 +124,7 @@ public class Compiler {
                         node.getSelector());
             }
 
-            STSymbol selector = STSymbol.create(node.getSelector());
+            STSymbol selector = STSymbol.unique(node.getSelector());
             int index = mExecutable.placeLiteral(selector);
             mBytecode.append(BytecodeType.PUSH_LITERAL, index);
             mBytecode.append(BytecodeType.SEND_MESSAGE, countArguments);
@@ -181,8 +181,15 @@ public class Compiler {
         }
 
     }
-
-    public void compile(ProgramNode program, STScope scope)
+    
+    
+    public void compile(LexerInterface lexer, STScope scope) throws FileEvalException, UnsupportedNodeException {
+        Parser parser = new Parser(lexer);
+        ProgramNode program = parser.parse();
+        compileProgram(program, scope);
+    }
+    
+    public void compileProgram(ProgramNode program, STScope scope)
             throws UnsupportedNodeException {
         List<Node> nodes = program.getNodes();
         for (Node node : nodes) {
@@ -204,11 +211,11 @@ public class Compiler {
     }
 
     private void compileError(Node node, String message, Object... args) {
-
+        
     }
 
     private void compileClass(ClassNode classNode, STScope scope) {
-        STSymbol className = STSymbol.create(classNode.getClassName());
+        STSymbol className = STSymbol.unique(classNode.getClassName());
         STClass existed = scope.getAndCast(className);
 
         if (existed != null) {
@@ -216,25 +223,33 @@ public class Compiler {
                     className.toString());
         }
 
-        STClass stclass = new STClass();
         STSymbol superClassName = STSymbol
-                .create(classNode.getSuperclassName());
+                .unique(classNode.getSuperclassName());
         STClass superclass = scope.getAndCast(superClassName);
-
+        
         if (superclass == null) {
             compileError(classNode, "superclass %s not found",
                     superClassName.toString());
         }
-
-        stclass.setComment(STSymbol.create(classNode.getComment()));
-        stclass.setCategory(STSymbol.create(classNode.getCategory()));
+        
+        STMetaclass metaclass = Universe.objects().METACLASS;
+        if(classNode.getMetaClassName() != null) {
+            STSymbol metaClassName = STSymbol
+                    .unique(classNode.getMetaClassName());
+            metaclass = scope.getAndCast(metaClassName);
+        }
+        
+        STClass stclass = metaclass.createSubclassOf(className, superclass);
+        
+        stclass.setComment(STSymbol.unique(classNode.getComment()));
+        stclass.setCategory(STSymbol.unique(classNode.getCategory()));
         stclass.setName(className);
 
         VariableNames instanceVariables = classNode.getInstanceVariableNames();
 
         for (String varName : instanceVariables) {
             try {
-                stclass.addInstanceVariable(STSymbol.create(varName));
+                stclass.addInstanceVariable(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
                 compileError(classNode, "Duplicate instance variable %s",
                         varName);
@@ -245,7 +260,7 @@ public class Compiler {
 
         for (String varName : classVariableNames) {
             try {
-                stclass.addClassVariable(STSymbol.create(varName));
+                stclass.addClassVariable(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
                 compileError(classNode, "Duplicate class variable %s", varName);
             }
@@ -261,21 +276,21 @@ public class Compiler {
     }
 
     private void compileMethod(MethodNode methodNode, STScope scope) {
-        STSymbol selector = STSymbol.create(methodNode.getSelector());
+        STSymbol selector = STSymbol.unique(methodNode.getSelector());
         STMethod method = scope.getAndCast(selector);
         if (method != null) {
             compileError(methodNode, "method already % exists",
                     selector.toString());
         }
 
-        method.setComment(STSymbol.create(methodNode.getComment()));
-        method.setCategory(STSymbol.create(methodNode.getCategory()));
-        method.setPrimitive(STSymbol.create(methodNode.getPrimitiveName()));
+        method.setComment(STSymbol.unique(methodNode.getComment()));
+        method.setCategory(STSymbol.unique(methodNode.getCategory()));
+        method.setPrimitiveName(STSymbol.unique(methodNode.getPrimitiveName()));
 
         List<String> temporaries = methodNode.getTemporaries();
         for (String varName : temporaries) {
             try {
-                method.addTemporary(STSymbol.create(varName));
+                method.addTemporary(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
                 compileError(methodNode,
                         "Duplicate method temporary variable %s", varName);
@@ -286,7 +301,7 @@ public class Compiler {
 
         for (String varName : arguments) {
             try {
-                method.addArgument(STSymbol.create(varName));
+                method.addArgument(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
                 compileError(methodNode,
                         "Duplicate method argument variable %s", varName);
@@ -310,7 +325,7 @@ public class Compiler {
 
         for (String varName : arguments) {
             try {
-                block.addArgument(STSymbol.create(varName));
+                block.addArgument(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
                 compileError(blockNode, "Duplicate block argument variable %s",
                         varName);
@@ -326,4 +341,6 @@ public class Compiler {
         
         return block;
     }
+
+    
 }

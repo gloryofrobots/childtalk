@@ -15,4 +15,9 @@ public class STContext extends STObject {
     public void assign(STObject varName, STObject value) {
         mScope.assign(varName, value);
     }
+
+    public void pushScope(STScope scope) {
+        scope.append(mScope);
+        setScope(scope);
+    }
 }

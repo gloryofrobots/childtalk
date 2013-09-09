@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
-import ua.ho.gloryofrobots.yellowtalk.stobject.STInteger;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSmallInteger;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
 
@@ -23,7 +23,7 @@ public class IntegerNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return new STInteger(mData);
+        return new STSmallInteger(mData);
     }
     
     public void onAccept(Visitor visitor) {

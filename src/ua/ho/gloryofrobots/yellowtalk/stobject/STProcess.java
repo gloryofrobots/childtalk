@@ -59,4 +59,14 @@ public class STProcess extends STObject {
         
         mCallStack.removeLast();
     }
+
+    public void completeRoutineWithResult(STObject result, Routine continuation) {
+        Routine top = mCallStack.getLast();
+        while(top != continuation) {
+            mCallStack.removeLast();
+            top = mCallStack.getLast();
+        }
+        
+        continuation.compliteWithResult(result);
+    }
 }

@@ -26,7 +26,7 @@ public class Parser implements ParserInterface {
     }
 
     @Override
-    public Node parse() throws FileEvalException {
+    public ProgramNode parse() throws FileEvalException {
 
         ProgramNode node = new ProgramNode();
 

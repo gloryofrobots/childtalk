@@ -1,13 +1,17 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class STArray extends STObject {
 
     private static final long serialVersionUID = 1L;
+    private static final int DEFAULT_SIZE = 5;
     
-    List<STObject> mElements;
+    ArrayList<STObject> mElements;
+    
+    public STArray() {
+        this(DEFAULT_SIZE);
+    }
     
     public STArray(int size) {
         mElements = new ArrayList<STObject>(size);
@@ -25,6 +29,24 @@ public class STArray extends STObject {
         mElements.set(index, object);
     }
     
+    @SuppressWarnings("unchecked")
+    public <T extends STObject>
+    T getAndCast(int index) {
+        STObject value = get(index);
+        T obj = null;
+        try {
+            obj = (T) value;    
+        } catch(ClassCastException e) {
+            return null;
+        } 
+        
+        return obj;
+    }
+    
+    public boolean has(STObject obj) {
+        return mElements.contains(obj);
+    }
+    
     public STObject get(int index) {
         return mElements.get(index);
     }
@@ -36,5 +58,11 @@ public class STArray extends STObject {
     public STObject first() {
         return get(0);
     }
+
+    public int indexOf(STObject obj) {
+        return mElements.indexOf(obj);
+    }
+
+    
     
 }
