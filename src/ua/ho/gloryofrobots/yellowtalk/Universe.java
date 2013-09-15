@@ -1,14 +1,16 @@
 package ua.ho.gloryofrobots.yellowtalk;
 
+import ua.ho.gloryofrobots.yellowtalk.scheduler.Scheduler;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STImage;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMetaclass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STProtoObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
+// God like object
 public class Universe {
     private static STImage sImage;
-    private static Loader sLoader;
     private static String[] sCoreClasses = {
         "Object",
         "Behaviour",
@@ -39,6 +41,13 @@ public class Universe {
     }
     
     public static class Classes{
+        public  STClass Stack;
+        public  STClass Scope;
+        public  STClass Process;
+        public  STClass Method;
+        public  STClass Context;
+        public  STClass Array;
+        public  STClass Class;
         public  STClass Smalltalk;
         public  STClass Block;
         public  STClass LargeInteger;
@@ -63,12 +72,11 @@ public class Universe {
     private static Objects sObjects;
     private static Symbols sSymbols;
     
-    private Universe(){}
     
+    private Universe(){}
     
     public static void bigbang(){
         sObjects = new Objects();
-        sLoader = new Loader();
         sImage = new STImage();
         sSymbols = new Symbols();
         sClasses = new Classes();
@@ -76,37 +84,16 @@ public class Universe {
         sSymbols.SELF = STSymbol.unique("self");
         sSymbols.SUPER = STSymbol.unique("super");
         
-        sObjects.FALSE = new STObject();
-        sObjects.TRUE = new STObject();
+        sObjects.FALSE = STObject.createEmpty();
+        
+        sObjects.TRUE = STObject.createEmpty();
         sObjects.NIL = STClass.create("nil");
-        /*
-        String folder = "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/core";
-        String [] cl = {"bootstrap.st"};
-        
-        sImage.put(STSymbol.unique("nil"), sObjects.NIL);
-        sLoader.loadClassesFromFolder(folder, cl, sImage);
-        
-        fetchClasses(sImage);
-        
-        sObjects.FALSE.setSTClass(sClasses.False);
-        sObjects.TRUE.setSTClass(sClasses.True);
-        */
+        sObjects.NIL.setSTClass(STProtoObject.get());
     }
     
-    private static void fetchClasses(STImage image) {
-        sClasses.ByteArray = image.getAndCast("ByteArray");
-        sClasses.False = image.getAndCast("False");
-        sClasses.True = image.getAndCast("True");
-        
-    }
-
     public static STClass getClassFromImage(String name) {
         STSymbol symbol = STSymbol.unique(name);
         return  sImage.getAndCast(symbol);
-    }
-    
-    public static Loader loader() {
-        return sLoader;
     }
     
     public static STImage image() {
@@ -126,7 +113,36 @@ public class Universe {
     }
 
     public static Signals signals() {
-        // TODO Auto-generated method stub
         return sSignals;
+    }
+
+
+    public static void beginToGrow() {
+        sClasses.Stack = sImage.getAndCast("Stack");
+        sClasses.Scope = sImage.getAndCast("Scope");
+        sClasses.Process = sImage.getAndCast("Process");
+        sClasses.Method = sImage.getAndCast("Method");
+        sClasses.Context = sImage.getAndCast("Context");
+        sClasses.Array = sImage.getAndCast("Array");
+        sClasses.Class = sImage.getAndCast("Class");
+        sClasses.Smalltalk = sImage.getAndCast("Smalltalk");
+        sClasses.Block = sImage.getAndCast("Block");
+        sClasses.LargeInteger = sImage.getAndCast("LargeInteger");
+        sClasses.SmallInteger = sImage.getAndCast("SmallInteger");
+        sClasses.Float = sImage.getAndCast("Float");
+        sClasses.Object = sImage.getAndCast("Object");
+        sClasses.String = sImage.getAndCast("String");
+        sClasses.ByteArray = sImage.getAndCast("ByteArray");
+        sClasses.Symbol = sImage.getAndCast("Symbol");
+        sClasses.Character = sImage.getAndCast("Character");
+        sClasses.Dictionary = sImage.getAndCast("Dictionary");
+        sClasses.True = sImage.getAndCast("True");
+        sClasses.False = sImage.getAndCast("False");
+        sClasses.Metaclass = sImage.getAndCast("Metaclass");
+        sClasses.Behavior = sImage.getAndCast("Behavior");
+        sClasses.DateTime = sImage.getAndCast("DateTime");
+        
+        sObjects.FALSE.setSTClass(sClasses.False);
+        sObjects.TRUE.setSTClass(sClasses.True);
     }
 }

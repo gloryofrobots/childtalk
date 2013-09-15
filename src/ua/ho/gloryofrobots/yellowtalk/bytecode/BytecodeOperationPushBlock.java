@@ -7,6 +7,7 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 public class BytecodeOperationPushBlock extends BytecodeOperation {
 
     @Override
+    public
     void perform(int argument) {
         STExecutableObject executable = mRoutine.getExecutable();
         STContext context = mRoutine.getContext();

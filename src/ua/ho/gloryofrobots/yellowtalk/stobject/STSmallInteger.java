@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
 public class STSmallInteger extends STNumber {
 
@@ -59,7 +60,8 @@ public class STSmallInteger extends STNumber {
             return asFloat();
         }
 
-        throw new RuntimeException("Unsopported large integer cast");
+        SignalSuite.error("STSmallInteger cast not supported %d", maxPriority);
+        return null;
     }
 
     @Override

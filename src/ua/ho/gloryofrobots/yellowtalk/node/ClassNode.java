@@ -7,13 +7,12 @@ import java.util.List;
 import ua.ho.gloryofrobots.yellowtalk.node.ClassNode.VariableNames;
 import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
 
-public class ClassNode extends Node implements NodeWithMetaData {
+public class ClassNode extends MethodsContainerNode implements NodeWithMetaData {
 
     public class VariableNames extends ArrayList<String> {
         private static final long serialVersionUID = -3930721623064440013L;
     }
 
-    public List<MethodNode> mMethods;
     protected String m_superclassName = new String();
     protected String m_className = new String();
     protected String m_comment = new String();
@@ -26,8 +25,6 @@ public class ClassNode extends Node implements NodeWithMetaData {
 
     public ClassNode() {
         super();
-        mMethods = new LinkedList<MethodNode>();
-
         m_instanceVariableNames = new VariableNames();
         m_classVariableNames = new VariableNames();
         m_poolDictionaries = new VariableNames();
@@ -38,11 +35,11 @@ public class ClassNode extends Node implements NodeWithMetaData {
     }
     
     public String getClassName() {
-        return m_superclassName;
+        return m_className;
     }
     
     public void seClassName(String name) {
-        m_superclassName = name;
+        m_className = name;
     }
 
     public void setSuperclassName(String name) {
@@ -75,29 +72,26 @@ public class ClassNode extends Node implements NodeWithMetaData {
             setComment(value);
         } else if (label.equals("category:")) {
             setCategory(value);
-        } else if (label.equals("instanceVariableNames:")) {
+        } /*else if (label.equals("instanceVariableNames:")) {
             parseVariableNames(m_instanceVariableNames, value);
         } else if (label.equals("classVariableNames:")) {
             parseVariableNames(m_classVariableNames, value);
         } else if (label.equals("poolDictionaries:")) {
             parseVariableNames(m_poolDictionaries, value);
-        } else {
+        }*/ else {
             throw new NodeWithMetaData.UnknownMetaDataException(String.format(
                     "Unknown metadata %s", label));
         }
     }
 
-    public void parseVariableNames(VariableNames vars, String data) {
+    /*public void parseVariableNames(VariableNames vars, String data) {
         String[] dataArray = data.split(" ");
         for (String varName : dataArray) {
             vars.add(varName);
         }
-    }
+    }*/
 
-    public void addMethod(MethodNode node) {
-        mMethods.add(node);
-    }
-
+  
     // /PRINTING
     @Override
     protected void writeRepresentation(StringWriter writer) {
@@ -117,7 +111,7 @@ public class ClassNode extends Node implements NodeWithMetaData {
             method.writeRepresentation(writer);
         }
         writer.decreaseLevel();
-        writer.writeln("-----------------");
+        writer.writeln("]");
     }
 
     public VariableNames getInstanceVariableNames() {
@@ -130,26 +124,15 @@ public class ClassNode extends Node implements NodeWithMetaData {
         return null;
     }
 
-    public List<MethodNode> getMethods() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * public void setInstanceVariable(String varName) {
-     * 
-     * }
-     * 
-     * public void setClassVariable(String varName) {
-     * 
-     * }
-     * 
-     * void setPoolDictionary(String poolDictionary) {
-     * 
-     * }
-     */
-    
     public void onAccept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public void addInstanceVariable(String value) {
+        m_instanceVariableNames.add(value);
+    }
+    
+    public void addClassVariable(String value) {
+        m_classVariableNames.add(value);
     }
 }

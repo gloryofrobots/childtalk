@@ -17,7 +17,8 @@ public class BlockRoutine extends MethodRoutine {
         Routine continuation = block.getContinuation();
         mProcess.completeRoutineWithResult(result, continuation);
     }
-
+    
+    @Override
     protected void createContext() {
         STBlock block = (STBlock) mExecutable;
         mContext = block.getContext();

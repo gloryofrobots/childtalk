@@ -21,15 +21,16 @@ public class ArrayNode extends Node implements NodeFactory{
 
     @Override
     public STObject createObject() {
-        STArray array = new STArray(getSize());
-
+        int size = getSize();
+        STArray array =  STArray.create(size);
+        
         for (Node element : mElements) {
-
             NodeFactory factory = (NodeFactory) element;
             STObject obj = factory.createObject();
             array.add(obj);
 
         }
+        
         return array;
     }
 

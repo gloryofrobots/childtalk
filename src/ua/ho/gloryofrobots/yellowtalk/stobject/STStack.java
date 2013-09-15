@@ -1,21 +1,29 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
+
 import ua.ho.gloryofrobots.yellowtalk.StackInterface;
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 
 public class STStack extends STObject implements StackInterface<STObject> {
     private static final long serialVersionUID = 1L;
     private STObject[] mData;
     private int mIndex;
     private static final int DEFAULT_SIZE = 20;
-    
-    STStack() {
+
+    protected STStack() {
         mData = new STObject[DEFAULT_SIZE];
         mIndex = 0;
     }
-    
+
+    public static STStack create() {
+        STStack obj = new STStack();
+        obj.setSTClass(Universe.classes().Stack);
+        return obj;
+    }
+
     public void push(STObject obj) {
         mData[mIndex] = obj;
         mIndex++;
-        if(mIndex >= mData.length) {
+        if (mIndex >= mData.length) {
             grow();
         }
     }
@@ -23,8 +31,8 @@ public class STStack extends STObject implements StackInterface<STObject> {
     private void grow() {
         // TODO Auto-generated method stub
         int newSize = mData.length + mData.length / 2;
-        STObject[] newData =  new STObject[newSize];
-        System.arraycopy(mData, 0, newData, 0,  mData.length);
+        STObject[] newData = new STObject[newSize];
+        System.arraycopy(mData, 0, newData, 0, mData.length);
         mData = newData;
     }
 
@@ -33,15 +41,19 @@ public class STStack extends STObject implements StackInterface<STObject> {
         STObject obj = mData[mIndex];
         return obj;
     }
-    
+
     public STObject peek() {
-        if(mIndex == 0) {
+        if (mIndex == 0) {
             return null;
         }
-        
-        return mData[mIndex - 1];
-    }
 
+        return mData[getCurrentIndex()];
+    }
+    
+    public int getCurrentIndex() {
+        return mIndex - 1;
+    }
+    
     public int getCurrentPosition() {
         return mIndex;
     }
@@ -53,7 +65,7 @@ public class STStack extends STObject implements StackInterface<STObject> {
     public void set(int position, STObject returnValue) {
         mData[position] = returnValue;
     }
-    
+
     public STObject getFromEnd(int shift) {
         return mData[mIndex - shift];
     }

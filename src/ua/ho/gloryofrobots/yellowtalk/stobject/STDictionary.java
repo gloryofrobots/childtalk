@@ -3,10 +3,28 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 import java.util.HashMap;
 
 import ua.ho.gloryofrobots.yellowtalk.DictionaryInterface;
+import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STDictionary extends STObject implements DictionaryInterface<STObject, STObject> {
     private static final long serialVersionUID = 1L;
-    protected HashMap<STObject, STObject> mBinding;
+    protected HashMap<STObject, STObject> mData;
+    
+    public static STDictionary create() {
+        STDictionary obj = new STDictionary();
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Dictionary;
+            }
+        });
+        
+        return obj;
+    }
+    
+    private STDictionary() {
+        mData = new HashMap<STObject, STObject>();
+    }
     
     @SuppressWarnings (value="unchecked")
     public <T extends STObject> 
@@ -24,17 +42,17 @@ public class STDictionary extends STObject implements DictionaryInterface<STObje
     
     @Override
     public STObject at(STObject name) {
-        return mBinding.get(name);
+        return mData.get(name);
     }
 
     @Override
     public boolean has(STObject name) {
-        return mBinding.containsKey(name);
+        return mData.containsKey(name);
     }
 
     @Override
     public void put(STObject name, STObject object) {
-        mBinding.put(name, object);        
+        mData.put(name, object);        
     }
 
 }

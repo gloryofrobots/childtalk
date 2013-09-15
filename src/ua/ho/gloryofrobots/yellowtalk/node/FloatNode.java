@@ -23,8 +23,7 @@ public class FloatNode extends Node implements NodeFactory{
     
     @Override
     public STObject createObject() {
-        // TODO Auto-generated method stub
-        return new STFloating(mData);
+        return STFloating.create(mData);
     }
     
     public void onAccept(Visitor visitor) {

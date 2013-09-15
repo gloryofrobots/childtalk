@@ -2,12 +2,31 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import java.util.Map;
 
-import ua.ho.gloryofrobots.yellowtalk.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STScope extends STInternalDictionary {
     private static final long serialVersionUID = 1L;
     private STScope next = null;
     private STScope previous = null;
+    
+    protected STScope() {
+        
+    }
+    
+    public static STScope create() {
+        STScope obj = new STScope();
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Scope;
+            }
+        });
+        
+        return obj;
+    }
+    
     
     @SuppressWarnings (value="unchecked")
     public <T extends STObject> 
@@ -43,6 +62,19 @@ public class STScope extends STInternalDictionary {
          }
     }
     
+    public STObject lookup(STObject key) {
+        STScope scope = this;
+        while(scope != null) {
+            STObject  value = scope.at(key);
+            if(value != null) {
+                return value;
+            }
+            scope = scope.next;
+        }
+        
+        return null;
+    }
+    
     public void putUnique(STObject name, STObject object)
             throws DuplicateVariableException {
         if (has(name)) {
@@ -59,5 +91,14 @@ public class STScope extends STInternalDictionary {
         }
         
         return clone;
+    }
+    
+    public String toString() {
+        String result = "";
+        for(STObject obj : mData) {
+            result += obj.toString() + "\n";
+        }
+        
+        return result;
     }
 }

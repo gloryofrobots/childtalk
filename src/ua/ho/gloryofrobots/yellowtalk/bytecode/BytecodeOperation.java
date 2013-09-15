@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.bytecode;
 
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
@@ -10,15 +11,18 @@ public abstract class BytecodeOperation {
         private static final long serialVersionUID = 1L;
         
     }
+    
+    protected Routine mRoutine;
+    
     public void setRoutine(Routine routine) {
         mRoutine = routine;
     }
     
-    abstract void perform(int argument) throws BytecodeRuntimeError;
+    public abstract void perform(int argument);
 
-    protected Routine mRoutine;
     
-    public void runtimeError(String message, Object... args) throws BytecodeRuntimeError{
-        
+    
+    public void runtimeError(String message, Object... args){
+        SignalSuite.error(message, args);
     }
 }

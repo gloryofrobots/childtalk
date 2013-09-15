@@ -2,6 +2,9 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import java.util.ArrayList;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
+
 public class STArray extends STObject {
 
     private static final long serialVersionUID = 1L;
@@ -9,12 +12,38 @@ public class STArray extends STObject {
     
     ArrayList<STObject> mElements;
     
-    public STArray() {
-        this(DEFAULT_SIZE);
+    public static STArray create() {
+        STArray array  = new STArray();
+        array.setClassProvider(new BindingClassProvider(array) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Array;
+            }
+        });
+        return array;
+    }
+   
+    public static STArray create(int size) {
+        STArray array  = new STArray(size);
+        array.setClassProvider(new BindingClassProvider(array) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Array;
+            }
+        });
+        return array;
     }
     
-    public STArray(int size) {
+    //TODO change to ARRAY
+    protected STArray(int size) {
         mElements = new ArrayList<STObject>(size);
+        for (int i = 0; i < size; i++) {
+            mElements.add(Universe.objects().NIL);
+        }
+    }
+    
+    protected STArray() {
+        mElements = new ArrayList<STObject>();
     }
     
     public int size() {
@@ -61,6 +90,10 @@ public class STArray extends STObject {
 
     public int indexOf(STObject obj) {
         return mElements.indexOf(obj);
+    }
+
+    public void clear() {
+        mElements.clear();
     }
 
     

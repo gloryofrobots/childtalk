@@ -22,8 +22,7 @@ public class LargeIntegerNode extends Node implements NodeFactory{
     
     @Override
     public STObject createObject() {
-        // TODO Auto-generated method stub
-        return new STLargeInteger(mData);
+        return  STLargeInteger.create(mData);
     }
     
     public void onAccept(Visitor visitor) {

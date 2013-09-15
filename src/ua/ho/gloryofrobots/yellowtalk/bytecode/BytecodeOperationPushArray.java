@@ -7,9 +7,10 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 public class BytecodeOperationPushArray extends BytecodeOperation {
 
     @Override
+    public
     void perform(int argument) {
         STStack stack = mRoutine.getStack();
-        STArray array = new STArray(argument);
+        STArray array = STArray.create(argument);
 
         for (int i = 1; i <= argument; i++) {
             STObject obj = stack.pop();

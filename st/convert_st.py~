@@ -1,0 +1,9 @@
+def convert_dir(dir_path):
+	for root, dirs, files in os.walk(dir_path):
+		for name in files:
+			filename = os.path.join(root, name)
+            convert_file(filename)
+		for name in dirs:
+			dirname = os.path.join(root, name)
+			convert_dir(dirname)
+            pass

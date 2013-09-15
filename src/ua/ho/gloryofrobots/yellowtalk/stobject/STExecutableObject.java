@@ -1,8 +1,11 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 
-import ua.ho.gloryofrobots.yellowtalk.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeArray;
+import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeWriter;
+import ua.ho.gloryofrobots.yellowtalk.compilation.CompileInfo;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 
 public abstract class STExecutableObject extends STObject {
@@ -10,17 +13,24 @@ public abstract class STExecutableObject extends STObject {
     private STArray mArguments;
     private STArray mArgumentsValues;
     private STArray mLiterals;
-
+    
     private BytecodeArray mBytecode;
-
+    private BytecodeWriter mBytecodeWriter;
+    
     protected STExecutableObject() {
-        mScope = new STScope();
-        mArguments = new STArray();
-        mArgumentsValues = new STArray();
-        mLiterals = new STArray();
+        transformToScopedObject();
+        mArguments = STArray.create();
+        mArgumentsValues = STArray.create();
+        mLiterals = STArray.create();
         mBytecode = new BytecodeArray();
+        //TODO REFACTOR
+        mBytecodeWriter = new BytecodeWriter(mBytecode);
     }
-
+    
+    public BytecodeWriter getBytecodeWriter() {
+        return mBytecodeWriter;
+    }
+    
     public int placeLiteral(STObject obj) {
         int index = mLiterals.indexOf(obj);
         if (index < 0) {
@@ -35,12 +45,19 @@ public abstract class STExecutableObject extends STObject {
         return mLiterals.get(index);
     }
     
-    public void addArgument(STSymbol name) throws DuplicateVariableException {
+    public void addArgument(STSymbol name) throws DuplicateVariableException{
         if (mArguments.has(name)) {
             throw new DuplicateVariableException(name.toString());
         }
 
         mArguments.add(name);
+    }
+    
+    public void setArguments(String[] names){
+        mArguments.clear();
+        for(String name : names) {
+            mArguments.add(STSymbol.unique(name));
+        }
     }
     
     public void addArgumentValue(int index, STObject value)  {

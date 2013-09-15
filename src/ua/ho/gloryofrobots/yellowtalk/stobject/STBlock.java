@@ -5,10 +5,11 @@ import ua.ho.gloryofrobots.yellowtalk.scheduler.BlockRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 
 public class STBlock extends STExecutableObject implements ExceptionHandler {
     private static final long serialVersionUID = 1L;
-    STContext mContext = new STContext();
+    STContext mContext = STContext.create();
     Routine mContinuation;
 
     public void attachToRoutine(Routine routine) {
@@ -37,7 +38,7 @@ public class STBlock extends STExecutableObject implements ExceptionHandler {
     public void onException(STObject exception, Routine routine) {
         STStack stack = routine.getStack();
         stack.push(exception);
-        BlockRoutine.callExecutable(routine, this);
+        SchedulingSuite.callExecutable(routine, this);
     }
 
     @Override

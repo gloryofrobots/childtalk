@@ -6,13 +6,29 @@ import java.util.List;
 import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
 
 public class MethodNode extends Node implements NodeWithMetaData {
-
+    BodyNode mBody;
+    protected String mComment = new String();
+    protected String mCategory = new String();
+    protected String mSelector = new String();
+    protected String mPrimitiveName = new String();
+    protected List<String> mArguments;
+    protected List<String> mTemporaries;
+    private boolean mIsStatic = false;
+    
     public MethodNode() {
         mBody = new BodyNode();
         mArguments = new ArrayList<String>();
         mTemporaries = new ArrayList<String>();
     }
-
+    
+    public void setStatic(boolean value) {
+        mIsStatic = value;
+    }
+    
+    public boolean isStatic() {
+        return mIsStatic;
+    }
+    
     @Override
     public void setMetaData(String label, String value)
             throws UnknownMetaDataException {
@@ -102,15 +118,6 @@ public class MethodNode extends Node implements NodeWithMetaData {
     }
 
     public void onAccept(Visitor visitor) {
-        visitor.visit(this);
+        visitor.visit(this.getBody());
     }
-    
-    BodyNode mBody;
-    protected String mComment = new String();
-    protected String mCategory = new String();
-    protected String mSelector = new String();
-    protected String mPrimitiveName = new String();
-    protected List<String> mArguments;
-    protected List<String> mTemporaries;
-
 }

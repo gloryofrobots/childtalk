@@ -1,12 +1,16 @@
+"
 Object subclass: Rectangle [
-    <instanceVariableNames:'origin corner'>
+    |origin corner|
     
-    "center [
+    /classVar ass dd ass ds/
+    
+    center [
         ^ origin + corner / 2
     ]
     
     extent: newExtent [
-        corner :=  origin + newExtent
+        corner :=  origin + newExtent.
+        corner := corner + 34.
     ]
     
     intersects: aRectangle [
@@ -37,7 +41,7 @@ Object subclass: Rectangle [
     
     classes [
         ^ self collect: [ :element | element class]
-    ]"
+    ]
     
     containsInstanceOf: aClass [
         |x|
@@ -45,6 +49,33 @@ Object subclass: Rectangle [
          ^ false
     ]
 ]
+Rectangle extend [
+    goFuck:hour [
+        ^ hour
+    ]
+        
+]
+"
+Object subclass: R [
+    extent: newExtent [
+           
+            self put: 2; put: 3; put: 4.
+            self color: 34.
+            super prepend: 13.
+        ]
+]
     
+"
+Eval [ 
+    nil subclass: #Object
+        instanceVariableNames: ''
+        classVariableNames: ''.
+    
+    Object subclass: #Behavior
+           instanceVariableNames: 'name superclass instanceVariableNames instanceSize methodDictionary subclasses finalizationRequest'
+           classVariableNames: ''.
+           
+]"
+   
       
   

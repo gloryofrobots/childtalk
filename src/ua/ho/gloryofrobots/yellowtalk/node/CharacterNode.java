@@ -21,8 +21,7 @@ public class CharacterNode extends Node implements NodeFactory{
 
     @Override
     public STObject createObject() {
-        // TODO Auto-generated method stub
-        return new STCharacter(mData);
+        return  STCharacter.create(mData);
     }
     
     public void onAccept(Visitor visitor) {

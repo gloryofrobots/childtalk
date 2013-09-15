@@ -1,8 +1,7 @@
-nil subclass: Object [
-    <instanceVariableNames:'name superclass instanceVariableNames instanceSize methodDictionary subclasses finalizationRequest'>
-    
-    initialize []
-    finalize []
+Object extend [
+        
+    initialize [yourself]
+    finalize [yourself]
     
     copy [
         ^ self shallowCopy
@@ -13,27 +12,13 @@ nil subclass: Object [
         ^self
     ]
     
-    size [
-        <primitive: 'Object_size'>
-        self primitiveFailed
-    ]
-    
     hash [
         <primitive: 'Object_hash'>
         self primitiveFailed
     ]
 
-    isCharacter [
-        ^false
-    ]
-
-    
-    isBoolean [
-        ^false
-    ]
-    
     isKindOf: aClass [
-        <comment: "Answer true if the receiver's class is a subclass of aClass">
+        "Answer true if the receiver's class is a subclass of aClass"
         | class |
         aClass ifNil: [ ^false ].
         class := self class.
@@ -44,26 +29,6 @@ nil subclass: Object [
     isMemberOf: aClass [
         "Answer true whenever the receiver is an instance of the given class"
         ^self class = aClass
-    ]
-    
-    isClass [
-        ^false
-    ]
-    
-    isNumber [
-        ^false
-    ]
-    
-    isCollection [
-        ^false
-    ]
-    
-    isString [
-        ^false
-    ]
-    
-    isSymbol [
-        ^false
     ]
     
     ifNil: aBlock [
@@ -81,8 +46,6 @@ nil subclass: Object [
     notNil [
         ^true
     ] 
-    
-    
     
     class [
         <primitive: 'Object_class'>
@@ -141,7 +104,6 @@ nil subclass: Object [
         NotFound signal: aMessage
     ] 
     
-    
     respondsTo: selector [
         "Answer if the receiver can respond to the given selector"
         ^self class doesUnderstand: selector
@@ -154,7 +116,7 @@ nil subclass: Object [
         ifTrue: [ WrongArgumentCount signal ]
     ]
     
-    perform: selector with: argument1 [
+     perform: selector with: argument1 [
         <primitive: 'Object_perform'>
         (self respondsTo: selector)
         ifFalse: [ self doesNotUnderstand: selector ]
@@ -213,11 +175,9 @@ nil subclass: Object [
         ^self
     ] 
     
-    
     briefInspect [
         ^self
     ] 
-    
     
     display [
         Transcript show: self displayString
@@ -264,27 +224,12 @@ nil subclass: Object [
         ^stream contents
     ]
     
-    storeOn: aStream [
-        "Append to aStream a String representation from which the receiver can be reconstructed"
-        aStream
-            nextPut: $(;
-            store: self class;
-            nextPutAll: ' basicNew)'
-    ]
-    
-    storeString [
-        "Answer a String representation from which the receiver can be reconstructed"
-        | stream |
-        stream := WriteStream on: String new.
-        self storeOn: stream.
-        ^stream contents
-    ] 
     
     species [
         "Answer the same class as that of the receiver.
          Some Collection classes may override it"
         ^self class
     ] 
-]
+] 
 
 

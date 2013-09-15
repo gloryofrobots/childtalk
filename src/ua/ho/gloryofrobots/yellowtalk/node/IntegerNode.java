@@ -23,7 +23,7 @@ public class IntegerNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return new STSmallInteger(mData);
+        return  STSmallInteger.create(mData);
     }
     
     public void onAccept(Visitor visitor) {

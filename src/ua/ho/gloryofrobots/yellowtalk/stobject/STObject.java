@@ -3,54 +3,33 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
-
-/*
-Array.cpp
-BlockClosure.cpp
-BlockContext.cpp
-Boolean.cpp
-ByteArray.cpp
-Character.cpp
-ClassObject.cpp
-CompiledBlock.cpp
-CompiledMethod.cpp
-Context.cpp
-Dictionary.cpp
-Float.cpp
-Globals.cpp
-LargeInteger.cpp
-MetaClass.cpp
-MethodContext.cpp
-NilObject.cpp
-Object.cpp
-Process.cpp
-Semaphore.cpp
-SmallInteger.cpp
-String.cpp
-Symbol.cpp
-Symbols.cpp
-VariableBinding.cpp*/
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.ClassProvider;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.DefaultClassProvider;
 
 
 public class STObject implements Serializable {
+
     private static final long serialVersionUID = 1L;
+    
     protected STScope mScope = null;
     
-    private STClass mClass;
+    private ClassProvider mClassProvider;
     
+    @SuppressWarnings("unchecked")
     public static <T extends STObject> 
     T newObject(STClass _class, Class<T> aClass) {
         T object = null;
         try {
             
-            Constructor<T> constructor = aClass.getConstructor();
-            object = constructor.newInstance();
-            object.setSTClass(_class);
-        } catch (InstantiationException e) {
-            return null;
+            Method constructor = aClass.getMethod("create", STClass.class);
+            object = (T) constructor.invoke(null, _class);
+            object.transformToScopedObject();
         } catch (IllegalAccessException e) {
             return null;
         } catch (NoSuchMethodException e) {
@@ -64,28 +43,19 @@ public class STObject implements Serializable {
         } 
         return object;
     }
-    
-    public static <T extends STObject> 
-    T newObject(STClass _class, Class<T> aClass, STObject argument) {
-        T object = null;
-        try {
-            Constructor<T> constructor = aClass.getDeclaredConstructor(new Class[] {STObject.class});
-            object = constructor.newInstance(argument);
-            object.setSTClass(_class);
-        } catch (InstantiationException e) {
-            return null;
-        } catch (IllegalAccessException e) {
-            return null;
-        } catch (NoSuchMethodException e) {
-            return null;
-        } catch (SecurityException e) {
-            return null;
-        } catch (IllegalArgumentException e) {
-            return null;
-        } catch (InvocationTargetException e) {
-            return null;
-        } 
+     
+    public static STObject createEmpty() {
+        STObject object = new STObject();
         return object;
+    }
+    
+    public static STObject createWithClass(STClass _class) {
+        STObject object = new STObject();
+        object.setSTClass(_class);
+        return object;
+    }
+    
+    protected STObject() {
     }
     
     public STObject shallowCopy() {
@@ -104,18 +74,32 @@ public class STObject implements Serializable {
         mScope = scope;
     }
     
+    protected void transformToScopedObject() {
+        mScope = STScope.create();
+    }
+    
     public STClass getSTClass() {
-        return mClass;
+        //We use ClassProvider for later binding default types with ST classes
+        return mClassProvider.getSTClass();
     }
     
     public void setSTClass(STClass _class) {
-        //TODO remove
         if(_class == null) {
+            SignalSuite.error("STObject.setSTClass. class is null");
             return;
         }
-        mClass = _class;
-        STScope scope = mClass.getScope();
-        scope.append(mScope);
+        
+        mClassProvider = new DefaultClassProvider(_class);
+        if(mScope == null) {
+            return;
+        }
+        
+        STScope scope = _class.getScope();
+        mScope.append(scope);
+    }
+    
+    public void setClassProvider(ClassProvider classProvider) {
+        mClassProvider = classProvider;
     }
     
     public static boolean isNotNilOrNull(STObject object) {

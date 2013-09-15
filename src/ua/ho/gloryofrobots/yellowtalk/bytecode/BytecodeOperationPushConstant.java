@@ -6,7 +6,8 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 public class BytecodeOperationPushConstant extends BytecodeOperation {
 
     @Override
-    void perform(int argument) throws BytecodeRuntimeError {
+    public
+    void perform(int argument) {
         // TODO Auto-generated method stub
         
         BytecodeType.Constant constant = BytecodeType.Constant.values()[argument];

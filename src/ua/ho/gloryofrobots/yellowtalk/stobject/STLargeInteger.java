@@ -3,6 +3,7 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 import java.math.BigInteger;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
 public class STLargeInteger extends STNumber {
 
@@ -164,7 +165,8 @@ public class STLargeInteger extends STNumber {
         if (maxPriority == FLOAT_INTEGER_PRIORITY) {
             return asFloat();
         }
-
-        throw new RuntimeException("Unsopported large integer cast");
+        
+        SignalSuite.error("STLargeInteger cast not supported %d", maxPriority);
+        return null;
     }
 }

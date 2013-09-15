@@ -1,72 +1,116 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
-import java.util.LinkedList;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STProcess extends STObject {
     private static final long serialVersionUID = 1L;
-    LinkedList<Routine> mCallStack;
+    Routine mActiveRoutine;
     State mState;
     STStack mStack;
-    
+
     public enum State {
         TERMINATED, SUSPENDED, ACTIVE, IDLE;
     }
-    
+
     public STProcess() {
         mState = State.IDLE;
-        mCallStack = new LinkedList<Routine>();
         mStack = new STStack();
+    }
+    
+    public static STProcess create() {
+        STProcess obj = new STProcess();
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Process;
+            }
+        });
+        return obj;
     }
     
     public STStack getStack() {
         return mStack;
     }
-    
+
     public State getState() {
         return mState;
     }
-    
+
     private void setState(State state) {
         mState = state;
     }
     
-    public void setActiveRoutine(Routine routine) {
-        if(mCallStack.size() > 0 
-                && mCallStack.getLast().equals(routine)) {
-            return;
-        }
-        
-        mCallStack.add(routine);
-        //routine.setProcess(this);
+    public void callExecutable(STExecutableObject executable) {
+        Routine routine = executable.createRoutine();
+        routine.call(this);
     }
     
-    public void execute() {
-        if(mCallStack.size() == 0) {
-            setState(State.TERMINATED);
+    public void setActiveRoutine(Routine routine) {
+        if (mActiveRoutine == routine) {
             return;
         }
-        
-        mCallStack.getLast().execute();
+        mActiveRoutine = routine;
+        // routine.setProcess(this);
+    }
+
+    public void execute() {
+        if (mActiveRoutine == null) {
+            terminate();
+            return;
+        }
+
+        mActiveRoutine.execute();
     }
 
     public void killRoutine(Routine routine) {
-        if(mCallStack.getLast().equals(routine) == false) {
-            //TODO THROW ERROR
-            return;
+        if (mActiveRoutine.equals(routine) == false) {
+            throw new RuntimeException();
         }
-        
-        mCallStack.removeLast();
+
+        mActiveRoutine = mActiveRoutine.getCaller();
     }
 
     public void completeRoutineWithResult(STObject result, Routine continuation) {
-        Routine top = mCallStack.getLast();
-        while(top != continuation) {
-            mCallStack.removeLast();
-            top = mCallStack.getLast();
+        Routine top = mActiveRoutine;
+        while (top != continuation) {
+            top = mActiveRoutine.getCaller();
+        }
+
+        continuation.compliteWithResult(result);
+    }
+
+    public boolean isTerminated() {
+        return mState == State.TERMINATED;
+    }
+
+    public void terminate() {
+        setState(State.TERMINATED);
+    }
+
+    public boolean isSuspended() {
+        return mState == State.SUSPENDED;
+    }
+
+    public void suspend() {
+        setState(State.SUSPENDED);
+    }
+
+    public boolean isActive() {
+        return mState == State.ACTIVE;
+    }
+
+    public void activate() {
+        setState(State.ACTIVE);
+    }
+
+    public STObject getResult() {
+        if(mStack.getCurrentIndex() != 0) {
+            return null;
         }
         
-        continuation.compliteWithResult(result);
+        return mStack.peek();
     }
 }

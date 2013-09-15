@@ -9,7 +9,7 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 public class BytecodeOperationAssign extends BytecodeOperation {
 
     @Override
-    void perform(int argument) {
+    public void perform(int argument) {
         STExecutableObject executable = mRoutine.getExecutable();
         STObject varName = executable.getLiteral(argument);
         

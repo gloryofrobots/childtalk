@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramNode extends Node {
+    protected List<Node> mNodes;
+    
     public ProgramNode() {
         mNodes = new ArrayList<Node>();
     }
@@ -26,5 +28,11 @@ public class ProgramNode extends Node {
     public void onAccept(Visitor visitor) {
         visitor.visit(this);
     }
-    protected List<Node> mNodes;
+   
+    public int size() {
+       return mNodes.size();
+    }
+    public Node getNode(int i) {
+        return mNodes.get(i);
+    }
 }

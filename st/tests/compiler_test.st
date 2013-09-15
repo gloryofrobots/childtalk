@@ -1,0 +1,3 @@
+Eval [
+    Object new class.
+]

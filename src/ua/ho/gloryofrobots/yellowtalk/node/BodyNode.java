@@ -29,7 +29,7 @@ public class BodyNode extends Node {
         for(StatementNode node : mStatements) {
             //writer.writeln("++++++++++++++++++++++");
             node.writeRepresentation(writer);
-            
+            writer.writeln("");
         }
         //writer.writeln("");
     }

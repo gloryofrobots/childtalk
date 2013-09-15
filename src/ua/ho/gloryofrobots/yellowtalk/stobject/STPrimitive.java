@@ -8,7 +8,8 @@ public abstract class STPrimitive extends STObject {
    
     private static final long serialVersionUID = 1L;
     
-   
+    
+    
     public boolean execute(Routine routine) {
         STObject receiver = routine.getContext().getReceiver();
         STStack stack = routine.getStack();

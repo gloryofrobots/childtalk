@@ -7,7 +7,8 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 public class BytecodeOperationPushLiteral extends BytecodeOperation {
 
     @Override
-    void perform(int argument) throws BytecodeRuntimeError {
+    public 
+    void perform(int argument) {
         STExecutableObject executable = mRoutine.getExecutable();
         STStack stack = mRoutine.getStack();
         STObject literal = executable.getLiteral(argument);

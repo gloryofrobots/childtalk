@@ -4,13 +4,12 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
 public class STFloating extends STNumber {
 
     private static final long serialVersionUID = 1L;
-    
-    
-   
+
     private double mData;
 
     private STFloating(double data) {
@@ -51,7 +50,8 @@ public class STFloating extends STNumber {
 
     @Override
     protected STNumber castToPriority(int maxPriority) {
-        throw new RuntimeException("Unsopported floating cast");
+        SignalSuite.error("STFloat cast not supported");
+        return null;
     }
 
     @Override

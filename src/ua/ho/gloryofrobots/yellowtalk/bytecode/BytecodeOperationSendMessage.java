@@ -1,20 +1,18 @@
 package ua.ho.gloryofrobots.yellowtalk.bytecode;
 
-import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 public class BytecodeOperationSendMessage extends BytecodeOperation {
-
     @Override
-    void perform(int countArguments) throws BytecodeRuntimeError {
+    public
+    void perform(int countArguments){
         STStack stack = mRoutine.getStack();
         STSymbol selector = (STSymbol) stack.pop();
 
-        STObject receiver = stack.getFromEnd(countArguments);
-        Routine.call(mRoutine, receiver, selector);
+        STObject receiver = stack.getFromEnd(countArguments + 1);
+        SchedulingSuite.callForSelector(mRoutine, receiver, selector);
     }
-
-   
 }

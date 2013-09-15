@@ -19,6 +19,7 @@ public interface Visitor  {
     public void visit(StatementNode node);
     public void visit(ReturnNode node);
     public void visit(Node node);
+    
     public void visit(NameTermNode node);
     public void visit(MessageSelectorNode node);
     

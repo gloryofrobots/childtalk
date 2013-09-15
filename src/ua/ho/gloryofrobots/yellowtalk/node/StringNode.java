@@ -18,7 +18,7 @@ public class StringNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return new STString(mData);
+        return  STString.create(mData);
     }
 
     @Override

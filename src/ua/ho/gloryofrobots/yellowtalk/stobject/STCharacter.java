@@ -7,7 +7,7 @@ public class STCharacter extends STObject {
     private static final long serialVersionUID = 1L;
     private char mValue;
 
-    private STCharacter(char data) {
+    protected STCharacter(char data) {
         mValue = data;
     }
     

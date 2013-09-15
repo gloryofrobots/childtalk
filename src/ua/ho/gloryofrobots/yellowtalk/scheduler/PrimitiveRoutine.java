@@ -1,6 +1,8 @@
 package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
@@ -21,16 +23,25 @@ public class PrimitiveRoutine extends Routine {
         
         if(primitiveName == null) {
             mFailed = true;
+            //TODO exception
             throw new RuntimeException();
         }
-        STObject receiver = mContext.getReceiver();
-        STClass klass = receiver.getSTClass();
+        
+        STClass klass = mContext.getReceiver().getSTClass();
         
         mPrimitive = klass.getPrimitive(primitiveName);
         if(mPrimitive == null) {
             mFailed = true;
+            //TODO Smalltalk exception
             throw new RuntimeException();
         }
+    }
+    
+    @Override
+    protected void createContext() {
+        mContext = STContext.create();
+        STObject receiver = mStack.pop();
+        mContext.setReceiver(receiver);
     }
     
     @Override
@@ -53,7 +64,6 @@ public class PrimitiveRoutine extends Routine {
 
     @Override
     protected void onCompliteWithResult(STObject result) {
-        //Should not happen
-        throw new RuntimeException();
+        SignalSuite.error("Error in interpreter logic onCompliteWithResult of PrimitiveRoutine should not called");
     }
 }

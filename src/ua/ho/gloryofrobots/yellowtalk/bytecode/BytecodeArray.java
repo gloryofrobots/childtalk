@@ -1,39 +1,17 @@
 package ua.ho.gloryofrobots.yellowtalk.bytecode;
 
-public class BytecodeArray {
-    int [] mCode;
-    protected int mSize;
-    protected final int DEFAULT_CODE_SIZE = 50;
-    public BytecodeArray() {
-        mCode = new int[DEFAULT_CODE_SIZE];
+import ua.ho.gloryofrobots.yellowtalk.IntArray;
+
+public class BytecodeArray extends IntArray{
+    public short getHigh(int index) {
+        return BytecodeUtils.unpackCommand(mCode[index]);
     }
-    
-    public int getSize() {
-        return mSize;
+
+    public int getLow(int index) {
+        return BytecodeUtils.unpackArgument(mCode[index]);
     }
-    
-    public int get(int index) {
-        return mCode[index];
-    }
-    
-    public int getHigh(int code) {
-        return 0;
-    }
-    
-    public int getLow(int code) {
-        return 0;
-    }
-    
-    public void set(int high, int low) {
-        
-    }
-    
-    public void append(BytecodeType codeType, int argument) {
-        
-    }
-    
-    public void pushConstant(BytecodeType.Constant constant) {
-        append(BytecodeType.PUSH_CONSTANT,constant.ordinal());
-        
+
+    public void set(int index, short high, int low) {
+        set(index, BytecodeUtils.pack(high, low));
     }
 }

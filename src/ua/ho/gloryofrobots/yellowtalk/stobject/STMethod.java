@@ -1,13 +1,11 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import ua.ho.gloryofrobots.yellowtalk.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.PrimitiveRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STMethod extends STExecutableObject {
 
@@ -19,8 +17,20 @@ public class STMethod extends STExecutableObject {
     STSymbol mCategory;
     STSymbol mPrimitiveName = null;
     
-    public STMethod() {
-        mTemporaries = new STArray();
+    protected STMethod() {
+        mTemporaries = STArray.create();
+    }
+    
+    public static STMethod create() {
+        STMethod obj = new STMethod();
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Method;
+            }
+        });
+        
+        return obj;
     }
     
     public void setComment(STSymbol comment) {

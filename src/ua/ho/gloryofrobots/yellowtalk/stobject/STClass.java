@@ -1,15 +1,15 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
-import ua.ho.gloryofrobots.yellowtalk.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STClass extends STObject {
     STArray mInstanceVariables;
-    
+
     private static final long serialVersionUID = 1L;
-    protected STScope mScope = new STScope();
-    
+
     STSymbol mComment;
     STSymbol mCategory;
     STSymbol mName;
@@ -17,39 +17,54 @@ public class STClass extends STObject {
     STDictionary mPrimitives;
     STArray mSubclasses;
     Class<?> mInternalObjectClass = null;
-    
-    protected STClass() {
-        mInstanceVariables = new STArray(10);
-        mPrimitives = new STDictionary();
-        mSubclasses = new STArray();
-    }
-    
-    public void setInternalObjectClass(Class<?> _class) {
-        mInternalObjectClass = _class;
-    }
-    
-    public Class<?> getInternalObjectClass() {
-        return mInternalObjectClass;
-    }
-    
+
     public static STClass create(String name) {
+        return create(STSymbol.unique(name));
+    }
+
+    public static STClass create(STSymbol name) {
         STClass klass = new STClass();
-        klass.setName(STSymbol.unique(name));
+        klass.setName(name);
+        klass.setClassProvider(new BindingClassProvider(klass) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Class;
+            }
+        });
         return klass;
     }
     
+    protected STClass() {
+        mInstanceVariables = new STArray(10);
+        mPrimitives = STDictionary.create();
+        mSubclasses = STArray.create();
+        transformToScopedObject();
+        mScope.put(STSymbol.unique("subclasses"), mSubclasses);
+
+        mScope.put(STSymbol.unique("superclass"), mSuperClass);
+        mScope.put(STSymbol.unique("instanceVariableNames"), mInstanceVariables);
+    }
+
+    public void setInternalObjectClass(Class<?> _class) {
+        mInternalObjectClass = _class;
+    }
+
+    public Class<?> getInternalObjectClass() {
+        return mInternalObjectClass;
+    }
+
     public void setSuperClass(STClass _class) {
         mSuperClass = _class;
     }
-    
+
     public STClass getSuperClass() {
         return mSuperClass;
     }
-    
-    public STMethod findMethod(STObject selector) {
-        return mScope.getAndCast(selector);
-    }
 
+    public STMethod findMethod(STObject selector) {
+        return (STMethod) mScope.lookup(selector);
+    }
+    
     public void addInstanceVariable(STSymbol varName)
             throws DuplicateVariableException {
         if (mInstanceVariables.has(varName)) {
@@ -58,11 +73,31 @@ public class STClass extends STObject {
 
         mInstanceVariables.add(varName);
     }
-
+    
+    public void addInstanceVariables(STArray vars)
+            throws DuplicateVariableException {
+        int size = vars.size();
+        for(int i = 0; i < size; i++) {
+            STSymbol varName = vars.getAndCast(i);
+            addInstanceVariable(varName);
+        }
+    }
+    
     public void addClassVariable(STSymbol varName)
             throws DuplicateVariableException {
         getScope().putUnique(varName, null);
     }
+    
+    public void addClassVariables(STArray vars)
+            throws DuplicateVariableException {
+        int size = vars.size();
+        for(int i = 0; i < size; i++) {
+            STSymbol varName = vars.getAndCast(i);
+            addClassVariable(varName);
+        }
+    }
+    
+    
 
     public void setComment(STSymbol comment) {
         mComment = comment;
@@ -74,45 +109,69 @@ public class STClass extends STObject {
 
     public void setName(STSymbol name) {
         mName = name;
+        mScope.put(STSymbol.unique("name"), mName);
     }
 
     public STSymbol getName() {
         return mName;
     }
-    
+
     public void setPrimitive(STSymbol name, STPrimitive primitive) {
-        if(mPrimitives.has(name) ) {
-            throw new RuntimeException("Duplicated primitive " + name.toString());
+        if (mPrimitives.has(name)) {
+            //TODO signal
+            throw new RuntimeException("Duplicated primitive "
+                    + name.toString());
         }
-        
+
         mPrimitives.put(name, primitive);
     }
-    
+
     public void setPrimitive(String name, STPrimitive primitive) {
         STSymbol symbolName = STSymbol.unique(name);
         setPrimitive(symbolName, primitive);
-   }
-    
+    }
+
     public STPrimitive getPrimitive(STSymbol name) {
         STClass host = this;
-        while(STObject.isNotNilOrNull(host)) {
-            STPrimitive primitive = host.getPrimitive(name);
-            if(primitive != null) {
+        while (STObject.isNotNilOrNull(host)) {
+            STPrimitive primitive = host._getPrimitive(name);
+            if (primitive != null) {
                 return primitive;
             }
-            
+
             host = host.getSuperClass();
         }
+
+        return null;
+    }
+
+    private STPrimitive _getPrimitive(STSymbol name) {
+        STObject result = mPrimitives.at(name);
+        if(result == null) {
+            return null;
+        }
         
-         return null;
+        return result.castToSubclass();
     }
 
     public void addSubclass(STClass klass) {
-        //Link scopes
+        // Link scopes
         STScope scope = klass.getScope();
-        
+
         mScope.append(scope);
-        
+
         mSubclasses.add(klass);
+    }
+
+    public void addStaticMethod(STSymbol selector, STMethod method) {
+        getSTClass().addMethod(selector, method);
+    }
+
+    public void addMethod(STSymbol selector, STMethod method) {
+        mScope.put(selector, method);
+    }
+    
+    public String toString() {
+        return "<STClass  " + mName + ">";
     }
 }
