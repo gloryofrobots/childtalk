@@ -167,4 +167,7 @@ public abstract class Routine {
     public Routine getCaller() {
         return mCaller;
     }
+
+    abstract public String createErrorString();
+      
 }

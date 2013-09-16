@@ -21,8 +21,8 @@ public class Universe {
     
   
     public static class Symbols{
-        STSymbol SELF;
-        STSymbol SUPER;
+        public STSymbol SELF;
+        public STSymbol SUPER;
     }
     
     
@@ -35,8 +35,9 @@ public class Universe {
     
     public static class Signals{
         
-        public  STObject PrimitiveError;
-        public  STObject TypeError;
+        public  STObject PrimitiveError = STObject.createEmpty();;
+        public  STObject RuntimeError = STObject.createEmpty();;
+        public  STObject TypeError = STObject.createEmpty();;
        
     }
     

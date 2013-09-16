@@ -3,11 +3,16 @@ package ua.ho.gloryofrobots.yellowtalk.node;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
-public class MethodNode extends Node implements NodeWithMetaData {
+public class MethodNode extends ExecutableNode implements NodeWithMetaData, NodeFactory {
     BodyNode mBody;
     protected String mComment = new String();
+    protected String mClassName;
     protected String mCategory = new String();
     protected String mSelector = new String();
     protected String mPrimitiveName = new String();
@@ -36,10 +41,21 @@ public class MethodNode extends Node implements NodeWithMetaData {
             setComment(value);
         } else if (label.equals("category:")) {
             setCategory(value);
+        } else if (label.equals("primitive:")) {
+            setPrimitiveName(value);
         }
+        
 
     }
+    
+    public String getClassName() {
+        return mClassName;
+    }
 
+    public void setClassName(String mClassName) {
+        this.mClassName = mClassName;
+    }
+    
     public String getSelector() {
         return mSelector;
     }
@@ -89,6 +105,10 @@ public class MethodNode extends Node implements NodeWithMetaData {
     }
 
     public void setPrimitiveName(String mPrimitiveName) {
+        if(mPrimitiveName.length() == 0) {
+            int bdsm = 1;
+            int x = bdsm;
+        }
         this.mPrimitiveName = mPrimitiveName;
     }
 
@@ -119,5 +139,43 @@ public class MethodNode extends Node implements NodeWithMetaData {
 
     public void onAccept(Visitor visitor) {
         visitor.visit(this.getBody());
+    }
+    
+    //TODO REMOVE UNNECESSARY METHODS
+    @Override
+    public STObject createObject() throws NodeFactoryException {
+        STMethod method = STMethod.create();
+        method.setCompileInfo(mCompileInfo);
+        
+        method.setSelector(STSymbol.unique(getSelector()));
+        method.setClassName(STSymbol.unique(getClassName()));
+        method.setComment(STSymbol.unique(getComment()));
+        method.setCategory(STSymbol.unique(getCategory()));
+        
+        if(mPrimitiveName.length() > 0) {
+            method.setPrimitiveName(STSymbol.unique(mPrimitiveName));
+        }
+        
+        List<String> temporaries = getTemporaries();
+        for (String varName : temporaries) {
+            try {
+                method.addTemporary(STSymbol.unique(varName));
+            } catch (DuplicateVariableException e) {
+                throw new NodeFactoryException("Duplicate method temporary variable " + varName);
+                
+            }
+        }
+
+        List<String> arguments = getArguments();
+
+        for (String varName : arguments) {
+            try {
+                method.addArgument(STSymbol.unique(varName));
+            } catch (DuplicateVariableException e) {
+                throw new NodeFactoryException("Duplicate method argument " + varName);
+            }
+        }
+        
+        return method;
     }
 }

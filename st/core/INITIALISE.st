@@ -1,4 +1,5 @@
 Eval [
+
     nil subclass: #Object
         instanceVariableNames: ''
         classVariableNames: ''.
@@ -11,11 +12,11 @@ Eval [
            instanceVariableNames: ''
            classVariableNames: ''.
     
-    Behavior subclass: #Class
+    Behaviour subclass: #Class
          instanceVariableNames: 'classVariables'
              classVariableNames: ''.
     
-    Behavior subclass: #Metaclass
+    Behaviour subclass: #Metaclass
          instanceVariableNames: 'instanceClass'
              classVariableNames: ''.
     

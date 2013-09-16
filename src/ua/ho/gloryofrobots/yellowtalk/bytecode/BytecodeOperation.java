@@ -20,9 +20,11 @@ public abstract class BytecodeOperation {
     
     public abstract void perform(int argument);
 
-    
-    
     public void runtimeError(String message, Object... args){
-        SignalSuite.error(message, args);
+        
+        String lineString = mRoutine.createErrorString();
+        String errorMessage = "Runtime Error: " + message + " at line " + lineString + "\n bytecode :" 
+                    + mRoutine.getExecutable().getBytecode().toString();
+        SignalSuite.error(errorMessage, args);
     }
 }

@@ -1,7 +1,10 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
+import ua.ho.gloryofrobots.yellowtalk.compilation.Token;
+
 public class AssignNode extends Node {
     
+  
     public String getAssignName() {
         return mAssignName;
     }

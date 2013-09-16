@@ -25,7 +25,7 @@ public class BootstrapSuite {
     
     public static void loadDefaultSystem() {
         String folder = "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/core";
-        String [] classNames = { "INITIALISE", "Object"," Behavior", "Metaclass"};
+        String [] classNames = { "INITIALISE", "Object","Behaviour", "Metaclass"};
         
         Loader loader = new Loader();
         

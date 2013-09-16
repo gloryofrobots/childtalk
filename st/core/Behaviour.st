@@ -7,6 +7,7 @@ Behaviour extend [
     
     subclass: name instanceVariableNames: instVarNames classVariableNames: classVarNames [
         <primitive: 'Behaviour_createSubclass'>
+        self primitiveFailed
     ]
     
     name [
@@ -34,12 +35,8 @@ Behaviour extend [
     ]
     
     new [
-        <primitive: 'Behavior_new'>
-    	^self primitiveFailed
-    ]
-    
-    new: anInteger [
-        self shouldNotImplement
+         <primitive: 'Behavior_new'>
+        ^self primitiveFailed
     ]
     
     doesUnderstand: selector [

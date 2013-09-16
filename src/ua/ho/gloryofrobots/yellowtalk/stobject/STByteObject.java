@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STByteObject extends STObject {
 
@@ -10,13 +11,23 @@ public class STByteObject extends STObject {
 
     static public STByteObject create(int size) {
         STByteObject obj = new STByteObject(size);
-        obj.setSTClass(Universe.classes().ByteArray);
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().ByteArray;
+            }
+        });
         return obj;
     }
     
     static public STByteObject create(byte [] data) {
         STByteObject obj = new STByteObject(data);
-        obj.setSTClass(Universe.classes().ByteArray);
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().ByteArray;
+            }
+        });
         return obj;
     }
     

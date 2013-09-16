@@ -9,13 +9,13 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STImage;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STScope;
 
 public class CompileSuite {
-    public static ProgramNode parseWithLexer(LexerInterface lexer) throws FileEvalException {
+    public static ProgramNode parseWithLexer(Lexer lexer) throws FileEvalException {
         Parser parser = new Parser(lexer);
         return parser.parse();
     }
     
     public static void compileProgramStream(ProgramTextStreamInterface programStream, STImage image){
-        LexerInterface lexer;
+        Lexer lexer;
         try {
             lexer = Lexer.create(programStream);
             ProgramNode program = parseWithLexer(lexer);            
@@ -31,7 +31,7 @@ public class CompileSuite {
     }
     
     public static STExecutableObject compileEval(ProgramTextStreamInterface programStream){
-        LexerInterface lexer;
+        Lexer lexer;
         STExecutableObject executable = null;
         try {
             lexer = Lexer.create(programStream);

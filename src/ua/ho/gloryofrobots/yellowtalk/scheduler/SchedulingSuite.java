@@ -21,6 +21,8 @@ public class SchedulingSuite {
     
     public static void callForSelector(Routine caller, STObject receiver, STSymbol selector) {
         STClass superClass = receiver.getSTClass();
+        STClass supersuperclass = superClass.getSTClass();
+        STClass meta = Universe.classes().Metaclass;
         STExecutableObject executable =  superClass.findMethod(selector);
 
         

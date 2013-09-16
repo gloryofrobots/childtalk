@@ -9,7 +9,7 @@ import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamInterface.Pos
 import ua.ho.gloryofrobots.yellowtalk.compilation.Token.Type;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
-public class Lexer implements LexerInterface {
+public class Lexer{
     public class Transaction {
         private Lexer mLexer;
         private int mCount;
@@ -46,17 +46,23 @@ public class Lexer implements LexerInterface {
         next();
     }
     
-    public static LexerInterface create(ProgramTextStreamInterface programStream)
+    public static Lexer create(ProgramTextStreamInterface programStream)
             throws FileEvalException {
         Lexer lexer = new Lexer(programStream);
         return lexer;
     }
         
-    public void throwError(String txt, Token token) throws FileEvalException {
+    public void lexerError(String txt, Token token) throws FileEvalException {
         try {
+            
             ProgramTextStreamInterface.PositionInfo info = mProgramStream
                     .getPositionInfo(token.getPosition());
-            throw new FileEvalException(txt, this, info.line, info.column);
+            String streamRepr = mProgramStream.toString();
+            String streamPart = (streamRepr != null) ? (" in " + streamRepr) : "";
+            
+            String message = String.format("Syntax Error: %s%s at line %d column %d "
+                    , txt, streamPart, info.line, info.column);
+            throw new FileEvalException(message);
         } catch (IndexOutOfBoundsException e) {
             throwError(txt);
         }
@@ -71,7 +77,6 @@ public class Lexer implements LexerInterface {
      * LexerException(txt, this, -1, -1); }
      */
 
-    @Override
     public boolean lookup(int count) throws FileEvalException {
         if (mCurrentToken.type == Token.Type.END) {
             return false;
@@ -89,7 +94,6 @@ public class Lexer implements LexerInterface {
         return true;
     }
 
-    @Override
     public Token next() throws FileEvalException {
         _next();
         mTransaction.onNext();
@@ -113,12 +117,12 @@ public class Lexer implements LexerInterface {
         }
     }
     
-    @Override
+    
     public Token current() {
         return mCurrentToken;
     }
 
-    @Override
+    
     public Token previous() {
         if (mCurrentToken.getPrevious() == null) {
             return null;
@@ -378,7 +382,7 @@ public class Lexer implements LexerInterface {
         
         if (token.evalInteger(str, radix) == false) {
             if (token.evalLargeInteger(str, radix) == false) {
-                throwError("Error in integer format", token);
+                lexerError("Error in integer format", token);
             }
         }
 
@@ -386,7 +390,7 @@ public class Lexer implements LexerInterface {
         if (toLowerChar(lastChar) == 'r') {
             radix = token.integerValue();
             if (radix < 2 || radix > 36) {
-                throwError("Invalid integer radix", token);
+                lexerError("Invalid integer radix", token);
             }
 
             str = "";
@@ -403,7 +407,7 @@ public class Lexer implements LexerInterface {
            
             if (token.evalInteger(str, radix) == false) {
                 if (token.evalLargeInteger(str, radix) == false) {
-                    throwError("Error in integer format after radix", token);
+                    lexerError("Error in integer format after radix", token);
                 }
             }
 
@@ -420,7 +424,7 @@ public class Lexer implements LexerInterface {
                 token.clear();
 
                 if (token.evalFloat(str) == false) {
-                    throwError("Error in float format", token);
+                    lexerError("Error in float format", token);
                 }
             } else {
                 pushBackChar(2);
@@ -447,7 +451,7 @@ public class Lexer implements LexerInterface {
                 pushBackChar(1);
 
                 if (token.evalFloat(str) == false) {
-                    throwError("Error in float format", token);
+                    lexerError("Error in float format", token);
                 }
 
             } else {
@@ -500,7 +504,7 @@ public class Lexer implements LexerInterface {
                     "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/tests/lexer_test.st");
             ProgramTextStreamInterface programStream = new ProgramTextStream(
                     fileStream);
-            LexerInterface lexer = Lexer.create(programStream);
+            Lexer lexer = Lexer.create(programStream);
             Token token;
             while(true) {
                 token = lexer.current();
@@ -528,19 +532,31 @@ public class Lexer implements LexerInterface {
         }
     }
 
-    @Override
+    
     public void startTransaction() {
         mTransaction.reset();
     }
 
-    @Override
+    
     public void rollBackTransaction() {
         mTransaction.restore();
         endTransaction();
     }
 
-    @Override
+    
     public void endTransaction() {
         mTransaction.reset();
+    }
+
+    public int getCurrentTokenPosition() {
+        return current().getPosition();
+    }
+
+    public int getPreviousTokenPosition() {
+        return current().getPrevious().getPosition();
+    }
+
+    public ProgramTextStreamInterface getStream() {
+        return mProgramStream;
     }
 }

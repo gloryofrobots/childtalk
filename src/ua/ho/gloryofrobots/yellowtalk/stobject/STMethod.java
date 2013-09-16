@@ -13,9 +13,12 @@ public class STMethod extends STExecutableObject {
 
     private STArray mTemporaries;
 
-    STSymbol mComment;
-    STSymbol mCategory;
-    STSymbol mPrimitiveName = null;
+    protected STSymbol mComment;
+    protected STSymbol mCategory;
+    protected STSymbol mPrimitiveName = null;
+    protected STSymbol mClassName;
+
+    private STSymbol mSelector;
     
     protected STMethod() {
         mTemporaries = STArray.create();
@@ -42,6 +45,11 @@ public class STMethod extends STExecutableObject {
     }
 
     public void setPrimitiveName(STSymbol primitive) {
+        if(primitive.toString().equals("Behaviour_createSubclass") == false) {
+            System.out.println("----" + primitive.toString());
+        }
+        
+        
         mPrimitiveName = primitive;
     }
     
@@ -87,5 +95,13 @@ public class STMethod extends STExecutableObject {
         }
         
         return routine;
+    }
+
+    public void setClassName(STSymbol name) {
+        mClassName = name;
+    }
+
+    public void setSelector(STSymbol name) {
+        mSelector = name;
     }
 }

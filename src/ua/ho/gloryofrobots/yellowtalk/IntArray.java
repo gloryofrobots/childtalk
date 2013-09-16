@@ -1,44 +1,44 @@
 package ua.ho.gloryofrobots.yellowtalk;
 
 public class IntArray {
-    protected int[] mCode;
-    protected int mSize;
+    protected int[] mData;
+    protected int mMaxIndex;
     protected final int DEFAULT_SIZE = 50;
     
     
     public IntArray() {
-        mCode = new int[DEFAULT_SIZE];
+        mData = new int[DEFAULT_SIZE];
     }
 
-    public int getCountSettedElements() {
-        return mSize;
+    public int getMaxSettedIndex() {
+        return mMaxIndex;
     }
     
     public int getActualArraySize() {
-        return mCode.length;
+        return mData.length;
     }
 
     public int get(int index) {
-        return mCode[index];
+        return mData[index];
     }
 
     public void set(int index, int value) {
-        while(index >= mCode.length) {
+        while(index >= mData.length) {
             grow();
         }
         
-        mCode[index] = value;
+        mData[index] = value;
         
-        if(index > mSize - 1) {
-            mSize = index + 1;
+        if(index > mMaxIndex - 1) {
+            mMaxIndex = index + 1;
         }
     }
     
     private void grow() {
-        int newSize = getCountSettedElements() + DEFAULT_SIZE;
+        int newSize = getMaxSettedIndex() + DEFAULT_SIZE;
         int [] newData = new int[newSize];
-        System.arraycopy(mCode, 0, newData, 0, mCode.length);
-        mCode = null;
-        mCode = newData;
+        System.arraycopy(mData, 0, newData, 0, mData.length);
+        mData = null;
+        mData = newData;
     }
 }

@@ -94,8 +94,8 @@ public class STObject implements Serializable {
             return;
         }
         
-        STScope scope = _class.getScope();
-        mScope.append(scope);
+        //STScope scope = _class.getScope();
+        //mScope.append(scope);
     }
     
     public void setClassProvider(ClassProvider classProvider) {

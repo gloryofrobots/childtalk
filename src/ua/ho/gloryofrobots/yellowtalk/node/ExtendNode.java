@@ -8,7 +8,7 @@ public class ExtendNode extends MethodsContainerNode {
         return m_className;
     }
 
-    public void seClassName(String name) {
+    public void setClassName(String name) {
         m_className = name;
     }
 

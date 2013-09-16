@@ -13,7 +13,7 @@ public abstract class STExecutableObject extends STObject {
     private STArray mArguments;
     private STArray mArgumentsValues;
     private STArray mLiterals;
-    
+    private CompileInfo mCompileInfo;
     private BytecodeArray mBytecode;
     private BytecodeWriter mBytecodeWriter;
     
@@ -23,8 +23,18 @@ public abstract class STExecutableObject extends STObject {
         mArgumentsValues = STArray.create();
         mLiterals = STArray.create();
         mBytecode = new BytecodeArray();
-        //TODO REFACTOR
+        
+        mCompileInfo = null;
         mBytecodeWriter = new BytecodeWriter(mBytecode);
+    }
+    
+    public CompileInfo getCompileInfo() {
+        return mCompileInfo;
+    }
+    
+    public void setCompileInfo(CompileInfo info) {
+         mCompileInfo = info;
+         mBytecodeWriter.setCompileInfo(info);
     }
     
     public BytecodeWriter getBytecodeWriter() {

@@ -99,19 +99,19 @@ public class ProgramTextStream implements ProgramTextStreamInterface {
         }
 
         PositionInfo info = new PositionInfo();
-        info.line = 0;
-        info.column = 0;
+        info.line = 1;
+        info.column = 1;
         char ch;
         for (int i = 0; i < position; i++) {
             ch = mData[i];
             if (ch == '\n') {
                 info.line++;
-                info.column = 0;
+                info.column = 1;
             } else {
                 info.column++;
             }
         }
-
+        
         return info;
     }
 
@@ -129,4 +129,19 @@ public class ProgramTextStream implements ProgramTextStreamInterface {
         return mCurrentIndex >= mData.length;
     }
 
+    @Override
+    public char[] getRange(int first, int last) {
+        int size = last - first;
+        if(size < 0) {
+            return null;
+        }
+        
+        char[] copy = new char[size];
+        System.arraycopy(mData, first, copy, 0, size);
+        return copy;
+    }
+    
+    public String toString() {
+        return null;
+    }
 }

@@ -60,9 +60,40 @@ public class STClass extends STObject {
     public STClass getSuperClass() {
         return mSuperClass;
     }
-
+    
+    public STMethod findMethodInSuperclass(STObject selector) {
+        STMethod method =  (STMethod) mScope.lookup(selector);
+        
+        if(method == null && mSuperClass != null) {
+            method =  (STMethod) mSuperClass.findMethodInSuperclass(selector);
+        }
+        
+        return method;
+    }
+    
     public STMethod findMethod(STObject selector) {
-        return (STMethod) mScope.lookup(selector);
+        STMethod method = findMethodInSuperclass(selector);
+        STClass th = this;
+        
+        STClass stclass = getSTClass();
+        if(method == null) {
+            if(stclass == null) {
+                return method;
+            }
+            method =  stclass.findMethodInSuperclass(selector);
+        }
+
+        return method;
+    }
+    
+    public STMethod findVariable(STObject selector) {
+        STMethod method =  (STMethod) mScope.lookup(selector);
+        
+        if(method == null && mSuperClass != null) {
+            method =  (STMethod) mSuperClass.findVariable(selector);
+        }
+        
+        return method;
     }
     
     public void addInstanceVariable(STSymbol varName)
@@ -156,9 +187,9 @@ public class STClass extends STObject {
 
     public void addSubclass(STClass klass) {
         // Link scopes
-        STScope scope = klass.getScope();
-
-        mScope.append(scope);
+        /*STScope scope = klass.getScope();
+        
+        scope.append(mScope);*/
 
         mSubclasses.add(klass);
     }

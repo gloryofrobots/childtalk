@@ -20,7 +20,7 @@ public class ArrayNode extends Node implements NodeFactory{
     }
 
     @Override
-    public STObject createObject() {
+    public STObject createObject() throws NodeFactoryException {
         int size = getSize();
         STArray array =  STArray.create(size);
         

@@ -2,6 +2,7 @@ package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
 import javax.management.RuntimeErrorException;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
@@ -22,7 +23,7 @@ public class MethodRoutine extends Routine {
     public void onActivate() {
         mStackEnterPosition = mStack.getCurrentPosition();
         mInstructionPointer = 0;
-        mLastInstructionIndex = mBytecode.getCountSettedElements();
+        mLastInstructionIndex = mBytecode.getMaxSettedIndex();
     }
 
     protected void fillExecutableArguments() {
@@ -44,7 +45,8 @@ public class MethodRoutine extends Routine {
         mContext.setReceiver(receiver);
 
         STScope scope = mExecutable.createScope();
-        scope.append(receiver.getScope());
+        scope.put(Universe.symbols().SELF, receiver);
+        //scope.append(receiver.getScope());
         mContext.setScope(scope);
     }
 
@@ -68,4 +70,12 @@ public class MethodRoutine extends Routine {
         InterpreterSuite.performOperation(high, low, this);
         mInstructionPointer++;
     }
+    
+    @Override
+    public String createErrorString() {
+        int previousPointer = mInstructionPointer;
+        String line = mExecutable.getCompileInfo().getCodeLine(previousPointer);
+        return line;
+    }
+    
 }

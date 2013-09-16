@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import ua.ho.gloryofrobots.yellowtalk.compilation.CompileSuite;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream;
+import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamFile;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamInterface;
 import ua.ho.gloryofrobots.yellowtalk.compilation.Compiler.UnsupportedNodeException;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
@@ -18,7 +19,7 @@ public class Loader {
         ProgramTextStreamInterface programStream = null;
         try {
             fileStream = new FileInputStream(path);
-            programStream = new ProgramTextStream(fileStream);
+            programStream = new ProgramTextStreamFile(fileStream,path);
         } catch (IOException x) {
             SignalSuite.error("IO error in file %s - %s", path, x.getMessage());
         } catch (ProgramReadException e) {

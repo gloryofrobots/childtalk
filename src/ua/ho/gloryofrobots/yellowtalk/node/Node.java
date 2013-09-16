@@ -2,10 +2,16 @@ package ua.ho.gloryofrobots.yellowtalk.node;
 
 import java.util.List;
 
+import ua.ho.gloryofrobots.yellowtalk.compilation.CompileInfo;
+import ua.ho.gloryofrobots.yellowtalk.compilation.Token;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
 public abstract class Node {
     protected class StringWriter {
+        private int mLevel = 0;
+        int mPadding = 0;
+        private String mData = new String();
+        
         protected int getLevel() {
             return mLevel;
         }
@@ -65,15 +71,25 @@ public abstract class Node {
         public void setPadding(int padding) {
             mPadding = padding;
         }
-        
-        private int mLevel = 0;
-        int mPadding = 0;
-        private String mData = new String();
-        
-       
     }
    
-   //PRINTING ////////////////////////////////////////////////////////////// 
+   //////////////////////////////////////////////////////////////// 
+    int mPosition = CompileInfo.UNKNOWN_POSITION;
+    
+    
+    public void itIsYourToken(Token token){
+        int position = token.getPosition();
+        setPosition(position);
+    }
+    
+    public int getPosition() {
+        return mPosition;
+    }
+    
+    public void setPosition(int position) {
+        this.mPosition = position;
+    }
+
     public String toString() {
         StringWriter writer = new StringWriter();
         writeRepresentation(writer);

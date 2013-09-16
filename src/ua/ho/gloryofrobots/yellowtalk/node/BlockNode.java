@@ -3,8 +3,19 @@ package ua.ho.gloryofrobots.yellowtalk.node;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockNode extends Node {
-    public BlockNode() {
+import ua.ho.gloryofrobots.yellowtalk.compilation.CompileInfo;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.compilation.Token;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
+
+public class BlockNode extends ExecutableNode implements NodeFactory{
+    protected BodyNode mBody;
+    protected List<String> mArguments;
+    
+    public BlockNode() {   
+        mBody = new BodyNode();
         mArguments = new ArrayList<String>();
     }
     
@@ -19,8 +30,7 @@ public class BlockNode extends Node {
     public BodyNode getBody() {
         return mBody;
     }
-    protected BodyNode mBody = new BodyNode();
-    protected List<String> mArguments;
+
     
     @Override
     void writeRepresentation(StringWriter writer) {
@@ -41,5 +51,24 @@ public class BlockNode extends Node {
     
     public void onAccept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public STObject createObject() throws NodeFactoryException {
+        STBlock block = STBlock.create();
+        
+        block.setCompileInfo(mCompileInfo);
+        
+        List<String> arguments = getArguments();
+
+        for (String varName : arguments) {
+            try {
+                block.addArgument(STSymbol.unique(varName));
+            } catch (DuplicateVariableException e) {
+                throw new NodeFactoryException("Duplicate block argument " + varName);
+            }
+        }
+        
+        return block;
     }
 }

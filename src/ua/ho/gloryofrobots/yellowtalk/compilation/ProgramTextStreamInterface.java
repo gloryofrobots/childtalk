@@ -10,9 +10,10 @@ public interface ProgramTextStreamInterface{
     
     public boolean goForward();
     public boolean goBackward(int count);
-    
+
     public char getCurrentChar();
     public int getPosition();
     public PositionInfo getPositionInfo(int position);
     public boolean isEnd();
+    public char[] getRange(int first, int last);
 }

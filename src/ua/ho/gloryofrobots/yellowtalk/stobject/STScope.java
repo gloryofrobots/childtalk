@@ -9,7 +9,7 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvide
 public class STScope extends STInternalDictionary {
     private static final long serialVersionUID = 1L;
     private STScope next = null;
-    private STScope previous = null;
+    //private STScope previous = null;
     
     protected STScope() {
         
@@ -44,22 +44,24 @@ public class STScope extends STInternalDictionary {
     
     public void append(STScope scope) {
         next = scope;
-        scope.setPrevious(this);
+        //scope.setPrevious(this);
     }
     
-    private void setPrevious(STScope prev) {
-        previous = prev;
-    }
+//    private void setPrevious(STScope prev) {
+//        previous = prev;
+//    }
     
-    public void assign(STObject key, STObject value) {
+    public boolean assign(STObject key, STObject value) {
          STScope scope = this;
          while(scope != null) {
              if(scope.has(key)) {
                  scope.put(key, value);
-                 break;
+                 return true;
              }
              scope = scope.next;
          }
+         
+         return false;
     }
     
     public STObject lookup(STObject key) {

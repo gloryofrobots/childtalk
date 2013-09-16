@@ -6,6 +6,7 @@ import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STBlock extends STExecutableObject implements ExceptionHandler {
     private static final long serialVersionUID = 1L;
@@ -29,8 +30,13 @@ public class STBlock extends STExecutableObject implements ExceptionHandler {
 
     public static STBlock create() {
         STBlock block = new STBlock();
-        block.setSTClass(Universe.classes().Block);
-
+        block.setClassProvider(new BindingClassProvider(block) {
+            @Override
+            protected STClass _getSTClass() {
+                return Universe.classes().Block;
+            }
+        });
+        
         return block;
     }
 

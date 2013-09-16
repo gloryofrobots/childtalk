@@ -19,8 +19,12 @@ public abstract class BindingClassProvider implements ClassProvider {
         }
         
         STClass klass = _getSTClass();
-        STScope scope = klass.getScope();
-        scope.append(mObject.getScope());
+        if(klass == null) {
+            return null;
+        }
+        
+        //STScope scope = klass.getScope();
+        //mObject.getScope().append(scope);
         return klass;
     }
     

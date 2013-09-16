@@ -58,7 +58,7 @@ Rectangle extend [
 "
 Object subclass: R [
     extent: newExtent [
-           
+           <primitive: 'SSSS'>
             self put: 2; put: 3; put: 4.
             self color: 34.
             super prepend: 13.

@@ -22,8 +22,11 @@ public class BytecodeOperationPushConstant extends BytecodeOperation {
         case TRUE:
             stack.push(Universe.objects().TRUE);
             break;
+        case SELF:
+            stack.push(mRoutine.getContext().getReceiver());
+            break;
         default:
-            runtimeError("Unsopported constant %s", constant.toString());
+            runtimeError("Unsupported constant %s", constant.toString());
         }
     }
 

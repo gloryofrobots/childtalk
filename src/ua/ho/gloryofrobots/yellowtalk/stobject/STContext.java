@@ -31,11 +31,29 @@ public class STContext extends STObject {
     }
     
     public void assign(STObject varName, STObject value) {
-        mScope.assign(varName, value);
+        if (mScope.assign(varName, value) == true) {
+            return;
+        }
+        
+        if(mReceiver.getScope().assign(varName, value) == true) {
+            return;
+        }
+        
+        if(mReceiver.getSTClass().getScope().assign(varName, value) == true) {
+            return;
+        }
     }
 
     public STObject lookup(STObject varName) {
         STObject result = mScope.lookup(varName);
+        
+        if(result == null) {
+            result = mReceiver.getScope().lookup(varName);
+        }
+        
+        if(result == null) {
+            result = mReceiver.getSTClass().findVariable(varName);
+        }
         
         if(result == null) {
             return Universe.image().lookup(varName);
