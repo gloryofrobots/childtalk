@@ -21,7 +21,8 @@ public class CompileSuite {
             ProgramNode program = parseWithLexer(lexer);            
             compile(program, image);
         } catch (FileEvalException e) {
-            SignalSuite.error("Parse error %s", e.getMessage());
+            e.printStackTrace();
+            //SignalSuite.error("Parse error %s", e.getMessage());
         }
     }
     

@@ -1,5 +1,8 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
@@ -83,7 +86,12 @@ public class STScope extends STInternalDictionary {
             throw new DuplicateVariableException(name.toString());
         }
     }
-
+    
+    public List<STObject> asList() {
+        ArrayList<STObject> copy = new  ArrayList<STObject>(mData);
+        return copy;
+    }
+    
     public STScope copySelf() {
         STScope clone = new STScope();
         for (Map.Entry<STObject, Integer> item : mBinding.entrySet()) {

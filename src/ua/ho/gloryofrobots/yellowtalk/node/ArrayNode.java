@@ -1,12 +1,19 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ua.ho.gloryofrobots.yellowtalk.stobject.STArray;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
 public class ArrayNode extends Node implements NodeFactory{
+    List<Node> mElements;
 
+    public ArrayNode() {
+        super();
+        mElements = new ArrayList<Node>();
+    }
+    
     public void addElement(Node element) {
         mElements.add(element);
     }
@@ -34,12 +41,15 @@ public class ArrayNode extends Node implements NodeFactory{
         return array;
     }
 
-    List<Node> mElements;
-
+    
     @Override
     void writeRepresentation(StringWriter writer) {
         // TODO Auto-generated method stub
-        writer.write("{%s}", mElements);
+        writer.write("{");
+        for(Node node : mElements) {
+            writer.write(node.toString());
+        }
+        writer.write("}");
     }
     
     public void onAccept(Visitor visitor) {

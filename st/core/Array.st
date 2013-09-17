@@ -1,4 +1,4 @@
-Array extends [
+Array extend [
     
     
     new: size [

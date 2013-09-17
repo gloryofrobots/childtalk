@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperation;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationAssign;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationDuplicate;
@@ -41,8 +42,12 @@ public class InterpreterSuite {
 
     public static void performOperation(int index, int argument, Routine routine) {
         BytecodeOperation operation = get(index);
-        System.out.printf("OP %s arg: %d\n", operation.getClass().getName(),
-                argument);
+        
+        if(Universe.isOnDebug == true) {
+            System.out.printf("OP %s arg: %d\n", operation.getClass().getName(),
+                    argument);
+        }
+        
         operation.setRoutine(routine);
         operation.perform(argument);
     }

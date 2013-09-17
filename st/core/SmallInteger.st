@@ -1,5 +1,7 @@
 SmallInteger extend [
-   
+    (+) new: aNumber [
+        <primitive: 'SmallInteger_newColon'>
+    ]
     
     + aNumber [
          <primitive: 'SmallInteger_plus'>

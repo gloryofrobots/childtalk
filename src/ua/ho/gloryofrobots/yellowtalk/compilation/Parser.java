@@ -3,6 +3,7 @@ package ua.ho.gloryofrobots.yellowtalk.compilation;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.yellowtalk.compilation.Token.Type;
 import ua.ho.gloryofrobots.yellowtalk.node.*;
@@ -78,8 +79,8 @@ public class Parser{
         EvalNode eval = new EvalNode();
         
         int startPosition = mLexer.getCurrentTokenPosition();
-        
-        parseBody(eval);
+        BodyNode body = eval.getBody();
+        parseBody(body);
         node.addNode(eval);
         
         int endPosition = mLexer.getPreviousTokenPosition();
@@ -329,7 +330,7 @@ public class Parser{
             }
         }
 
-        parseMethodTemporaries(method);
+        parseExecutableTemporaries(method);
         parseBody(body);
         
         //catch method body last position
@@ -348,7 +349,7 @@ public class Parser{
         return true;
     }
 
-    protected void parseMethodTemporaries(MethodNode method)
+    protected void parseExecutableTemporaries(ExecutableNode method)
             throws FileEvalException {
         Token token = mLexer.current();
         if ((token.type == Token.Type.BINARY && token.equalValue('|')) == false) {
@@ -448,12 +449,16 @@ public class Parser{
         }
 
     }
-
+    
+    
+    
     public void DEBUG_LOG(String message, Token token) {
+        if(Universe.isOnDebug == false) return;
         System.out.printf("LOG : %s Token : %s\n", message, token);
     }
 
     public void DEBUG_LOG(String function, String message) {
+        if(Universe.isOnDebug == false) return;
         System.out.printf("LOG : %s  %s\n", function, message);
     }
 
@@ -461,17 +466,15 @@ public class Parser{
         Token token = mLexer.current();
 
         while (true) {
+            if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
+                return;
+            }
+            
             DEBUG_LOG("parseBody", token);
 
             StatementNode statement = parseStatement();
             DEBUG_LOG("getStatement", statement.toString());
             body.addStatement(statement);
-
-            token = mLexer.current();
-            if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
-                return;
-            }
-
             token = mLexer.current();
         }
         //
@@ -489,26 +492,15 @@ public class Parser{
 
         while (true) {
             DEBUG_LOG("parseBlockBody", token);
-
+            if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
+                break;
+            }
+            
             StatementNode statement = parseStatement();
             DEBUG_LOG("getStatement parseBlockBody", statement.toString());
             body.addStatement(statement);
             token = mLexer.current();
-
-            if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
-                break;
-            }
-
-            token = mLexer.current();
         }
-
-        //
-        // if (m_in_block)
-        // {
-        // ERROR_SIGNAL(GSE_ERROR_INTERP,
-        // NEW_OBJECT<String>("Expected ] after block body"));
-        // }
-
     }
 
     private StatementNode parseStatement() throws FileEvalException {
@@ -756,6 +748,7 @@ public class Parser{
         //catch first position of block body
         int startPosition = mLexer.getCurrentTokenPosition();
         parseBlockMessagePattern(block);
+        parseExecutableTemporaries(block);
         parseBlockBody(body);
         //catch last position of block body
         int endPosition = mLexer.getPreviousTokenPosition();
@@ -800,19 +793,18 @@ public class Parser{
     }
 
     private ArrayNode parseArray() throws FileEvalException {
-        Token token = mLexer.next();
         ArrayNode array = new ArrayNode();
-
-        token = mLexer.next();
+        Token token = mLexer.next();
         while ((token.type == Token.Type.END || (token.type == Token.Type.CLOSING && token
                 .charValue() == '}')) == false) {
-            StatementNode element = new StatementNode();
-            parseExpression(element);
+            //StatementNode element = new StatementNode();
+            //parseExpression(element);
+            StatementNode element = parseStatement();
             array.addElement(element);
 
-            token = mLexer.next();
-            if (token.type == Token.Type.CLOSING && token.charValue() == '.')
-                token = mLexer.next();
+            token = mLexer.current();
+            /*if (token.type == Token.Type.CLOSING && token.charValue() == '.')
+                token = mLexer.next();*/
         }
 
         return array;

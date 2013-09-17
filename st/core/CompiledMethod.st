@@ -57,11 +57,11 @@ CompiledMethod extend [
     ]
     
     argumentStackSize [
-    "    ^argumentStackSize" [
+    "    ^argumentStackSize" 
     ]
     
     temporaryStackSize [
-    "    ^temporaryStackSize" [
+    "    ^temporaryStackSize"
     ]
     
     selector [
@@ -71,6 +71,6 @@ CompiledMethod extend [
     
     initializeParser: aCompilerParser [
         super initializeParser: aCompilerParser.
-    "    argumentStackTop := aCompilerParser argumentScopes peek key - 1" [
+    "    argumentStackTop := aCompilerParser argumentScopes peek key - 1" 
     ]
 ]

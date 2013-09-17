@@ -26,7 +26,7 @@ public class StatementNode extends Node {
     void writeRepresentation(StringWriter writer) {
         int last = mNodes.size();
         StringWriter nodeWriter = new StringWriter();
-        nodeWriter.setPadding(2);
+        nodeWriter.setPadding(1);
         for (int i = 0; i < last; i++) {
             Node node = mNodes.get(i);
             nodeWriter.write(node.toString());

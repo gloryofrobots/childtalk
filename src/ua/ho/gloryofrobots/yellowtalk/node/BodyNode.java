@@ -5,7 +5,7 @@ import java.util.List;
 
 import ua.ho.gloryofrobots.yellowtalk.compilation.Token;
 
-public class BodyNode extends ExecutableNode {
+public class BodyNode extends Node {
 
     public BodyNode() {
         mStatements = new ArrayList<StatementNode>();
@@ -29,10 +29,14 @@ public class BodyNode extends ExecutableNode {
 
     @Override
     void writeRepresentation(StringWriter writer) {
+        int size = mStatements.size();
+        int i = 1;
         for (StatementNode node : mStatements) {
             // writer.writeln("++++++++++++++++++++++");
             node.writeRepresentation(writer);
-            writer.writeln("");
+            if(i != size)
+                writer.writeln("");
+            i++;
         }
         // writer.writeln("");
     }

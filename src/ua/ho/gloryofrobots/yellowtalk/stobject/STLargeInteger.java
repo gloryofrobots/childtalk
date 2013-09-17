@@ -165,8 +165,19 @@ public class STLargeInteger extends STNumber {
         if (maxPriority == FLOAT_INTEGER_PRIORITY) {
             return asFloat();
         }
+        if (maxPriority == SMALL_INTEGER_PRIORITY) {
+            return asSmallInteger();
+        }
         
         SignalSuite.error("STLargeInteger cast not supported %d", maxPriority);
         return null;
+    }
+    
+    private STNumber asSmallInteger() {
+        return STSmallInteger.create(mData.intValue());
+    }
+
+    public String toString() {
+        return mData.toString();
     }
 }

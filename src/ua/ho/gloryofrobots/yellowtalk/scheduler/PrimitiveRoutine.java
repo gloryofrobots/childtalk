@@ -27,16 +27,13 @@ public class PrimitiveRoutine extends Routine {
             throw new RuntimeException();
         }
 
-        STObject receiver = mContext.getReceiver();
+        STMethod method = (STMethod) mExecutable;
         
+        mPrimitive =  method.getPrimitive();
         
-        STClass klass = null;
-        if (receiver instanceof STClass) {
-            klass = (STClass) receiver;
-            mPrimitive = klass.getPrimitive(primitiveName);
-        } 
         if(mPrimitive == null) {
-            klass = mContext.getReceiver().getSTClass();
+            STObject receiver = mContext.getReceiver();
+            STClass klass = receiver.getSTClass();
             mPrimitive = klass.getPrimitive(primitiveName);
         }
         

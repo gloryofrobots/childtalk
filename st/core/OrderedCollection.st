@@ -27,7 +27,7 @@ OrderedCollection extend [
     shiftFrom: anIndex by: offset [
         self size to: anIndex reverseDo: [ :i |
             self at: i + offset put: (self at: i) ].
-    
+    ]
     
     add: anObject [
         self incrementLastIndex.

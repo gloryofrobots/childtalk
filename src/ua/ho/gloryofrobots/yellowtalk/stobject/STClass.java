@@ -196,10 +196,12 @@ public class STClass extends STObject {
 
     public void addStaticMethod(STSymbol selector, STMethod method) {
         getSTClass().addMethod(selector, method);
+        method.setOwnerClass(this);
     }
 
     public void addMethod(STSymbol selector, STMethod method) {
         mScope.put(selector, method);
+        method.setOwnerClass(this);
     }
     
     public String toString() {

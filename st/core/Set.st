@@ -7,7 +7,7 @@ Set extend [
     
     initialize [
         tally := 0
-    
+    ]
     
     incrementTally [
         tally >= (self basicSize // 2)

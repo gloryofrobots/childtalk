@@ -60,13 +60,8 @@ ContextPart extend [
         self primitiveFailed
     ]
     
-    parent: aContext [
-    "    parent := aContext" [
-    ]
-    
     parent [
         <primitive: 'ContextPart_parent'>
         self primitiveFailed
-    "    ^parent" [
     ]
 ]

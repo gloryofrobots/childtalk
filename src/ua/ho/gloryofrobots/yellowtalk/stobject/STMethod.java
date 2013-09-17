@@ -11,17 +11,15 @@ public class STMethod extends STExecutableObject {
 
     private static final long serialVersionUID = 1L;
 
-    private STArray mTemporaries;
-
     protected STSymbol mComment;
     protected STSymbol mCategory;
     protected STSymbol mPrimitiveName = null;
     protected STSymbol mClassName;
-
+    protected STClass mOwnerClass;
     private STSymbol mSelector;
-    
-    protected STMethod() {
-        mTemporaries = STArray.create();
+        
+    public void setOwnerClass(STClass owner) {
+        mOwnerClass = owner;
     }
     
     public static STMethod create() {
@@ -45,16 +43,20 @@ public class STMethod extends STExecutableObject {
     }
 
     public void setPrimitiveName(STSymbol primitive) {
-        if(primitive.toString().equals("Behaviour_createSubclass") == false) {
-            System.out.println("----" + primitive.toString());
-        }
-        
-        
         mPrimitiveName = primitive;
     }
     
     public STSymbol getPrimitiveName() {
         return mPrimitiveName;
+    }
+    
+    public STPrimitive getPrimitive() {
+        if(mOwnerClass == null) {
+            return null;
+        }
+        
+        STPrimitive primitive = mOwnerClass.getPrimitive(mPrimitiveName);
+        return primitive;
     }
     
     public boolean hasPrimitive() {
@@ -65,25 +67,6 @@ public class STMethod extends STExecutableObject {
         return true;
     }
     
-    public void addTemporary(STSymbol name) throws DuplicateVariableException {
-        if (mTemporaries.has(name)) {
-            throw new DuplicateVariableException(name.toString());
-        }
-
-        mTemporaries.add(name);
-    }
-
-    @Override
-    public void fillScope(STScope scope) {
-        super.fillScope(scope);
-        
-        int size = mTemporaries.size();
-        for(int i = 0; i < size; i++) {
-            STSymbol varName  = mTemporaries.getAndCast(i);
-            scope.put(varName, null);
-        }
-    }
-
     @Override
     public Routine createRoutine() {
         Routine routine;

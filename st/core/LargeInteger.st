@@ -1,4 +1,8 @@
 LargeInteger extend [
+    (+) new: aNumber [
+        <primitive: 'LargeInteger_newColon'>
+    ]
+    
     initialize [
         finalizationRequest := true
     ]

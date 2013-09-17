@@ -5,21 +5,21 @@ Exception extend [
 ]
 
 MessageNotUnderstood extend [
-    message: aMessage receiver: anObject
+    message: aMessage receiver: anObject [
         ^self new
         message: aMessage receiver: anObject;
         signal
     ]
     
-    message
+    message [
         ^message
     ] 
     
-    receiver
+    receiver [
         ^receiver
     ]
     
-    message: aMessage receiver: anObject
+    message: aMessage receiver: anObject [
         message := aMessage.
         receiver := anObject.
         self messageText: anObject class printString, ': did not understood ', aMessage printString
@@ -28,19 +28,19 @@ MessageNotUnderstood extend [
 
 
 SubclassResponsibility extend [
-    signal
+    signal [
         ^self signal: 'This method is not responsibility of this class. A subclass must implement this method.'
     ]
 ]
 
 WrongArgumentCount extend [
-    signal
+    signal [
         ^self signal: 'Wrong number of arguments.'
     ]
 ]
 
 NotFound extend [
-    what: anObject
+    what: anObject [
         ^self signal: 'Object not found.'
     ]
 ]

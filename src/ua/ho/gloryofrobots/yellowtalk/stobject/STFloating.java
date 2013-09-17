@@ -1,6 +1,8 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
@@ -49,9 +51,27 @@ public class STFloating extends STNumber {
     }
 
     @Override
-    protected STNumber castToPriority(int maxPriority) {
-        SignalSuite.error("STFloat cast not supported");
+    protected STNumber castToPriority(int priority) {
+        if (priority == LARGE_INTEGER_PRIORITY) {
+            return asLargeInteger();
+        }
+        if (priority == SMALL_INTEGER_PRIORITY) {
+            return asSmallInteger();
+        }
+        
         return null;
+    }
+
+    private STNumber asSmallInteger() {
+        int casted = (int) mData;
+        return STSmallInteger.create(casted);
+    }
+
+    private STNumber asLargeInteger() {
+        BigDecimal bd = new BigDecimal(mData);
+        BigDecimal rounded = bd.setScale(0, RoundingMode.HALF_UP);
+        BigInteger bigInt = rounded.toBigInteger();
+        return STLargeInteger.create(bigInt);
     }
 
     @Override
@@ -147,5 +167,9 @@ public class STFloating extends STNumber {
         }
         
         return Universe.objects().FALSE;
+    }
+    
+    public String toString() {
+        return Double.toString(mData);
     }
 }

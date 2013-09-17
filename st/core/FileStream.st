@@ -84,6 +84,7 @@ FileStream extend [
         | primSize |
         primSize := self fileOp: 7 on: handle.
         ^primSize max: endPos
+    ]
     
     atEnd [
         ^self size = curPos

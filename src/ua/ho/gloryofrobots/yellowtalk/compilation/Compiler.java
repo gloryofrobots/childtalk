@@ -353,7 +353,7 @@ public class Compiler {
         BodyNode body = blockNode.getBody();
         
         block.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL, null);
-        compileExecutableObjectBody(body, block);
+        compileExecutableObjectBody(blockNode, block);
         //FAKE RETURN TOP ELEMENT
         block.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
         

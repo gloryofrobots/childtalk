@@ -6,4 +6,9 @@ public class SignalSuite {
         InOutSuite.toStdErr(error);
         throw new RuntimeException(error);
     }
+    
+    public static void warning(String format, Object... args) throws RuntimeException {
+        String error = String.format(format, args);
+        InOutSuite.toStdErr(error);
+    }
 }

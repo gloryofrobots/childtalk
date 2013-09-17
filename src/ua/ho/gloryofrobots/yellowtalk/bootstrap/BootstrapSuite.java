@@ -2,16 +2,19 @@ package ua.ho.gloryofrobots.yellowtalk.bootstrap;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.List;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.compilation.CompileSuite;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamInterface;
 import ua.ho.gloryofrobots.yellowtalk.inout.InOutSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STImage;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STProcess;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 public class BootstrapSuite {
     
@@ -25,18 +28,23 @@ public class BootstrapSuite {
     
     public static void loadDefaultSystem() {
         String folder = "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/core";
-        String [] classNames = { "INITIALISE", "Object","Behaviour", "Metaclass"};
+        String [] classNames = {"INITIALISE"};
         
         Loader loader = new Loader();
         
         STImage image = Universe.image();
         loader.loadAndCompileClassesFromFolder(folder, classNames, image);
-        
-        
-        
         Universe.beginToGrow();
         
-        System.out.println(image.toString());
+        List<STObject> objects = image.asList();
+        for(STObject obj : objects) {
+            STClass klass = (STClass) obj;
+            STSymbol name = klass.getName();
+            loader.loadAndCompileClass(folder, name.toString(), image);
+        }
+        
+        DefaultPrimitivesInitialiser.initialisePrimitives();
+        //System.out.println(image.toString());
         /*
         sImage.put(STSymbol.unique("nil"), sObjects.NIL);
         sLoader.loadClassesFromFolder(folder, cl, sImage);
@@ -52,7 +60,8 @@ public class BootstrapSuite {
         ProgramTextStreamInterface programStream =  Loader.createProgramStream(path);
         STExecutableObject executable = CompileSuite.compileEval(programStream);
         STProcess process = SchedulingSuite.callExecutableInNewProcess(executable);
-        STObject result =  process.getResult();     
+        STObject result =  process.getResult();  
+        System.out.println(result);
         return result;
     }
     

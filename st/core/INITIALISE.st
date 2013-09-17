@@ -96,7 +96,7 @@ Eval [
              instanceVariableNames: ''
              classVariableNames: ''.
     
-    Object subclass: #BlockClosure
+    Object subclass: #Block
            instanceVariableNames: 'block outerFrame'
            classVariableNames: ''.
     

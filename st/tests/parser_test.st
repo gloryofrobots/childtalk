@@ -55,16 +55,38 @@ Rectangle extend [
     ]
         
 ]
-"
+EMPTY ARRAY!!!!!!!!"
 Object subclass: R [
-    extent: newExtent [
-           <primitive: 'SSSS'>
-            self put: 2; put: 3; put: 4.
-            self color: 34.
-            super prepend: 13.
+    initializeHandle: aMode [
+            
+            aMode
+            caseOf: {
+                
+                [ self class read ] -> [ self allowReadOnly ].
+                [ self class write ] -> [ self allowWriteOnly ].
+                [ self class readWrite ] -> [ self allowReadAndWrite ].
+                [ self class readWriteCreate ] -> [ self allowReadAndWrite ] }
         ]
-]
     
+    new: size [
+        <primitive: 'Array_newColon'>
+    ]
+    
+    -> anObject [
+        "Create a new association between myself and anObject"
+        ^Association key: self value: anObject
+    ]
+    
+   reverseDo: aBlock [
+        "Call aBlock traversing the elements of the collection in the opposite order of do:"
+        self from: self size to: 1 by: -1 do: [ :ea |
+        aBlock value: ea ]
+    ]
+    
+]
+
+
+ 
 "
 Eval [ 
     nil subclass: #Object

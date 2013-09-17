@@ -199,7 +199,7 @@ public class DefaultPrimitivesInitialiser {
     }
 
     private static void initialiseSmalltalk() {
-        STClass smallTalk = Universe.classes().Smalltalk;
+        /*STClass smallTalk = Universe.classes().Smalltalk;
         smallTalk.setPrimitive("Smalltalk_quit", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
@@ -218,7 +218,7 @@ public class DefaultPrimitivesInitialiser {
                 
                 return STString.create(System.getenv(name)); 
             }
-        });
+        });*/
     }
 
     private static void initialiseDateTime() {
@@ -360,7 +360,7 @@ public class DefaultPrimitivesInitialiser {
     }
 
     private static void initialiseBehaviour() {
-        STClass behaviour = Universe.classes().Behavior;
+        STClass behaviour = Universe.classes().Behaviour;
         behaviour.setPrimitive("Behavior_new", new STPrimitive() {
 
             @SuppressWarnings("unchecked")
@@ -563,6 +563,22 @@ public class DefaultPrimitivesInitialiser {
                 return first.truncate();
             }
         });
+        
+        floating.setPrimitive("Float_newColon", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STNumber number = getStrictCastedObject(routine,
+                        routine.getArgument(0), "Number");
+                STNumber result = number.convert(STNumber.FLOAT_INTEGER_PRIORITY);
+                if(result == null) {
+                    primitiveError(routine, "Can`t create Float instance from %s ",
+                            number.toString());
+                }
+                
+                return result;
+            }
+        });
   
     }
 
@@ -661,7 +677,22 @@ public class DefaultPrimitivesInitialiser {
                 return Universe.objects().NIL;
             }
         });
-
+        
+        largeInteger.setPrimitive("LargeInteger_newColon", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STNumber number = getStrictCastedObject(routine,
+                        routine.getArgument(0), "Number");
+                STNumber result = number.convert(STNumber.LARGE_INTEGER_PRIORITY);
+                if(result == null) {
+                    primitiveError(routine, "Can`t create LargeInteger instance from %s ",
+                            number.toString());
+                }
+                
+                return result;
+            }
+        });
     }
 
     private static NumberPrimitives sNumberPrimitives = new NumberPrimitives();
@@ -761,6 +792,22 @@ public class DefaultPrimitivesInitialiser {
                         return first.asLargeInteger();
                     }
                 });
+        
+        smallInteger.setPrimitive("SmallInteger_newColon", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STNumber number = getStrictCastedObject(routine,
+                        routine.getArgument(0), "Number");
+                STNumber result = number.convert(STNumber.SMALL_INTEGER_PRIORITY);
+                if(result == null) {
+                    primitiveError(routine, "Can`t create SmallInteger instance from %s ",
+                            number.toString());
+                }
+                
+                return result;
+            }
+        });
 
     }
 }

@@ -63,7 +63,7 @@ public class Universe {
         public  STClass True;
         public  STClass False;
         public  STClass Metaclass;
-        public  STClass Behavior;
+        public  STClass Behaviour;
         public  STClass DateTime;
     }
     
@@ -73,7 +73,7 @@ public class Universe {
     private static Objects sObjects;
     private static Symbols sSymbols;
     
-    
+    public static boolean isOnDebug = false;
     private Universe(){}
     
     public static void bigbang(){
@@ -140,7 +140,7 @@ public class Universe {
         sClasses.True = sImage.getAndCast("True");
         sClasses.False = sImage.getAndCast("False");
         sClasses.Metaclass = sImage.getAndCast("Metaclass");
-        sClasses.Behavior = sImage.getAndCast("Behavior");
+        sClasses.Behaviour = sImage.getAndCast("Behaviour");
         sClasses.DateTime = sImage.getAndCast("DateTime");
         
         sObjects.FALSE.setSTClass(sClasses.False);

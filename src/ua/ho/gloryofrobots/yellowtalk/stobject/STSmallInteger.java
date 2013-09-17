@@ -158,4 +158,8 @@ public class STSmallInteger extends STNumber {
 
         return Universe.objects().FALSE;
     }
+    
+    public String toString() {
+        return Integer.toString(mData);
+    }
 }

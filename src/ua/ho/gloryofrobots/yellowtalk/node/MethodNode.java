@@ -1,30 +1,20 @@
 package ua.ho.gloryofrobots.yellowtalk.node;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
-import ua.ho.gloryofrobots.yellowtalk.node.Node.StringWriter;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 public class MethodNode extends ExecutableNode implements NodeWithMetaData, NodeFactory {
-    BodyNode mBody;
+    
     protected String mComment = new String();
     protected String mClassName;
     protected String mCategory = new String();
     protected String mSelector = new String();
     protected String mPrimitiveName = new String();
-    protected List<String> mArguments;
-    protected List<String> mTemporaries;
     private boolean mIsStatic = false;
-    
-    public MethodNode() {
-        mBody = new BodyNode();
-        mArguments = new ArrayList<String>();
-        mTemporaries = new ArrayList<String>();
-    }
     
     public void setStatic(boolean value) {
         mIsStatic = value;
@@ -44,8 +34,6 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
         } else if (label.equals("primitive:")) {
             setPrimitiveName(value);
         }
-        
-
     }
     
     public String getClassName() {
@@ -62,26 +50,6 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
 
     public void setSelector(String mSelector) {
         this.mSelector = mSelector;
-    }
-
-    public List<String> getArguments() {
-        return mArguments;
-    }
-
-    public void addArgument(String argument) {
-        mArguments.add(argument);
-    }
-
-    public void addTemporary(String temporary) {
-        mTemporaries.add(temporary);
-    }
-
-    public List<String> getTemporaries() {
-        return mTemporaries;
-    }
-
-    public BodyNode getBody() {
-        return mBody;
     }
 
     public String getComment() {

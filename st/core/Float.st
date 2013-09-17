@@ -1,5 +1,8 @@
 Float extend [
- 
+    (+) new: aNumber [
+        <primitive: 'Float_newColon'>
+    ]
+    
     asFraction [
         ^self notYetImplemented
     ]

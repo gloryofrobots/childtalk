@@ -121,7 +121,15 @@ public class STObject implements Serializable {
             return null;
         } 
     }
-   
+   public String toString() {
+       STClass klass = getSTClass();
+       String data = String.format("<STObject at 0x%s ", Integer.toHexString(this.hashCode()));
+       if(klass != null) {
+           data += "of class " + klass.getName().toString();
+       }
+       data += ">";
+       return data;
+   }
 }
 
 

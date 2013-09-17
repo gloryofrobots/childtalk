@@ -1,7 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 
-import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeWriter;
 import ua.ho.gloryofrobots.yellowtalk.compilation.CompileInfo;
@@ -16,6 +15,7 @@ public abstract class STExecutableObject extends STObject {
     private CompileInfo mCompileInfo;
     private BytecodeArray mBytecode;
     private BytecodeWriter mBytecodeWriter;
+    private STArray mTemporaries;
     
     protected STExecutableObject() {
         transformToScopedObject();
@@ -23,7 +23,7 @@ public abstract class STExecutableObject extends STObject {
         mArgumentsValues = STArray.create();
         mLiterals = STArray.create();
         mBytecode = new BytecodeArray();
-        
+        mTemporaries = STArray.create();
         mCompileInfo = null;
         mBytecodeWriter = new BytecodeWriter(mBytecode);
     }
@@ -82,6 +82,14 @@ public abstract class STExecutableObject extends STObject {
         return mArguments.getAndCast(index);
    }
     
+    public void addTemporary(STSymbol name) throws DuplicateVariableException {
+        if (mTemporaries.has(name)) {
+            throw new DuplicateVariableException(name.toString());
+        }
+
+        mTemporaries.add(name);
+    }
+    
     public BytecodeArray getBytecode() {
         return mBytecode;
     }
@@ -99,6 +107,12 @@ public abstract class STExecutableObject extends STObject {
             STSymbol varName = mArguments.getAndCast(i);
             STObject value = mArgumentsValues.get(i);
             scope.put(varName, value);
+        }
+        
+        count = mTemporaries.size();
+        for(int i = 0; i < count; i++) {
+            STSymbol varName  = mTemporaries.getAndCast(i);
+            scope.put(varName, null);
         }
     }
 

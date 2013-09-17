@@ -189,7 +189,18 @@ public class Lexer{
         else if (isAlpha(lastChar)) {
             matchIdentifier(token, lastChar);
         }
-
+        
+        else if (lastChar == '-') {
+            if (isDigit(forwardChar())) {
+                pushBackChar(1);
+                matchNumber(token, lastChar);
+            }
+            else {
+                pushBackChar(1);
+                matchSecondBinary(token, lastChar);
+            }
+        }
+        
         else if (isDigit(lastChar)) {
             matchNumber(token, lastChar);
         }
