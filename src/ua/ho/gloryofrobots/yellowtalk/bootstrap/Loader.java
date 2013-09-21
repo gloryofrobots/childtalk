@@ -40,7 +40,7 @@ public class Loader {
     public void loadAndCompileFile(String path, STImage image) {
         ProgramTextStreamInterface programStream = createProgramStream(path);
         if(programStream == null) {
-            SignalSuite.warning("error loading file %s ", path);
+            //SignalSuite.warning("error loading file %s ", path);
             return;
         }
         CompileSuite.compileProgramStream(programStream, image);

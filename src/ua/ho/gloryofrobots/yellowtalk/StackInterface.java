@@ -14,5 +14,5 @@ public interface StackInterface<T> {
     public  void setIndex(int position);
     
 
-    public  void set(int position, T value);
+    public  void put(int position, T value);
 }

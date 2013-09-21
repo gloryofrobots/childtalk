@@ -30,7 +30,11 @@ public class STMetaclass extends STClass {
     }
     public STClass createSubclassOf(STSymbol className, STClass superclass) {
         mInstanceClass = new STClass();
-
+        
+        STClass superMeta = superclass.getSTClass();
+        //link MetaClasses for static scope
+        this.setSuperClass(superMeta);
+        
         mInstanceClass.setSuperClass(superclass);
         mInstanceClass.setSTClass(this);
         mInstanceClass.setName(className);
@@ -87,6 +91,6 @@ public class STMetaclass extends STClass {
     }
     
     public String toString() {
-        return "<STMetaclass  for " + mInstanceClass.toString() + ">";
+        return "<STMetaclass" + ((mInstanceClass != null) ? " for " + mInstanceClass.toString() : "") + ">";
     }
 }

@@ -31,6 +31,10 @@ public class STByteObject extends STObject {
         return obj;
     }
     
+    protected STByteObject() {
+        mData = new byte[10];
+    }
+    
     protected STByteObject(int size) {
         mData = new byte[size];
     }
@@ -53,5 +57,32 @@ public class STByteObject extends STObject {
     
     public String toString() {
         return new String(mData);
+    }
+    
+    protected byte[] getBytes() {
+        return mData;
+    }
+    
+    public void growTo(int newSize) {
+        if(newSize < size()) {
+            return;
+        }
+        
+        byte [] newData = new byte[newSize];
+        System.arraycopy(mData, 0, newData, 0, mData.length);
+        mData = null;
+        mData = newData;
+    }
+    
+    public long getHash() {
+        long hash = 5381;
+        for(int i = 0; i < mData.length; i++) {
+            if(mData[i] == 0) {
+                break;
+            }
+            hash = ((hash << 5) + hash) + mData[i]; 
+        }
+       
+        return hash;
     }
 }

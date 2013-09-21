@@ -7,23 +7,24 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
-public class MethodNode extends ExecutableNode implements NodeWithMetaData, NodeFactory {
-    
+public class MethodNode extends ExecutableNode implements NodeWithMetaData,
+        NodeFactory {
+
     protected String mComment = new String();
     protected String mClassName;
     protected String mCategory = new String();
     protected String mSelector = new String();
     protected String mPrimitiveName = new String();
     private boolean mIsStatic = false;
-    
+
     public void setStatic(boolean value) {
         mIsStatic = value;
     }
-    
+
     public boolean isStatic() {
         return mIsStatic;
     }
-    
+
     @Override
     public void setMetaData(String label, String value)
             throws UnknownMetaDataException {
@@ -35,7 +36,7 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
             setPrimitiveName(value);
         }
     }
-    
+
     public String getClassName() {
         return mClassName;
     }
@@ -43,7 +44,7 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
     public void setClassName(String mClassName) {
         this.mClassName = mClassName;
     }
-    
+
     public String getSelector() {
         return mSelector;
     }
@@ -73,7 +74,7 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
     }
 
     public void setPrimitiveName(String mPrimitiveName) {
-        if(mPrimitiveName.length() == 0) {
+        if (mPrimitiveName.length() == 0) {
             int bdsm = 1;
             int x = bdsm;
         }
@@ -106,31 +107,47 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
     }
 
     public void onAccept(Visitor visitor) {
-        visitor.visit(this.getBody());
+        visitor.visit(this);
     }
-    
-    //TODO REMOVE UNNECESSARY METHODS
+
+    // TODO REMOVE UNNECESSARY METHODS
     @Override
     public STObject createObject() throws NodeFactoryException {
         STMethod method = STMethod.create();
         method.setCompileInfo(mCompileInfo);
-        
-        method.setSelector(STSymbol.unique(getSelector()));
-        method.setClassName(STSymbol.unique(getClassName()));
-        method.setComment(STSymbol.unique(getComment()));
-        method.setCategory(STSymbol.unique(getCategory()));
-        
-        if(mPrimitiveName.length() > 0) {
+
+        String selector = getSelector();
+        if (selector != null) {
+            method.setSelector(STSymbol.unique(selector));
+        }
+
+        String className = getClassName();
+        if (className != null) {
+            method.setClassName(STSymbol.unique(className));
+        }
+
+        String comment = getComment();
+        if (comment != null) {
+            method.setComment(STSymbol.unique(comment));
+        }
+
+        String category = getCategory();
+        if (category != null) {
+            method.setCategory(STSymbol.unique(category));
+        }
+
+        if (mPrimitiveName.length() > 0) {
             method.setPrimitiveName(STSymbol.unique(mPrimitiveName));
         }
-        
+
         List<String> temporaries = getTemporaries();
         for (String varName : temporaries) {
             try {
                 method.addTemporary(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
-                throw new NodeFactoryException("Duplicate method temporary variable " + varName);
-                
+                throw new NodeFactoryException(
+                        "Duplicate method temporary variable " + varName);
+
             }
         }
 
@@ -140,10 +157,11 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData, Node
             try {
                 method.addArgument(STSymbol.unique(varName));
             } catch (DuplicateVariableException e) {
-                throw new NodeFactoryException("Duplicate method argument " + varName);
+                throw new NodeFactoryException("Duplicate method argument "
+                        + varName);
             }
         }
-        
+
         return method;
     }
 }

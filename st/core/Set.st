@@ -1,7 +1,7 @@
 Set extend [
    
-    new: size [
-        ^(self basicNew: (size max: 10)) initialize
+    (+) new: size [
+        ^(self newWithSize: (size max: 10)) initialize
     ]
     
     

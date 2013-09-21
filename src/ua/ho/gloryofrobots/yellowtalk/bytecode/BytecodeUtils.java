@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.bytecode;
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
 public class BytecodeUtils {
@@ -71,21 +72,35 @@ public class BytecodeUtils {
          * System.out.printf("%d %d %d %d",command,argument, command_r,
          * argument_r);
          */
-        /*
-         * BytecodeUtils.printBinary("argument", argument);
-         * BytecodeUtils.printBinary("command", command);
-         * 
-         * BytecodeUtils.printBinary("command << SYX_BYTECODE_ARGUMENT_BITS",
-         * command << ARGUMENT_BIT_COUNT); BytecodeUtils.printBinary(
-         * "command << SYX_BYTECODE_ARGUMENT_BITS + argument", (command <<
-         * ARGUMENT_BIT_COUNT) + argument);
-         * 
-         * int code = ((command << ARGUMENT_BIT_COUNT) + argument);
-         * 
-         * BytecodeUtils.printBinary("SYX_BYTECODE_ARGUMENT_MASK",
-         * ARGUMENT_MASK); BytecodeUtils.printBinary("code", code);
-         * BytecodeUtils.printBinary(" byte & SYX_BYTECODE_ARGUMENT_MASK", code
-         * & ARGUMENT_MASK);
-         */
+          /*int argument = 3; short command = 32;
+          BytecodeUtils.printBinary("argument", argument);
+          BytecodeUtils.printBinary("command", command);
+          
+          BytecodeUtils.printBinary("command << SYX_BYTECODE_ARGUMENT_BITS",
+          command << ARGUMENT_BIT_COUNT); BytecodeUtils.printBinary(
+          "command << SYX_BYTECODE_ARGUMENT_BITS + argument", (command <<
+          ARGUMENT_BIT_COUNT) + argument);
+          
+          int code = ((command << ARGUMENT_BIT_COUNT) + argument);
+          
+          BytecodeUtils.printBinary("SYX_BYTECODE_ARGUMENT_MASK",
+          ARGUMENT_MASK); BytecodeUtils.printBinary("code", code);
+          BytecodeUtils.printBinary(" byte & SYX_BYTECODE_ARGUMENT_MASK", code
+          & ARGUMENT_MASK);
+          */
+          /*
+          int a = 2;  int b = 3;
+          int c = b; //c |= b;
+          BytecodeUtils.printBinary("a", a);
+          BytecodeUtils.printBinary("b", b);
+          BytecodeUtils.printBinary("c", c);
+          int d = c & b;
+          
+          if((c & b) != 0) {
+              System.out.println("c & b");
+          }
+          if((c & a) != 0) {
+              System.out.println("c & a");
+          }*/
     }
 }

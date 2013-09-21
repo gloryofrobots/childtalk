@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.yellowtalk.compilation;
 import ua.ho.gloryofrobots.yellowtalk.IntArray;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 
 public class CompileInfo {
     public static final int UNKNOWN_POSITION = -1; 
@@ -22,11 +23,14 @@ public class CompileInfo {
     
     public void setPosition(int index, int position) {
         int realPosition = position - mFirstIndex; 
+//        if(realPosition < 0) {
+//            SignalSuite.error("Negative compileInfo position");
+//        }
         mPositions.set(index, realPosition);
     }
     
     public int getPosition(int index) {
-        while(true) {
+        while(index < mData.length) {
             int position = mPositions.get(index);
             if(position > 0) {
                 return position;
@@ -35,6 +39,7 @@ public class CompileInfo {
             index++;
         }
         
+        return UNKNOWN_POSITION;
     }
 
     public String getCodeLine(int index) {
@@ -44,6 +49,9 @@ public class CompileInfo {
         }
         String post = "";
         int position = getPosition(index);
+        if(position < 0) {
+            return null;
+        }
         int size = mData.length;
         for(int i = position; i < size; i++) {
             char ch = mData[i];
@@ -72,5 +80,12 @@ public class CompileInfo {
         
         String result = new StringBuilder(pre).reverse().toString() + post;
         return result;
+    }
+    
+    public String toString() {
+        if(mData == null) {
+            return "null";
+        }
+        return new String(mData);
     }
 }

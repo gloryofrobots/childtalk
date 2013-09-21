@@ -14,7 +14,7 @@ public class BytecodeOperationPushArray extends BytecodeOperation {
 
         for (int i = 1; i <= argument; i++) {
             STObject obj = stack.pop();
-            array.set(argument - i, obj);
+            array.put(argument - i, obj);
         }
 
         stack.push(array);

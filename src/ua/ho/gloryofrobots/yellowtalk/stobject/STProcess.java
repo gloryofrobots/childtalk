@@ -1,8 +1,12 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
+import java.util.ArrayList;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STProcess extends STObject {
@@ -10,16 +14,17 @@ public class STProcess extends STObject {
     Routine mActiveRoutine;
     State mState;
     STStack mStack;
-
+    ArrayList<Routine> mRoutines = new ArrayList<Routine>();
+ 
     public enum State {
         TERMINATED, SUSPENDED, ACTIVE, IDLE;
     }
 
     public STProcess() {
         mState = State.IDLE;
-        mStack = new STStack();
+        mStack = STStack.create();
     }
-    
+
     public static STProcess create() {
         STProcess obj = new STProcess();
         obj.setClassProvider(new BindingClassProvider(obj) {
@@ -30,7 +35,7 @@ public class STProcess extends STObject {
         });
         return obj;
     }
-    
+
     public STStack getStack() {
         return mStack;
     }
@@ -42,44 +47,86 @@ public class STProcess extends STObject {
     private void setState(State state) {
         mState = state;
     }
-    
+
     public void callExecutable(STExecutableObject executable) {
         Routine routine = executable.createRoutine();
         routine.call(this);
     }
-    
+    static Routine sLastRoutine;
     public void setActiveRoutine(Routine routine) {
+        
         if (mActiveRoutine == routine) {
             return;
+        }
+        
+        if(mRoutines.contains(routine) == false){
+            mRoutines.add(routine);
         }
         mActiveRoutine = routine;
         // routine.setProcess(this);
     }
-
+    public static int sMark = 0;
     public void execute() {
+        
+        findRoutineToExecute();
+        
+        
+        
+        /*if(sLastRoutine!=mActiveRoutine && mActiveRoutine!=null){
+            if(sMark > 0) {
+                sMark++;
+            }
+            
+            System.out.println("!!!!!!!!!!!!!! "+mActiveRoutine);
+            STContext c = mActiveRoutine.getContext();
+            STObject b = c.lookup(Universe.symbols().SELF);
+            if(sMark == 11 ) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+b.toString());
+                int bdsm = 1;
+                int x = bdsm;
+            }
+            sLastRoutine = mActiveRoutine;
+        }*/
+        
         if (mActiveRoutine == null) {
             terminate();
-            return;
+        } else {
+            DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_SCHEDULER,
+                    "Process run \n%s", mActiveRoutine.toString());
+            
+            
+            /*System.out.println("!!!!!!!!!!!!!!1");
+            DebugSuite.printTraceBackString(mActiveRoutine);
+            System.out.println(mActiveRoutine);*/
+            mActiveRoutine.execute();
         }
+    }
 
-        mActiveRoutine.execute();
+    private void findRoutineToExecute() {
+        Routine routine = mActiveRoutine;
+        while (routine != null && routine.isComplete() == true) {
+            routine.uncomplete();
+            routine = routine.getCaller();
+        }
+        mActiveRoutine = routine;
     }
 
     public void killRoutine(Routine routine) {
-        if (mActiveRoutine.equals(routine) == false) {
-            throw new RuntimeException();
-        }
-
         mActiveRoutine = mActiveRoutine.getCaller();
     }
 
-    public void completeRoutineWithResult(STObject result, Routine continuation) {
+    public void explicitCompliteRoutineWithResult(STObject result, Routine continuation) {
         Routine top = mActiveRoutine;
         while (top != continuation) {
-            top = mActiveRoutine.getCaller();
+            if (top == null) {
+                // TODO exception
+                SignalSuite.error("Continuation not exist");
+            }
+            top = top.getCaller();
         }
 
-        continuation.compliteWithResult(result);
+        mActiveRoutine = top;
+        continuation.explicitCompleteWithResult(result);
     }
 
     public boolean isTerminated() {
@@ -107,10 +154,10 @@ public class STProcess extends STObject {
     }
 
     public STObject getResult() {
-        if(mStack.getCurrentIndex() != 0) {
+        if (mStack.getCurrentIndex() != 0) {
             return null;
         }
-        
+
         return mStack.peek();
     }
 }

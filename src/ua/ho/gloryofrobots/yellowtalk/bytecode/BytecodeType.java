@@ -20,6 +20,7 @@ public enum BytecodeType {
     
     SELF_RETURN,
     STACK_RETURN,
+    BLOCK_RETURN,
     DUPLICATE,
     DO_EXTENDED;
     

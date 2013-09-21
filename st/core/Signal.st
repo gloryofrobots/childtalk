@@ -1,5 +1,9 @@
 Signal extend [
   
+    (+) new [
+        <primitive: 'Signal_new'>
+    ]
+    
     (+) signal: messageText [
         self new signal: messageText
     ]

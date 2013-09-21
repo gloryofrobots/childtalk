@@ -56,7 +56,52 @@ Rectangle extend [
         
 ]
 EMPTY ARRAY!!!!!!!!"
+
+Eval [
+    'sa\n' echo.
+]
+"
 Object subclass: R [
+
+    testClassMembershipMethods [
+        self assertTrue: (String isMemberOf: String class.) withMessage: 'should be String.'.
+    ]
+    
+    isKindOf: aClass [
+        | class |
+        aClass = self ifTrue: [^true].
+        aClass ifNil: [ ^false ].
+        class := self class.
+        
+        class = aClass ifTrue: [ ^true ].
+        aClass allSubclassesDo: [ :ea |  (class isKindOf: ea) ifTrue: [ ^true ] ].
+        ^false
+    ]
+    
+    
+    printOn: aStream [
+        aStream
+            nextPutAll: self class article;
+            space;
+           
+            nextPutAll: self class name
+    ]
+    
+     basicAt: anIndex [
+        anIndex >= self basicSize
+            ifTrue: [ self error: 'Index out of bounds' ].
+        ^Character value: (self byteAt: anIndex)
+    ]
+
+    test: aNumber [
+        ^ self test:(aNumber + 2) test1:2 test2:3.
+    ]
+    
+    test: aNum1 test1: aNum2 test2: aNum3 [
+        ^ aNum1  + (aNum2 * aNum3) 
+    ]
+    
+
     initializeHandle: aMode [
             
             aMode
@@ -73,18 +118,16 @@ Object subclass: R [
     ]
     
     -> anObject [
-        "Create a new association between myself and anObject"
         ^Association key: self value: anObject
     ]
     
    reverseDo: aBlock [
-        "Call aBlock traversing the elements of the collection in the opposite order of do:"
         self from: self size to: 1 by: -1 do: [ :ea |
         aBlock value: ea ]
     ]
     
 ]
-
+"
 
  
 "

@@ -1,10 +1,10 @@
 TextCollector extend [
       
-    new [
+   (+) new [
         self shouldNotImplement
     ]
     
-    proxyMessage: anAssociation [
+   (+) proxyMessage: anAssociation [
         "Specify an association of receiver -> selector, to be performed when writing to the TextCollector"
         ^self basicNew proxyMessage: anAssociation; yourself
     ]

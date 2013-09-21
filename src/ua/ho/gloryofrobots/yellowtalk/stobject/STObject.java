@@ -51,6 +51,7 @@ public class STObject implements Serializable {
     
     public static STObject createWithClass(STClass _class) {
         STObject object = new STObject();
+        object.transformToScopedObject();
         object.setSTClass(_class);
         return object;
     }
@@ -80,6 +81,7 @@ public class STObject implements Serializable {
     
     public STClass getSTClass() {
         //We use ClassProvider for later binding default types with ST classes
+        STObject nil = Universe.objects().NIL;
         return mClassProvider.getSTClass();
     }
     
@@ -88,6 +90,8 @@ public class STObject implements Serializable {
             SignalSuite.error("STObject.setSTClass. class is null");
             return;
         }
+        
+        _class.initObject(this);
         
         mClassProvider = new DefaultClassProvider(_class);
         if(mScope == null) {
@@ -129,6 +133,24 @@ public class STObject implements Serializable {
        }
        data += ">";
        return data;
+   }
+   
+   public STObject lookup(STObject selector) {
+       STObject obj = null;
+       if(mScope != null) {
+           obj = mScope.lookup(selector);
+       } 
+       
+       if(obj != null) {
+           return obj;
+       }
+       
+       STClass klass = getSTClass();
+       if(klass == null) {
+           return null;
+       }
+       
+       return klass.lookup(selector);
    }
 }
 

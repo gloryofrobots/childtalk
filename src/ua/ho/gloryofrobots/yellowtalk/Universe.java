@@ -3,26 +3,132 @@ package ua.ho.gloryofrobots.yellowtalk;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Scheduler;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STImage;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STLabeledObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMetaclass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STProtoObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSignal;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 // God like object
 public class Universe {
     private static STImage sImage;
     private static String[] sCoreClasses = {
+        //TODO remove to class definition
+        "INITIALISE",
         "Object",
         "Behaviour",
+        "UndefinedObject",
         "Class",
+        "Metaclass",
+        "Collection",
+        "Set",
+        "SequenceableCollection",
+        "Interval",
+        "ArrayedCollection",
+        "Array",
         "ByteArray",
-        "String"
-    };
+        "OrderedCollection",
+        "Stack",
+        "Bag",
+        "Block",
+        "Stream",
+        "PositionableStream",
+        "Random",
+        "ReadStream",
+        "WriteStream",
+        "ReadWriteStream",
+        "ByteStream",
+        "FileStream",
+        "StdIOStream",
+        "String",
+        "Symbol",
+        "Magnitude",
+        "Character",
+        "Number",
+        "Date",
+        "DateTime",
+        "Duration",
+        "Integer",
+        "SmallInteger",
+        "LargeInteger",
+        "Fraction",
+        "Float",
+        "Boolean",
+        "True",
+        "False",
+        "Association",
+        "VariableBinding",
+        "Dictionary",
+        "IdentityDictionary",
+        "SystemDictionary",
+        "Signal",
+        "Exception",
+        "Object",
+        "Behaviour",
+        "UndefinedObject",
+        "Metaclass",
+        "Set",
+        "SequenceableCollection",
+        "Interval",
+        "ArrayedCollection",
+        "Array",
+        "ByteArray",
+        "OrderedCollection",
+        "Stack",
+        "Bag",
+        "Block",
+        "PositionableStream",
+        "Random",
+        "WriteStream",
+        "FileStream",
+        "String",
+        "Symbol",
+        "Magnitude",
+        "Character",
+        "Number",
+        "Date",
+        "DateTime",
+        "Integer",
+        "SmallInteger",
+        "LargeInteger",
+        "Fraction",
+        "Float",
+        "True",
+        "False",
+        "Association",
+        "VariableBinding",
+        "Dictionary",
+        "IdentityDictionary",
+        "SystemDictionary",
+        "Signal",
+        "Error",
+        "NotImplemented",
+        "ZeroDivide",
+        "PrimitiveFailed",
+        "WrongArgumentCount",
+        "MessageNotUnderstood",
+        "NotYetImplemented",
+        "ShouldNotImplement",
+        "SubclassResponsibility",
+        "InvalidValue",
+        "InvalidArgument",
+        "NotFound",
+        "NotKeyed",
+        "Exception",
+        "MessageNotUnderstood",
+        "SubclassResponsibility",
+        "WrongArgumentCount",
+        "NotFound"
+        };
     
-  
+    //TODO String isKindOf Object. Object must setted as subclass to protoobject.
+    
     public static class Symbols{
         public STSymbol SELF;
         public STSymbol SUPER;
+        public STSymbol ERROR_COLON;
+        public STSymbol THIS_CONTEXT;
     }
     
     
@@ -32,16 +138,15 @@ public class Universe {
         public  STObject FALSE;
         public  STObject NIL;
     }
-    
+    /*
     public static class Signals{
-        
-        public  STObject PrimitiveError = STObject.createEmpty();;
-        public  STObject RuntimeError = STObject.createEmpty();;
-        public  STObject TypeError = STObject.createEmpty();;
-       
+        public  STObject PrimitiveError = STSignal.create();
+        public  STObject RuntimeError = STSignal.create();
+        public  STObject TypeError = STSignal.create();
     }
-    
+    */
     public static class Classes{
+        public  STClass Collection;
         public  STClass Stack;
         public  STClass Scope;
         public  STClass Process;
@@ -65,15 +170,15 @@ public class Universe {
         public  STClass Metaclass;
         public  STClass Behaviour;
         public  STClass DateTime;
+        public  STClass Signal;
     }
     
     private static Classes sClasses;
-    private static Signals sSignals;
+//    private static Signals sSignals;
     
     private static Objects sObjects;
     private static Symbols sSymbols;
     
-    public static boolean isOnDebug = false;
     private Universe(){}
     
     public static void bigbang(){
@@ -84,10 +189,12 @@ public class Universe {
         
         sSymbols.SELF = STSymbol.unique("self");
         sSymbols.SUPER = STSymbol.unique("super");
+        sSymbols.ERROR_COLON = STSymbol.unique("error:");
+        sSymbols.THIS_CONTEXT = STSymbol.unique("thisContext");
         
-        sObjects.FALSE = STObject.createEmpty();
+        sObjects.FALSE = STLabeledObject.create("false");
         
-        sObjects.TRUE = STObject.createEmpty();
+        sObjects.TRUE = STLabeledObject.create("true");
         sObjects.NIL = STClass.create("nil");
         sObjects.NIL.setSTClass(STProtoObject.get());
     }
@@ -113,9 +220,9 @@ public class Universe {
         return sSymbols;
     }
 
-    public static Signals signals() {
-        return sSignals;
-    }
+//    public static Signals signals() {
+//        return sSignals;
+//    }
 
 
     public static void beginToGrow() {
@@ -142,8 +249,11 @@ public class Universe {
         sClasses.Metaclass = sImage.getAndCast("Metaclass");
         sClasses.Behaviour = sImage.getAndCast("Behaviour");
         sClasses.DateTime = sImage.getAndCast("DateTime");
+        sClasses.Signal = sImage.getAndCast("Signal");
+        sClasses.Collection = sImage.getAndCast("Collection");
         
         sObjects.FALSE.setSTClass(sClasses.False);
         sObjects.TRUE.setSTClass(sClasses.True);
+        STProtoObject.get().setSuperClass(sClasses.Object);
     }
 }

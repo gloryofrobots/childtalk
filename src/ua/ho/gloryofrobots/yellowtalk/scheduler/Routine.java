@@ -1,6 +1,8 @@
 package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeArray;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STArray;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
@@ -10,7 +12,9 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STProcess;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STScope;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STSignal;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 //[2 > 0 ifTrue: [ 2 >1 ifTrue: [^3]. ^4]] value
@@ -20,7 +24,7 @@ public abstract class Routine {
     
     protected STStack mStack;
     protected STExecutableObject mExecutable;
-    
+    protected boolean mIsComplete;
     protected Routine mCaller;
     protected Routine mCalled;
     
@@ -32,7 +36,7 @@ public abstract class Routine {
     protected ExceptionHandler mExceptionHandler;
 
     protected STObject mHandledException;
-    
+    protected int mStackEnterPosition;
     public Routine(STExecutableObject executable) {
         mExecutable = executable;
         mBytecode = mExecutable.getBytecode();
@@ -45,6 +49,7 @@ public abstract class Routine {
         catchArguments();
         process.setActiveRoutine(this);
         createContext();
+        mStackEnterPosition = mStack.getCurrentPosition();
         onActivate();
     }
     
@@ -72,9 +77,19 @@ public abstract class Routine {
     public void resume() {
         mProcess.setActiveRoutine(this);
     }
-
-    public void terminate() {
-        mProcess.killRoutine(this);
+    
+    public void uncomplete() {
+        mIsComplete = false;
+    }
+    
+    public void complete() {
+        //System.out.println("COMPLETE!!" + this.toString());
+        mIsComplete = true;
+    }
+    
+    public boolean isComplete() {
+        //System.out.println("is COMPLETE!!" + this.toString());
+        return mIsComplete;
     }
     /*
     protected void complete() {
@@ -87,13 +102,24 @@ public abstract class Routine {
     */
     
     protected void setReturnValue(STObject value) {
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_SCHEDULER, "Routine returns %s", value.toString());
+        mStack.setIndex(mStackEnterPosition);
         mStack.push(value);
     }
 
     public void execute() {
+        if(isComplete()){
+            SignalSuite.error("Routine  execute error: already complete");
+        }
+        
         onExecute();
     }
-
+    
+    public void explicitCompleteWithResult(STObject result) {
+        onExplicitCompleteWithResult(result);
+    }
+    
+    protected abstract void onExplicitCompleteWithResult(STObject result);
     protected abstract void onExecute();
 
     public STStack getStack() {
@@ -140,13 +166,13 @@ public abstract class Routine {
             //FIXME signal
             throw new RuntimeException();
         }
-        return mArguments.get(index);
+        return mArguments.at(index);
     }
 
     public void flushArgumentsToStack(STStack stack) {
         int countArguments = mArguments.size();
         for (int i = 1; i <= countArguments; i++) {
-            mStack.push(mArguments.get(countArguments - i));
+            mStack.push(mArguments.at(countArguments - i));
         }
     }
 
@@ -155,19 +181,27 @@ public abstract class Routine {
         mArguments = STArray.create(countArguments);
         for (int i = 1; i <= countArguments; i++) {
             STObject argValue = mStack.pop();
-            mArguments.set(countArguments - i, argValue);
+            mArguments.put(countArguments - i, argValue);
         }
     }
     
-    public void signal(STObject primitiveError, String format) {
-        // TODO Auto-generated method stub
+    public void raise(STSignal signal) {
         throw new RuntimeException();
     }
 
     public Routine getCaller() {
         return mCaller;
     }
-
+    
+    @Override
+    public String toString() {
+        String data =  "<" + getClass().getSimpleName() + " " + Integer.toHexString(this.hashCode()) + mExecutable.toString();
+        if(mArguments != null && mArguments.size() > 0) {
+            data += "args:" + mArguments.toString();
+        }
+        data += ">";
+        return data;
+    }
+    
     abstract public String createErrorString();
-      
 }

@@ -83,7 +83,7 @@ public class Compiler {
             if (index < 0) {
                 compileError(node, "Unknown variable %s", assignString);
             }
-
+            
             mBytecode.append(BytecodeType.ASSIGN, index, node);
         }
 
@@ -100,7 +100,11 @@ public class Compiler {
 
         @Override
         public void visit(ReturnNode node) {
-            mBytecode.append(BytecodeType.STACK_RETURN, 0, node);
+            if(mExecutable instanceof STBlock) {
+                mBytecode.append(BytecodeType.BLOCK_RETURN, 0, node);
+            } else {
+                mBytecode.append(BytecodeType.STACK_RETURN, 0, node);
+            }
         }
 
         @Override
@@ -223,9 +227,7 @@ public class Compiler {
         List<MethodNode> methods = node.getMethods();
         for (MethodNode method : methods) {
             compileMethod(method, stclass);
-        }
-        
-        scope.put(className, stclass);
+        }        
     }
 
     private void compileAndExecuteEval(EvalNode node) {
@@ -243,7 +245,9 @@ public class Compiler {
             compileError(node, e.getMessage());
         }
         executable.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL, null);
-        compileExecutableObjectBody(node, executable);
+        BodyNode body = node.getBody();
+        compileExecutableObjectBody(body, executable);
+        
         executable.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
         return executable;
     }
@@ -325,10 +329,11 @@ public class Compiler {
            compileError(methodNode, e.getMessage());
         }
         
-        method.getBytecodeWriter().pushConstant(BytecodeType.Constant.SELF, null);
-        compileExecutableObjectBody(methodNode, method);
+        //method.getBytecodeWriter().pushConstant(BytecodeType.Constant.SELF, null);
+        BodyNode body = methodNode.getBody();
+        compileExecutableObjectBody(body, method);
         //FAKE RETURN
-        method.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
+        method.getBytecodeWriter().append(BytecodeType.SELF_RETURN, 0, null);
         
         if(methodNode.isStatic()) {
             stclass.addStaticMethod(selector, method);
@@ -338,7 +343,7 @@ public class Compiler {
         }
     }
     
-    private void compileExecutableObjectBody(ExecutableNode node, STExecutableObject executable) {
+    private void compileExecutableObjectBody(Node node, STExecutableObject executable) {
         MethodCompiler compiler = new MethodCompiler(executable);
         node.accept(compiler);
     }
@@ -350,10 +355,12 @@ public class Compiler {
         } catch (NodeFactoryException e) {
             compileError(blockNode, e.getMessage());
         }
-        BodyNode body = blockNode.getBody();
         
         block.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL, null);
-        compileExecutableObjectBody(blockNode, block);
+        
+        BodyNode body = blockNode.getBody();
+        compileExecutableObjectBody(body, block);
+        
         //FAKE RETURN TOP ELEMENT
         block.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
         

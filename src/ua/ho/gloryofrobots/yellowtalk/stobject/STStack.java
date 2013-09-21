@@ -2,43 +2,49 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.StackInterface;
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
-public class STStack extends STObject implements StackInterface<STObject> {
+public class STStack extends STCollection implements StackInterface<STObject> {
     private static final long serialVersionUID = 1L;
-    private STObject[] mData;
+    
     private int mIndex;
-    private static final int DEFAULT_SIZE = 20;
 
-    protected STStack() {
-        mData = new STObject[DEFAULT_SIZE];
-        mIndex = 0;
+    protected STStack(int size) {
+        super();
+        init();
     }
-
+    
     public static STStack create() {
-        STStack obj = new STStack();
+        STStack obj = new STStack(DEFAULT_SIZE);
+        obj.setClassProvider(new BindingClassProvider(obj) {
+            @Override
+            protected STClass _getSTClass() {
+               
+                return Universe.classes().Stack;
+            }
+        });
+        return obj;
+    }
+    
+    public static STStack create(int size) {
+        STStack obj = new STStack(size);
         obj.setSTClass(Universe.classes().Stack);
         return obj;
     }
-
-    public void push(STObject obj) {
-        mData[mIndex] = obj;
-        mIndex++;
-        if (mIndex >= mData.length) {
-            grow();
-        }
+    
+    public void init() {
+        mIndex = 0;
     }
-
-    private void grow() {
-        // TODO Auto-generated method stub
-        int newSize = mData.length + mData.length / 2;
-        STObject[] newData = new STObject[newSize];
-        System.arraycopy(mData, 0, newData, 0, mData.length);
-        mData = newData;
+    
+    public void push(STObject obj) {
+        put(mIndex, obj);
+        
+        mIndex++;
     }
 
     public STObject pop() {
         mIndex -= 1;
-        STObject obj = mData[mIndex];
+        STObject obj = at(mIndex);
         return obj;
     }
 
@@ -46,8 +52,10 @@ public class STStack extends STObject implements StackInterface<STObject> {
         if (mIndex == 0) {
             return null;
         }
-
-        return mData[getCurrentIndex()];
+        
+        int index = getCurrentIndex();
+        STObject res = at(index);
+        return res;
     }
     
     public int getCurrentIndex() {
@@ -62,12 +70,18 @@ public class STStack extends STObject implements StackInterface<STObject> {
         mIndex = position;
     }
 
-    public void set(int position, STObject returnValue) {
-        mData[position] = returnValue;
-    }
-
+    
     public STObject getFromEnd(int shift) {
-        return mData[mIndex - shift];
+        return at(mIndex - shift);
     }
-
+    
+    public String toString() {
+        String data = "<STStack ";
+        for(int i = 0; i < mIndex; i++) {
+            STObject obj = at(i);
+            data += obj.toString() + " ";
+        }
+        data += ">";
+        return data;
+    }
 }

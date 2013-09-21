@@ -1,16 +1,17 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STCollection.ForeachFunction;
 import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
-public class STArray extends STObject {
+public class STArray extends STCollection {
 
     private static final long serialVersionUID = 1L;
-    private static final int DEFAULT_SIZE = 5;
-    
-    ArrayList<STObject> mElements;
+    private int mMaxIndex;
     
     public static STArray create() {
         STArray array  = new STArray();
@@ -35,33 +36,46 @@ public class STArray extends STObject {
     }
     
     //TODO change to ARRAY
-    protected STArray(int size) {
-        mElements = new ArrayList<STObject>(size);
-        for (int i = 0; i < size; i++) {
-            mElements.add(Universe.objects().NIL);
-        }
+    private STArray(int size) {
+        super(size);
     }
     
     protected STArray() {
-        mElements = new ArrayList<STObject>();
+         super();
     }
     
+    public int getMaxSettedIndex() {
+        return mMaxIndex;
+    }
+    
+    //redefine size to show only setted elements
     public int size() {
-        return mElements.size();
+        return getMaxSettedIndex();
+    }
+    
+    public int capacity() {
+        return super.size();
+    }
+    
+    public void put(int position, STObject value) {
+        super.put(position, value);
+        if(position > mMaxIndex - 1) {
+            mMaxIndex = position + 1;
+        }
     }
     
     public void add(STObject object) {
-        mElements.add(object);
-    }
-    
-    public void set(int index, STObject object) {
-        mElements.set(index, object);
+        if(object == null) {
+            SignalSuite.error("Set null object to array");
+        }
+        
+        put(mMaxIndex, object);
     }
     
     @SuppressWarnings("unchecked")
     public <T extends STObject>
     T getAndCast(int index) {
-        STObject value = get(index);
+        STObject value = at(index);
         T obj = null;
         try {
             obj = (T) value;    
@@ -72,30 +86,27 @@ public class STArray extends STObject {
         return obj;
     }
     
-    public boolean has(STObject obj) {
-        return mElements.contains(obj);
-    }
-    
-    public STObject get(int index) {
-        return mElements.get(index);
-    }
-    
     public STObject last() {
-        return get(mElements.size() - 1);
+        return at(getMaxSettedIndex() - 1);
     }
     
     public STObject first() {
-        return get(0);
+        return at(0);
     }
-
-    public int indexOf(STObject obj) {
-        return mElements.indexOf(obj);
-    }
-
-    public void clear() {
-        mElements.clear();
-    }
-
     
-    
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        foreach(new ForeachFunction() {
+            
+            @Override
+            public boolean call(STObject obj) {
+                builder.append(obj.toString() + ", ");
+                return true;
+            }
+        });
+        builder.append("}");
+        return builder.toString();
+    }
 }

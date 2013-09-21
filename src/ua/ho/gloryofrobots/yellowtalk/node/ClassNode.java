@@ -115,13 +115,11 @@ public class ClassNode extends MethodsContainerNode implements NodeWithMetaData 
     }
 
     public VariableNames getInstanceVariableNames() {
-        // TODO Auto-generated method stub
-        return null;
+        return m_instanceVariableNames;
     }
 
     public VariableNames getClassVariableNames() {
-        // TODO Auto-generated method stub
-        return null;
+        return m_classVariableNames;
     }
 
     public void onAccept(Visitor visitor) {

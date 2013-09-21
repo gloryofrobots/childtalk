@@ -17,11 +17,11 @@ public class STMethod extends STExecutableObject {
     protected STSymbol mClassName;
     protected STClass mOwnerClass;
     private STSymbol mSelector;
-        
+
     public void setOwnerClass(STClass owner) {
         mOwnerClass = owner;
     }
-    
+
     public static STMethod create() {
         STMethod obj = new STMethod();
         obj.setClassProvider(new BindingClassProvider(obj) {
@@ -30,14 +30,14 @@ public class STMethod extends STExecutableObject {
                 return Universe.classes().Method;
             }
         });
-        
+
         return obj;
     }
-    
+
     public void setComment(STSymbol comment) {
         mComment = comment;
     }
-    
+
     public void setCategory(STSymbol category) {
         mCategory = category;
     }
@@ -45,38 +45,38 @@ public class STMethod extends STExecutableObject {
     public void setPrimitiveName(STSymbol primitive) {
         mPrimitiveName = primitive;
     }
-    
+
     public STSymbol getPrimitiveName() {
         return mPrimitiveName;
     }
-    
+
     public STPrimitive getPrimitive() {
-        if(mOwnerClass == null) {
+        if (mOwnerClass == null) {
             return null;
         }
-        
+
         STPrimitive primitive = mOwnerClass.getPrimitive(mPrimitiveName);
         return primitive;
     }
-    
+
     public boolean hasPrimitive() {
-        if(mPrimitiveName == null){
+        if (mPrimitiveName == null) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     @Override
     public Routine createRoutine() {
         Routine routine;
-        
+
         if (hasPrimitive() == false) {
             routine = new MethodRoutine(this);
         } else {
             routine = new PrimitiveRoutine(this);
         }
-        
+
         return routine;
     }
 
@@ -86,5 +86,15 @@ public class STMethod extends STExecutableObject {
 
     public void setSelector(STSymbol name) {
         mSelector = name;
+    }
+
+    @Override
+    public String toString() {
+        String result = String.format(
+                "<Method %s from %s>",
+                (mSelector != null) ? mSelector.toString() : "",
+                (mOwnerClass != null) ? mOwnerClass.toString() : "");
+
+        return result;
     }
 }

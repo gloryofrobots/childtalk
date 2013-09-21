@@ -20,4 +20,9 @@ public class STCharacter extends STObject {
         character.setSTClass(Universe.classes().Character);
         return character;
     }
+    
+    public String toString() {
+        String data = "$" + mValue;
+        return data;
+    }
 }

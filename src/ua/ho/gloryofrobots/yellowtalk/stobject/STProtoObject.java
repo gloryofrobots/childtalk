@@ -18,7 +18,7 @@ public class STProtoObject extends STMetaclass {
             sInstance.setClassProvider(new BindingClassProvider(sInstance) {
                 @Override
                 protected STClass _getSTClass() {
-                    return null;
+                    return Universe.classes().Object;
                 }
             });
         }

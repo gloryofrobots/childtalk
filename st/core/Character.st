@@ -1,84 +1,84 @@
 Character extend [
     
-    new [
+   (+) new [
         self shouldNotImplement
     ]
     
-    initialize [
+   (+) initialize [
         WhiteSpaceTable := { Character cr. Character nl. Character lf. Character space. Character tab.
     			 Character verticalTab. Character ff } asSet.
         XDigitsTable := (Set new: 40) addAll: #($0 $1 $2 $3 $4 $5 $6 $7 $8 $9 $a $b $c $d $e $f $A $B $C $D $E $F)
     ]
     
-    whiteSpaces [
+    (+) whiteSpaces [
         ^WhiteSpaceTable
     ]
     
-    separators [
+    (+) separators [
         ^WhiteSpaceTable
     ]
     
-    backspace [
+    (+) backspace [
         "Answer a backspace character"
         ^self value: 8
     ]
     
-    esc [
+    (+) esc [
         "Answer an esc character"
         ^self value: 27
     ]
     
-    cr [
+    (+) cr [
         "Answer a carriage return character"
         ^self value: 13
     ]
     
-    nl [
+    (+) nl [
         "Answer a new line character"
         ^self value: 10
     ]
     
-    lf [
+    (+) lf [
         "Answer a line feed character"
         ^self value: 10
     ]
     
-    space [
+    (+) space [
         "Answer a space character"
         ^self value: 32
     ]
     
-    tab [
+    (+) tab [
         "Answer a tab character"
         ^self value: 9
     ]
     
-    verticalTab [
+    (+) verticalTab [
         "Answer a vertical tab character"
         ^self value: 11
     ]
     
-    ff [
+    (+) ff [
         "Answer a form-feed character"
         ^self value: 12
     ]
     
-    newPage [
+    (+) newPage [
         "Answer a form-feed character"
         ^self value: 12
     ]
     
-    codePoint: anInteger [
+    (+) codePoint: anInteger [
         ^self value: anInteger
     ]
     
-    value: anInteger [
+    (+) value: anInteger [
         "Create a Character from the given integer representation"
         <primitive: 'Character_new'>
     	self primitiveFailed
     ]
     
-    digitValue: anInteger [
+    (+) digitValue: anInteger [
         "Create a Character whose digit value is anInteger"
         ^self value: anInteger + $0 asciiValue
     ]

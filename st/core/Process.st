@@ -1,8 +1,5 @@
 Process extend [
-   
-    
-    
-    on: aContext [
+    (+) on: aContext [
         ^self new context: aContext; initialize; yourself
     ]
     

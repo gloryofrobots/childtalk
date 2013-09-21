@@ -1,7 +1,5 @@
 Association extend [
-
-    
-    key: aKey value: aValue [
+    (+) key: aKey value: aValue [
         "Create an association aKey -> aValue"
         ^self new key: aKey value: aValue
     ]
@@ -44,29 +42,5 @@ Association extend [
             store: self key;
             nextPutAll: ' value: ';
             store: self value
-    ]
-    
-    
-    key: aSymbol on: aDictionary [
-        ^(self key: aSymbol value: 0)
-    	dictionary: aDictionary;
-    	yourself
-    ]
-    
-    
-    update [
-        | index |
-        value := dictionary indexOf: key.
-        (dictionary basicAt: value) ifNil:
-    	[ self errorNotFound: 'Key not found: ', key ]
-    ]
-    
-    dictionary: aDictionary [
-        dictionary := aDictionary.
-        self update
-    ]
-    
-    dictionary [
-        ^dictionary
     ]
 ]

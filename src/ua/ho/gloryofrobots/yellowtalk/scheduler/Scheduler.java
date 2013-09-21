@@ -97,6 +97,9 @@ public class Scheduler {
         }
     }
     
+    public STProcess getCurrentProcess() {
+        return mHead.process;
+    }
     //return next entry
     private ProcessEntry killProcess(ProcessEntry entry) {
         ProcessEntry previous = entry.previous;

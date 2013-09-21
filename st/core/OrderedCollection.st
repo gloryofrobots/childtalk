@@ -1,19 +1,17 @@
 OrderedCollection extend [
     
-    new: size [
-        ^(self basicNew: size) initialize
+    (+) new: size [
+        ^(self newWithSize: size) initialize
     ]
     
-    new [
+    (+) new [
         ^self new: 16
     ]
-    
     
     initialize [
         firstIndex := self basicSize // 2.
         lastIndex := firstIndex - 1
     ]
-    
     
     incrementLastIndex: aNumber [
         (lastIndex := lastIndex + aNumber) > self basicSize
@@ -106,7 +104,6 @@ OrderedCollection extend [
         ^lastIndex - firstIndex + 1
     ]
     
-    
     remove: anObject ifAbsent: aBlock [
         ^self removeAtIndex:
             (self indexOf: anObject startingAt: 1 ifAbsent: [ ^aBlock value ])
@@ -144,10 +141,5 @@ OrderedCollection extend [
     
     asArray [
         ^Array withAll: self startingAt: firstIndex
-    ]
-    
-    
-    isOrderedCollection [
-        ^true
     ]
 ]

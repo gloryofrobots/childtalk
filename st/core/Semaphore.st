@@ -1,11 +1,9 @@
 Semaphore extend [
-   
-    
-    new [
+   (+) new [
         ^self basicNew initialize
     ]
     
-    forMutualExclusion [
+   (+) forMutualExclusion [
         "Create a new Semaphore and signal it initially. This means the first time a Process waits, it's not blocked."
         ^self new
             signal;

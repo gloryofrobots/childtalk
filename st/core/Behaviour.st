@@ -10,18 +10,30 @@ Behaviour extend [
         self primitiveFailed
     ]
     
+    inheritsFrom: aClass [
+        "Answer whether the argument, aClass, is on the receiver's superclass chain."
+        | aSuperclass |
+        aSuperclass := self superclass.
+        [ aSuperclass == nil ]
+          whileFalse: [
+            aSuperclass == aClass ifTrue: [ ^ true ].
+            aSuperclass := aSuperclass superclass.
+          ].
+        ^ false.
+    ]
+    
     name [
-        ^name
+        ^ className
     ]
     
     subclasses [
         "A list of direct subclasses of the receiver"
-        ^subclasses
+        ^ classSubclasses
     ]
     
     superclass [
         "Answer my superclass"
-        ^superclass
+        ^ classSuperclass
     ]
     
     instanceVariableNames [
@@ -35,8 +47,7 @@ Behaviour extend [
     ]
     
     new [
-         <primitive: 'Behavior_new'>
-        ^self primitiveFailed
+         ^ self basicNew
     ]
     
     doesUnderstand: selector [
@@ -55,10 +66,12 @@ Behaviour extend [
     ]
     
     allSubclassesDo: aBlock [
+        |sb|
         "Call aBlock recursing trough each subclass of this class"
+        sb := self subclasses.
         self subclasses do: [ :ea |
-    	aBlock value: ea.
-    	ea allSubclassesDo: aBlock ]
+        aBlock value: ea.
+        ea allSubclassesDo: aBlock]
     ]
     
     allSuperclassesDo: aBlock  [

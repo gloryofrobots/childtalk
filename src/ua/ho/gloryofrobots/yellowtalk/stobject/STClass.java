@@ -1,7 +1,11 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
@@ -35,13 +39,11 @@ public class STClass extends STObject {
     }
     
     protected STClass() {
-        mInstanceVariables = new STArray(10);
+        mInstanceVariables = STArray.create(10);
         mPrimitives = STDictionary.create();
         mSubclasses = STArray.create();
         transformToScopedObject();
-        mScope.put(STSymbol.unique("subclasses"), mSubclasses);
-
-        mScope.put(STSymbol.unique("superclass"), mSuperClass);
+        mScope.put(STSymbol.unique("classSubclasses"), mSubclasses);
         mScope.put(STSymbol.unique("instanceVariableNames"), mInstanceVariables);
     }
 
@@ -55,45 +57,46 @@ public class STClass extends STObject {
 
     public void setSuperClass(STClass _class) {
         mSuperClass = _class;
+        mScope.put(STSymbol.unique("classSuperclass"), mSuperClass);
     }
 
     public STClass getSuperClass() {
         return mSuperClass;
     }
     
-    public STMethod findMethodInSuperclass(STObject selector) {
-        STMethod method =  (STMethod) mScope.lookup(selector);
-        
-        if(method == null && mSuperClass != null) {
-            method =  (STMethod) mSuperClass.findMethodInSuperclass(selector);
+    protected STObject _lookup(STObject selector) {
+        STObject obj = null;
+        obj = mScope.lookup(selector);
+       
+        if(obj != null) {
+            return obj;
         }
         
-        return method;
+        if(mSuperClass != null) {
+            obj =  mSuperClass._lookup(selector);
+        }
+        
+        return obj;
     }
     
-    public STMethod findMethod(STObject selector) {
-        STMethod method = findMethodInSuperclass(selector);
+    public STObject lookup(STObject selector) {
+        STObject obj = _lookup(selector);
+        
+        if(obj != null) {
+            return obj;
+        }
+        
         STClass th = this;
         
         STClass stclass = getSTClass();
-        if(method == null) {
-            if(stclass == null) {
-                return method;
-            }
-            method =  stclass.findMethodInSuperclass(selector);
-        }
-
-        return method;
-    }
-    
-    public STMethod findVariable(STObject selector) {
-        STMethod method =  (STMethod) mScope.lookup(selector);
         
-        if(method == null && mSuperClass != null) {
-            method =  (STMethod) mSuperClass.findVariable(selector);
+        if(stclass == null) {
+            return null;
         }
         
-        return method;
+        obj =  stclass._lookup(selector);
+        
+        return obj;
     }
     
     public void addInstanceVariable(STSymbol varName)
@@ -101,7 +104,7 @@ public class STClass extends STObject {
         if (mInstanceVariables.has(varName)) {
             throw new DuplicateVariableException(varName.toString());
         }
-
+       
         mInstanceVariables.add(varName);
     }
     
@@ -128,8 +131,6 @@ public class STClass extends STObject {
         }
     }
     
-    
-
     public void setComment(STSymbol comment) {
         mComment = comment;
     }
@@ -140,7 +141,7 @@ public class STClass extends STObject {
 
     public void setName(STSymbol name) {
         mName = name;
-        mScope.put(STSymbol.unique("name"), mName);
+        mScope.put(STSymbol.unique("className"), mName);
     }
 
     public STSymbol getName() {
@@ -206,5 +207,61 @@ public class STClass extends STObject {
     
     public String toString() {
         return "<STClass  " + mName + ">";
+    }
+
+    public List<STSymbol> getUnknownPrimitives() {
+        List<STSymbol> primitives = new ArrayList<STSymbol>();
+        List<STObject> objects = mScope.asList();
+        for(STObject obj : objects) {
+            if((obj instanceof STMethod) == false) {
+                continue;
+            }
+            
+            STMethod method = (STMethod) obj;
+            if(method.hasPrimitive() == false) {
+                continue;
+            }
+            if(method.getPrimitive() == null) {
+                primitives.add(method.getPrimitiveName());
+            }
+        }
+        return primitives;
+    }
+
+    public STExecutableObject findMethod(STObject selector) {
+        STObject obj = lookup(selector);
+        if(obj == null) {
+            return null;
+        }
+        
+        try {
+            return (STMethod) obj;
+        } catch(ClassCastException e) {
+            return null;
+        }
+    }
+    
+    private void _initObject(final STObject object) {
+       
+        mInstanceVariables.foreach(new STCollection.ForeachFunction() {
+            @Override
+            public boolean call(STObject varName) {
+                if(STObject.isNotNilOrNull(varName) == false) {
+                    return false;
+                }
+                STScope scope = object.getScope();
+                scope.put(varName, Universe.objects().NIL);
+                return true;
+            }
+        });
+       
+    }
+    
+    public void initObject(STObject object) {
+        if(mSuperClass != null) {
+            mSuperClass.initObject(object);
+        }
+        
+        _initObject(object);
     }
 }

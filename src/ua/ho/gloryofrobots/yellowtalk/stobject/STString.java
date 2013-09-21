@@ -40,7 +40,7 @@ public class STString extends STByteObject {
         int index = 0;
         for(String str : strings) {
             STSymbol symb = STSymbol.unique(str);
-            arr.set(index, symb);
+            arr.put(index, symb);
             index++;
         }
         

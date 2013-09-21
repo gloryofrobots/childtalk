@@ -1,11 +1,15 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
 public class STContext extends STObject {
     private static final long serialVersionUID = 1L;
     STObject mReceiver;
+    Routine mRoutine;
     
     private STContext() {
         transformToScopedObject();
@@ -20,6 +24,14 @@ public class STContext extends STObject {
             }
         });
         return obj;
+    }
+    
+    public void setRouitne(Routine routine) {
+        mRoutine = routine;
+    }
+    
+    public Routine getRouitne() {
+        return mRoutine;
     }
     
     public STObject getReceiver() {
@@ -48,12 +60,13 @@ public class STContext extends STObject {
         STObject result = mScope.lookup(varName);
         
         if(result == null) {
-            result = mReceiver.getScope().lookup(varName);
+            if(mReceiver == null) {
+                SignalSuite.error("mReceiver == null");
+            }
+            
+            result = mReceiver.lookup(varName);
         }
         
-        if(result == null) {
-            result = mReceiver.getSTClass().findVariable(varName);
-        }
         
         if(result == null) {
             return Universe.image().lookup(varName);

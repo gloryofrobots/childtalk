@@ -12,16 +12,16 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 public class PrimitiveRoutine extends Routine {
     private STPrimitive mPrimitive;
     private boolean mFailed;
-
+    private STSymbol mPrimitiveName;
     public PrimitiveRoutine(STExecutableObject executable) {
         super(executable);
     }
 
     @Override
     public void onActivate() {
-        STSymbol primitiveName = ((STMethod) mExecutable).getPrimitiveName();
+        mPrimitiveName = ((STMethod) mExecutable).getPrimitiveName();
 
-        if (primitiveName == null) {
+        if (mPrimitiveName == null) {
             mFailed = true;
             // TODO exception
             throw new RuntimeException();
@@ -30,17 +30,17 @@ public class PrimitiveRoutine extends Routine {
         STMethod method = (STMethod) mExecutable;
         
         mPrimitive =  method.getPrimitive();
-        
+        /*SignalSuite.warning("Primitive %s ", mPrimitiveName.toString());*/
         if(mPrimitive == null) {
             STObject receiver = mContext.getReceiver();
             STClass klass = receiver.getSTClass();
-            mPrimitive = klass.getPrimitive(primitiveName);
+            mPrimitive = klass.getPrimitive(mPrimitiveName);
         }
         
         if (mPrimitive == null) {
             mFailed = true;
+            SignalSuite.error("Primitive %s not exist", mPrimitiveName.toString());
             // TODO Smalltalk exception
-            throw new RuntimeException();
         }
     }
 
@@ -55,7 +55,7 @@ public class PrimitiveRoutine extends Routine {
     protected void onExecute() {
         // we already failed and method was called.
         if (mFailed) {
-            terminate();
+            complete();
         }
 
         if (mPrimitive.execute(this) == false) {
@@ -63,19 +63,31 @@ public class PrimitiveRoutine extends Routine {
             // Primitive failed. Execute method bytecodes
             Routine routine = new MethodRoutine(mExecutable);
             routine.callFrom(this);
-        } else {
-            terminate();
-        }
+        } 
     }
 
     @Override
     public String createErrorString() {
         return "Primitive";
     }
-
+    
+    @Override
+    public String toString() {
+        String data =  "<PrimitiveRoutine :" + mPrimitiveName.toString() + ">";        
+        //String data =  "<PrimitiveRoutine :" + mPrimitiveName.toString() + ">";        
+        return data;
+    }
+    
     @Override
     protected void onCompliteWithResult(STObject result) {
+        setReturnValue(result);
+        complete();
+        /**/
+    }
+
+    @Override
+    protected void onExplicitCompleteWithResult(STObject result) {
         SignalSuite
-                .error("Error in interpreter logic onCompliteWithResult of PrimitiveRoutine should not called");
+        .error("Error in interpreter logic onExplicitCompleteWithResult of PrimitiveRoutine should not called");
     }
 }

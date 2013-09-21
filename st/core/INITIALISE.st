@@ -5,10 +5,14 @@ Eval [
         classVariableNames: ''.
     
     Object subclass: #Behaviour
-           instanceVariableNames: 'name superclass instanceVariableNames instanceSize methodDictionary subclasses finalizationRequest'
+           instanceVariableNames: 'className classSuperclass instanceVariableNames instanceSize methodDictionary classSubclasses finalizationRequest'
            classVariableNames: ''.
     
     Object subclass: #UndefinedObject
+           instanceVariableNames: ''
+           classVariableNames: ''.
+    
+    Object subclass: #Test
            instanceVariableNames: ''
            classVariableNames: ''.
     
@@ -19,6 +23,10 @@ Eval [
     Behaviour subclass: #Metaclass
          instanceVariableNames: 'instanceClass'
              classVariableNames: ''.
+    
+    Object subclass: #Transcript
+           instanceVariableNames: ''
+           classVariableNames: ''.
     
     "Collections"
     
@@ -64,52 +72,18 @@ Eval [
     
     "Execution"
     
-    Object subclass: #ContextPart
-           instanceVariableNames: 'framePointer stack parent method arguments'
+    Object subclass: #Context
+           instanceVariableNames: ''
            classVariableNames: ''.
-    
-    ContextPart subclass: #MethodContext
-            instanceVariableNames: 'receiver'
-                classVariableNames: ''.
-    
-    ContextPart subclass: #BlockContext
-            instanceVariableNames: 'closure handledException handlerBlock ensureBlock'
-                classVariableNames: ''.
-    
-    Object subclass: #Process
-           instanceVariableNames: 'stack framePointer suspended returnedObject next scheduled'
-           classVariableNames: ''.
-    
-    Object subclass: #Semaphore
-           instanceVariableNames: 'waitingProcesses signals'
-           classVariableNames: ''.
-    
-    Object subclass: #CompiledCode
-           instanceVariableNames: 'bytecodes argumentCount temporaryCount literals stackSize text class'
-           classVariableNames: ''.
-    
-    CompiledCode subclass: #CompiledMethod
-             instanceVariableNames: 'selector primitive'
-                 classVariableNames: ''.
-    
-    CompiledCode subclass: #CompiledBlock
-             instanceVariableNames: ''
-             classVariableNames: ''.
     
     Object subclass: #Block
            instanceVariableNames: 'block outerFrame'
            classVariableNames: ''.
-    
-    
-    "Management"
-    
-    Object subclass: #ProcessorScheduler
-           instanceVariableNames: 'processByteslice activeProcess'
-           classVariableNames: ''.
-    
-    Object subclass: #ObjectMemory
+           
+    Object subclass: #Method
            instanceVariableNames: ''
            classVariableNames: ''.
+    
     
     "Streams"
     
@@ -168,10 +142,6 @@ Eval [
               classVariableNames: 'WhiteSpaceTable XDigitsTable'.
     
     Magnitude subclass: #Number
-          instanceVariableNames: ''
-              classVariableNames: ''.
-    
-    Magnitude subclass: #CPointer
           instanceVariableNames: ''
               classVariableNames: ''.
     
@@ -241,73 +211,14 @@ Eval [
                instanceVariableNames: 'systemInitializationRequests commandLine startupProcess startupObject'
                classVariableNames: ''.
     
-    
-    
-    "WinWorkspace"
-    
-    Object subclass: #WinWorkspace
-           instanceVariableNames: ''
-           classVariableNames: ''.
-    
     "Exceptions"
     
     Object subclass: #Signal
            instanceVariableNames: 'signalerContext messageText'
            classVariableNames: ''.
-    
+           
+    "All other exceptions defined here"
     Signal subclass: #Exception
            instanceVariableNames: 'handlerContext'
            classVariableNames: ''.
-    
-    Exception subclass: #Error
-          instanceVariableNames: ''
-              classVariableNames: ''.
-    
-    Error subclass: #NotImplemented
-          instanceVariableNames: ''
-          classVariableNames: ''.
-    
-    Error subclass: #ZeroDivide
-          instanceVariableNames: ''
-          classVariableNames: ''.
-    
-    Error subclass: #PrimitiveFailed
-        instanceVariableNames: ''
-            classVariableNames: ''.
-    
-    PrimitiveFailed subclass: #WrongArgumentCount
-            instanceVariableNames: ''
-            classVariableNames: ''.
-    
-    Error subclass: #MessageNotUnderstood
-         instanceVariableNames: 'message receiver'
-         classVariableNames: ''.
-    
-    NotImplemented subclass: #NotYetImplemented
-               instanceVariableNames: ''
-                   classVariableNames: ''.
-    
-    NotImplemented subclass: #ShouldNotImplement
-               instanceVariableNames: ''
-                   classVariableNames: ''.
-    
-    ShouldNotImplement subclass: #SubclassResponsibility
-               instanceVariableNames: ''
-                       classVariableNames: ''.
-    
-    Error subclass: #InvalidValue
-          instanceVariableNames: ''
-          classVariableNames: ''.
-    
-    InvalidValue subclass: #InvalidArgument
-             instanceVariableNames: ''
-                 classVariableNames: ''.
-    
-    InvalidArgument subclass: #NotFound
-            instanceVariableNames: ''
-                    classVariableNames: ''.
-    
-    InvalidArgument subclass: #NotKeyed
-                    instanceVariableNames: ''
-                    classVariableNames: ''.
 ]

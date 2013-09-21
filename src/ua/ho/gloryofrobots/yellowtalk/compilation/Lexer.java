@@ -3,6 +3,7 @@ package ua.ho.gloryofrobots.yellowtalk.compilation;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamInterface.PositionInfo;
@@ -309,10 +310,22 @@ public class Lexer{
     private String getStringFromStream() throws FileEvalException {
         char lastChar;
         String str = new String();
-
+        
         while (true) {
-
+            //Yes, i know this is very inefficient:)
             while ((lastChar = forwardChar()) != '\0' && lastChar != '\'') {
+                if(lastChar =='\\') {
+                    char special = forwardChar();
+                    if(special == 'n') lastChar = '\n';
+                    else if(special == 't') lastChar = '\t';
+                    else if(special == 'f') lastChar = '\f';
+                    else if(special == 'r') lastChar = '\r';
+                    else if(special == '\\') lastChar = '\\';
+                    else if(special == '"') lastChar = '"';
+                    else {
+                        pushBackChar(1);
+                    }
+                }
                 str += lastChar;
             }
 

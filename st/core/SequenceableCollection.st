@@ -1,7 +1,7 @@
 SequenceableCollection extend [
    
     
-    , aSequenceableCollection [
+    aSequenceableCollection [
         "Concatenate self to aSequenceableCollection"
         ^(self copyEmpty: self size + aSequenceableCollection size)
     	replaceFrom: 1 with: self;
@@ -143,6 +143,7 @@ SequenceableCollection extend [
     
     replaceFrom: startIndex to: stopIndex with: aCollection [
         "Replace items from startIndex to stopIndex with the elements of aCollection starting at 1."
+        
         self replaceFrom: startIndex to: stopIndex with: aCollection startingAt: 1
     ]
     
@@ -244,31 +245,24 @@ SequenceableCollection extend [
     
     from: startIndex to: stopIndex do: aBlock [
         "Call aBlock for each element from startIndex to stopIndex"
-        startIndex to: stopIndex do: [ :i | aBlock value: (self at: i) ]
+        startIndex to: stopIndex do: [ :i |  aBlock value: (self at: i) ]
     ]
     
     from: startIndex to: stopIndex by: step do: aBlock [
         "Call aBlock for each element from startIndex to stopIndex"
-        startIndex to: stopIndex by: step do: [ :i | aBlock value: (self at: i) ]
+        
+        startIndex to: stopIndex by: step do: [ :i |  aBlock value: (self at: i) ]
     ]
     
     do: aBlock [
         "Call aBlock for each element of the collection"
-        self from: 1 to: self size do: aBlock
+        self from: 1 to: self size do: aBlock.
     ]
-    
+  
     reverseDo: aBlock [
         "Call aBlock traversing the elements of the collection in the opposite order of do:"
         self from: self size to: 1 by: -1 do: [ :ea |
     	aBlock value: ea ]
-    ]
-    
-    at: anIndex [
-        self subclassResponsibility
-    ]
-    
-    at: anIndex put: anObject [
-        self subclassResponsibility
     ]
     
     at: anIndex ifAbsent: exceptionBlock [
@@ -299,6 +293,7 @@ SequenceableCollection extend [
     
     = aCollection [
         "Answer if the receiver is equivalent to aCollection"
+        
         self class = aCollection class
     	ifFalse: [ ^false ].
     

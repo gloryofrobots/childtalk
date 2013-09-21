@@ -1,11 +1,15 @@
 package ua.ho.gloryofrobots.yellowtalk.bytecode;
 
-public class BytecodeOperationSelfReturn extends BytecodeOperation {
+import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
+public class BytecodeOperationSelfReturn extends BytecodeOperation {
     @Override
     public
     void perform(int argument) {
-        // TODO Auto-generated method stub
+        STContext context  = mRoutine.getContext();
+        STObject result = context.getReceiver();
+        mRoutine.compliteWithResult(result);
     }
 
 }

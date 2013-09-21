@@ -5,14 +5,16 @@ WriteStream extend [
         self allowWriteOnly.
         self truncate
     ]
-    
-    
+]
+
+ReadStream extend [
     initialize [
         super initialize.
         self allowReadOnly
     ]
-    
-    
+]
+
+ReadWriteStream extend [
     initialize [
         super initialize.
         self allowReadAndWrite

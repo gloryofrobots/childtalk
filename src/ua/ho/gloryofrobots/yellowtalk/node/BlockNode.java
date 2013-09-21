@@ -35,7 +35,7 @@ public class BlockNode extends ExecutableNode implements NodeFactory {
     }
 
     public void onAccept(Visitor visitor) {
-        visitor.visit(mBody);
+        visitor.visit(this);
     }
 
     @Override

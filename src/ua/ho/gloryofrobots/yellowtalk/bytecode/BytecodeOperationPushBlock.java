@@ -3,6 +3,7 @@ package ua.ho.gloryofrobots.yellowtalk.bytecode;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STStack;
 
 public class BytecodeOperationPushBlock extends BytecodeOperation {
 
@@ -10,9 +11,11 @@ public class BytecodeOperationPushBlock extends BytecodeOperation {
     public
     void perform(int argument) {
         STExecutableObject executable = mRoutine.getExecutable();
-        STContext context = mRoutine.getContext();
+        STStack stack = mRoutine.getStack();
         STBlock block = (STBlock) executable.getLiteral(argument);
-        block.attachToRoutine(mRoutine);
+        STBlock newBlock = block.copySelf();
+        newBlock.attachToRoutine(mRoutine);
+        stack.push(newBlock);
     }
 
 }

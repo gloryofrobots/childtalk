@@ -1,52 +1,50 @@
 FileStream extend [
   
-    new [
+    (+) new [
         self shouldNotImplement
     ]
         
-    on: aFD for: aMode [
+   (+) on: aFD for: aMode [
         ^self basicNew initializeHandle: (self fileOp: 8 with: aFD with: aMode) for: aMode
     ]
     
-    open: aFilename [
+   (+) open: aFilename [
         ^self open: aFilename for: self read
     ]
     
-    open: aFilename for: aMode [
+   (+) open: aFilename for: aMode [
         ^self basicNew initializeHandle: (self fileOp: 0 with: aFilename with: aMode) for: aMode
     ]
     
-    fileOp: anInteger with: anArgument with: anotherArgument [
+   (+) fileOp: anInteger with: anArgument with: anotherArgument [
         "Returns a FILE* handle"
         <primitive: 'FileStream_fileOp'>
     	self primitiveFailed
     ]
     
-    fileIn: aFilename [
+   (+) fileIn: aFilename [
         ^(self open: aFilename) fileIn; yourself
     ]
     
-    append [
+   (+) append [
         ^'a'
     ]
     
-    write [
+   (+) write [
         ^'w'
     ]
     
-    read [
+   (+) read [
         ^'r'
     ]
     
-    readWrite [
+   (+) readWrite [
         ^'r+'
     ]
     
-    readWriteCreate [
+   (+) readWriteCreate [
         ^'w+'
     ]
-    
-    
     
     initialize [
         super initialize.

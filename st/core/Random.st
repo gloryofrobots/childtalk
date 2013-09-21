@@ -1,14 +1,12 @@
 Random extend [
    
-    new [
+    (+) new [
         ^self basicNew initialize
     ]
-    
     
     initialize [
         seed := 0
     ]
-    
     
     seed [
         ^seed
@@ -17,7 +15,6 @@ Random extend [
     seed: anInteger [
         seed := anInteger
     ]
-    
     
     next [
         "This is an implementation of the Lehmer's linear congruential method"

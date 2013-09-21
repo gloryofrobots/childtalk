@@ -119,6 +119,7 @@ Number extend [
     
     to: stop do: aBlock [
         "Do aBlock from self to stop. Pass the counter to aBlock"
+        
         self to: stop by: self unity do: aBlock
     ]
     
@@ -132,14 +133,14 @@ Number extend [
         | i |
         i := self.
         step >= 0
-    	ifTrue: [
-    	    [ i <= stop ]
-    		whileTrue: [ aBlock value: i.
-    			     i := i + step ] ]
-    	ifFalse: [
-    	    [ i >= stop ]
-    		whileTrue: [ aBlock value: i.
-    			     i := i + step ] ]
+        ifTrue: [
+            [ i <= stop ]
+            whileTrue: [ aBlock value: i.
+                     i := i + step ] ]
+        ifFalse: [
+            [ i >= stop ]
+            whileTrue: [ aBlock value: i.
+                     i := i + step ] ]
     ]
     
     to: stop by: step reverseDo: aBlock [
@@ -157,7 +158,6 @@ Number extend [
     			     i := i - step ] ]
     ]
     
-    
     asFraction [
         ^Fraction numerator: self denominator: 1
     ]
@@ -169,7 +169,6 @@ Number extend [
     coerce: aNumber [
         ^aNumber
     ]
-    
     
     negated [
         self ~= self zero

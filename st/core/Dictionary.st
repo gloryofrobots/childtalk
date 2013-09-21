@@ -1,16 +1,14 @@
 Dictionary extend [
   
     new: size [
-        ^(self basicNew: ((size \\ 2 = 0
+        ^(self newWithSize: ((size \\ 2 = 0
     			   ifTrue: [ size ]
     			   ifFalse: [ size + 1 ]) max: 20)) initialize
     ]
     
-    
     initialize [
         tally := 0
     ]
-    
     
     rehashClass [
         ^self class

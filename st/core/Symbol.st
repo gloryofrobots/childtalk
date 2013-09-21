@@ -1,21 +1,13 @@
 Symbol extend [
-    new: count [
+  
+   (+) new [
         self shouldNotImplement
     ]
     
-    new [
+   (+) basicNew [
         self shouldNotImplement
     ]
-    
-    basicNew [
-        self shouldNotImplement
-    ]
-    
-    basicNew: count [
-        self shouldNotImplement
-    ]
-    
-    
+
     at: anIndex put: anObject [
         self shouldNotImplement
     ]

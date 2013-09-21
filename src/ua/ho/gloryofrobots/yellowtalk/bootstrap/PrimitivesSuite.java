@@ -2,6 +2,7 @@ package ua.ho.gloryofrobots.yellowtalk.bootstrap;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
@@ -10,6 +11,8 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STByteObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STCharacter;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STCollection;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STLargeInteger;
@@ -23,7 +26,7 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSymbol;
 
 @SuppressWarnings("serial")
-public class DefaultPrimitivesInitialiser {
+public class PrimitivesSuite {
     private static class NumberPrimitives {
 
         public STPrimitive add = new STPrimitive() {
@@ -112,7 +115,8 @@ public class DefaultPrimitivesInitialiser {
 
                 STNumber second = getStrictCastedObject(routine,
                         routine.getArgument(0), "Number");
-
+                //DebugSuite.printTraceBackString(routine);
+                
                 return STNumber.lessEqual(first, second);
             }
         };
@@ -172,17 +176,23 @@ public class DefaultPrimitivesInitialiser {
 
     public static <T extends STObject> T getStrictCastedObject(Routine routine,
             STObject obj, String typeName) {
-        T result = obj.castToSubclass();
-        if (result == null) {
-            routine.signal(Universe.signals().PrimitiveError, String.format(
+        try {
+            T result = obj.castToSubclass();
+            if (result == null) {
+                SignalSuite.raiseError(routine,
+                        "Expected type : %s but got instance of %s", typeName,
+                        obj.getSTClass().getName());
+            }
+
+            return result;
+        } catch (ClassCastException e) {
+            SignalSuite.raiseError(routine,
                     "Expected type : %s but got instance of %s", typeName, obj
-                            .getSTClass().getName()));
-
+                            .getSTClass().getName());
+            return null;
         }
-
-        return result;
     }
-    
+
     public static void initialisePrimitives() {
         initialiseBehaviour();
         initialiseBlock();
@@ -193,32 +203,163 @@ public class DefaultPrimitivesInitialiser {
         initialiseFloat();
         initialiseCharacter();
         initialiseString();
-        
+
+        initialiseArray();
+        initialiseCollection();
         initialiseDateTime();
         initialiseSmalltalk();
+        intitaliseContext();
+    }
+
+    private static void intitaliseContext() {
+        // TODO Auto-generated method stub
+        STClass context = Universe.classes().Context;
+        context.setPrimitive("Context_echo", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                Routine contextRoutine = context.getRouitne();
+                if (contextRoutine == null) {
+                    System.out.println("Empty context!");
+                    return Universe.objects().NIL;
+                }
+
+                System.out.println(contextRoutine.toString());
+                return Universe.objects().NIL;
+            }
+        });
+
+        context.setPrimitive("Context_traceback", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                Routine contextRoutine = context.getRouitne();
+                if (contextRoutine == null) {
+                    System.out.println("Empty context!");
+                    return Universe.objects().NIL;
+                }
+
+                STString traceBackString = STString.create(DebugSuite
+                        .getTraceBackString(contextRoutine));
+                return traceBackString;
+            }
+        });
+    }
+
+    public static int getJavaColectionIndexFromSmalltalk(STSmallInteger index) {
+        return index.toInt() - 1;
+    }
+
+    private static void initialiseCollection() {
+        // TODO Auto-generated method stub
+        STClass collection = Universe.classes().Collection;
+        collection.setPrimitive("Collection_size", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STCollection collection = receiver.castToSubclass();
+                return STSmallInteger.create(collection.size());
+            }
+        });
+
+        collection.setPrimitive("Collection_at", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STSmallInteger indexArgument = (STSmallInteger) routine
+                        .getArgument(0);
+
+                STCollection collection = receiver.castToSubclass();
+
+                if (indexArgument == null) {
+                    primitiveError(routine, "Invalid Collection index %s",
+                            routine.getArgument(0).toString());
+
+                    return null;
+                }
+
+                int index = getJavaColectionIndexFromSmalltalk(indexArgument);
+                if (index >= collection.size() || index < 0) {
+                    primitiveError(routine, "Invalid Collection index %d ",
+                            index);
+
+                    return null;
+                }
+
+                STObject value = collection.at(index);
+                if (value == null) {
+                    primitiveError(routine, "Invalid Collection index %d ",
+                            index);
+
+                    return null;
+                }
+                return value;
+            }
+        });
+
+        collection.setPrimitive("Collection_at_put", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STSmallInteger indexArgument = routine.getArgument(0)
+                        .castToSubclass();
+                STObject valueArgument = routine.getArgument(1);
+
+                if (indexArgument == null) {
+                    primitiveError(routine, "Invalid Collection put index %s",
+                            routine.getArgument(0).toString());
+
+                    return null;
+                }
+
+                if (valueArgument == null) {
+                    primitiveError(routine, "Invalid Collection put value %s",
+                            routine.getArgument(1).toString());
+
+                    return null;
+                }
+
+                STCollection collection = receiver.castToSubclass();
+
+                int index = getJavaColectionIndexFromSmalltalk(indexArgument);
+                if (index > collection.size() || index < 0) {
+                    primitiveError(routine, "Invalid Collection put index %d ",
+                            index);
+
+                    return null;
+                }
+
+                collection.put(index, valueArgument);
+                return Universe.objects().NIL;
+            }
+        });
+    }
+
+    private static void initialiseArray() {
+        // TODO Auto-generated method stub
+
     }
 
     private static void initialiseSmalltalk() {
-        /*STClass smallTalk = Universe.classes().Smalltalk;
-        smallTalk.setPrimitive("Smalltalk_quit", new STPrimitive() {
-            @Override
-            protected STObject onExecute(Routine routine, STObject receiver,
-                    STStack stack) {
-                throw new RuntimeException();
-            }
-        });
-        
-        smallTalk.setPrimitive("Smalltalk_environmentVariableAt", new STPrimitive() {
-            @Override
-            protected STObject onExecute(Routine routine, STObject receiver,
-                    STStack stack) {
-                STObject arg = routine.getArgument(0);
-                
-                String name = arg.toString();
-                
-                return STString.create(System.getenv(name)); 
-            }
-        });*/
+        /*
+         * STClass smallTalk = Universe.classes().Smalltalk;
+         * smallTalk.setPrimitive("Smalltalk_quit", new STPrimitive() {
+         * 
+         * @Override protected STObject onExecute(Routine routine, STObject
+         * receiver, STStack stack) { throw new RuntimeException(); } });
+         * 
+         * smallTalk.setPrimitive("Smalltalk_environmentVariableAt", new
+         * STPrimitive() {
+         * 
+         * @Override protected STObject onExecute(Routine routine, STObject
+         * receiver, STStack stack) { STObject arg = routine.getArgument(0);
+         * 
+         * String name = arg.toString();
+         * 
+         * return STString.create(System.getenv(name)); } });
+         */
     }
 
     private static void initialiseDateTime() {
@@ -242,13 +383,14 @@ public class DefaultPrimitivesInitialiser {
                 return STSymbol.unique(str.toString());
             }
         });
-        
+
         string.setPrimitive("String_hash", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-
-                return STSmallInteger.create(receiver.hashCode());
+                STByteObject string = receiver.castToSubclass();
+                long hash = string.getHash();
+                return STLargeInteger.create(hash);
             }
         });
     }
@@ -261,6 +403,16 @@ public class DefaultPrimitivesInitialiser {
                     STStack stack) {
                 STClass klass = receiver.getSTClass();
                 return klass;
+            }
+        });
+        object.setPrimitive("Object_fatalError", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject obj = routine.getArgument(0);
+                SignalSuite.error(obj.toString());
+
+                return Universe.objects().NIL;
             }
         });
 
@@ -321,20 +473,32 @@ public class DefaultPrimitivesInitialiser {
                 return Universe.objects().NIL;
             }
         });
-    }
 
-    public static void initialiseBlock() {
-        STClass block = Universe.classes().Block;
-        block.setPrimitive("BlockClosure_execute", new STPrimitive() {
+        object.setPrimitive("Object_echo", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                SchedulingSuite.callExecutable(routine, (STExecutableObject) receiver);
+                // TODO DELETE
+                System.out.println(receiver);
                 return Universe.objects().NIL;
             }
         });
 
-        block.setPrimitive("BlockClosure_on_do", new STPrimitive() {
+    }
+
+    public static void initialiseBlock() {
+        STClass block = Universe.classes().Block;
+        block.setPrimitive("Block_execute", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                SchedulingSuite.callExecutable(routine,
+                        (STExecutableObject) receiver);
+                return Universe.objects().NIL;
+            }
+        });
+
+        block.setPrimitive("Block_on_do", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -349,7 +513,7 @@ public class DefaultPrimitivesInitialiser {
             }
         });
 
-        block.setPrimitive("BlockClosure_newProcess", new STPrimitive() {
+        block.setPrimitive("Block_newProcess", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -357,6 +521,17 @@ public class DefaultPrimitivesInitialiser {
             }
         });
 
+        block.setPrimitive("Block_value", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STBlock block = (STBlock) receiver;
+                stack.push(block);
+                routine.flushArgumentsToStack(stack);
+                SchedulingSuite.callExecutable(routine, block);
+                return Universe.objects().NIL;
+            }
+        });
     }
 
     private static void initialiseBehaviour() {
@@ -377,22 +552,41 @@ public class DefaultPrimitivesInitialiser {
                 } else {
                     object = STObject.createWithClass(klass);
                 }
+                if (object == null) {
+                    SignalSuite.error("Can`t create object of class %s",
+                            klass.toString());
+                }
 
                 return object;
             }
         });
-        
+
         behaviour.setPrimitive("Behaviour_createSubclass", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                STMetaclass.createClassInRuntime(this, routine, receiver, stack);
+                STMetaclass
+                        .createClassInRuntime(this, routine, receiver, stack);
                 return Universe.objects().NIL;
             }
         });
         
+        behaviour.setPrimitive("Behavior_doesUnderstand", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject key = routine.getArgument(0);
+                STClass klass = receiver.castToSubclass();
+                
+                if(klass.findMethod(key) != null) {
+                    return Universe.objects().TRUE;
+                }
+                
+                return Universe.objects().FALSE;
+            }
+        });
     }
-
+    
     private static void initialiseByteArray() {
         STClass byteArray = Universe.classes().ByteArray;
 
@@ -403,7 +597,31 @@ public class DefaultPrimitivesInitialiser {
                 STSmallInteger argument = (STSmallInteger) routine
                         .getArgument(0);
                 STByteObject obj = STByteObject.create(argument.toInt());
+                obj.setSTClass((STClass) receiver);
                 return obj;
+            }
+        });
+
+        byteArray.setPrimitive("ByteArray_growTo", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STSmallInteger argument = (STSmallInteger) routine
+                        .getArgument(0);
+
+                STByteObject obj = receiver.castToSubclass();
+                obj.growTo(argument.toInt());
+
+                return Universe.objects().NIL;
+            }
+        });
+
+        byteArray.setPrimitive("ByteArray_size", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STByteObject obj = receiver.castToSubclass();
+                return STSmallInteger.create(obj.size());
             }
         });
 
@@ -423,7 +641,7 @@ public class DefaultPrimitivesInitialiser {
                     return null;
                 }
 
-                int index = indexArgument.toInt();
+                int index = getJavaColectionIndexFromSmalltalk(indexArgument);
                 if (index > obj.size() || index < 0) {
                     primitiveError(routine, "Invalid ByteArray index %d ",
                             index);
@@ -462,7 +680,7 @@ public class DefaultPrimitivesInitialiser {
 
                 STByteObject obj = receiver.castToSubclass();
 
-                int index = indexArgument.toInt();
+                int index = getJavaColectionIndexFromSmalltalk(indexArgument);
                 if (index > obj.size() || index < 0) {
                     primitiveError(routine, "Invalid ByteArray index %d ",
                             index);
@@ -516,26 +734,19 @@ public class DefaultPrimitivesInitialiser {
     }
 
     private static void initialiseFloat() {
-     
+
         STClass floating = Universe.classes().Float;
 
         floating.setPrimitive("Float_plus", sNumberPrimitives.add);
-        floating.setPrimitive("Float_minus",
-                sNumberPrimitives.substract);
-        floating.setPrimitive("Float_mul",
-                sNumberPrimitives.multiply);
+        floating.setPrimitive("Float_minus", sNumberPrimitives.substract);
+        floating.setPrimitive("Float_mul", sNumberPrimitives.multiply);
         floating.setPrimitive("Float_div", sNumberPrimitives.divide);
-        floating
-                .setPrimitive("Float_lt", sNumberPrimitives.lessThen);
-        floating.setPrimitive("Float_gt",
-                sNumberPrimitives.greaterThen);
-        floating.setPrimitive("Float_le",
-                sNumberPrimitives.lessEqual);
-        floating.setPrimitive("Float_ge",
-                sNumberPrimitives.greaterEqual);
+        floating.setPrimitive("Float_lt", sNumberPrimitives.lessThen);
+        floating.setPrimitive("Float_gt", sNumberPrimitives.greaterThen);
+        floating.setPrimitive("Float_le", sNumberPrimitives.lessEqual);
+        floating.setPrimitive("Float_ge", sNumberPrimitives.greaterEqual);
         floating.setPrimitive("Float_eq", sNumberPrimitives.equal);
-        floating
-                .setPrimitive("Float_ne", sNumberPrimitives.notEqual);
+        floating.setPrimitive("Float_ne", sNumberPrimitives.notEqual);
         floating.setPrimitive("Float_mod", sNumberPrimitives.mod);
         floating.setPrimitive("Float_ceil", new STPrimitive() {
             @Override
@@ -545,7 +756,7 @@ public class DefaultPrimitivesInitialiser {
                 return first.ceil();
             }
         });
-        
+
         floating.setPrimitive("Float_floor", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
@@ -554,7 +765,7 @@ public class DefaultPrimitivesInitialiser {
                 return first.floor();
             }
         });
-        
+
         floating.setPrimitive("Float_trunc", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
@@ -563,23 +774,25 @@ public class DefaultPrimitivesInitialiser {
                 return first.truncate();
             }
         });
-        
+
         floating.setPrimitive("Float_newColon", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STNumber number = getStrictCastedObject(routine,
                         routine.getArgument(0), "Number");
-                STNumber result = number.convert(STNumber.FLOAT_INTEGER_PRIORITY);
-                if(result == null) {
-                    primitiveError(routine, "Can`t create Float instance from %s ",
+                STNumber result = number
+                        .convert(STNumber.FLOAT_INTEGER_PRIORITY);
+                if (result == null) {
+                    primitiveError(routine,
+                            "Can`t create Float instance from %s ",
                             number.toString());
                 }
-                
+
                 return result;
             }
         });
-  
+
     }
 
     private static void initialiseLargeInteger() {
@@ -677,19 +890,21 @@ public class DefaultPrimitivesInitialiser {
                 return Universe.objects().NIL;
             }
         });
-        
+
         largeInteger.setPrimitive("LargeInteger_newColon", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STNumber number = getStrictCastedObject(routine,
                         routine.getArgument(0), "Number");
-                STNumber result = number.convert(STNumber.LARGE_INTEGER_PRIORITY);
-                if(result == null) {
-                    primitiveError(routine, "Can`t create LargeInteger instance from %s ",
+                STNumber result = number
+                        .convert(STNumber.LARGE_INTEGER_PRIORITY);
+                if (result == null) {
+                    primitiveError(routine,
+                            "Can`t create LargeInteger instance from %s ",
                             number.toString());
                 }
-                
+
                 return result;
             }
         });
@@ -792,19 +1007,21 @@ public class DefaultPrimitivesInitialiser {
                         return first.asLargeInteger();
                     }
                 });
-        
+
         smallInteger.setPrimitive("SmallInteger_newColon", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STNumber number = getStrictCastedObject(routine,
                         routine.getArgument(0), "Number");
-                STNumber result = number.convert(STNumber.SMALL_INTEGER_PRIORITY);
-                if(result == null) {
-                    primitiveError(routine, "Can`t create SmallInteger instance from %s ",
+                STNumber result = number
+                        .convert(STNumber.SMALL_INTEGER_PRIORITY);
+                if (result == null) {
+                    primitiveError(routine,
+                            "Can`t create SmallInteger instance from %s ",
                             number.toString());
                 }
-                
+
                 return result;
             }
         });
@@ -827,7 +1044,6 @@ public class DefaultPrimitivesInitialiser {
 // !!!!!!!!!!!!!!!!!!!!
 
 //
-
 
 //
 // /* Contexts */

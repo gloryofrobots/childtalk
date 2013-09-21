@@ -1,8 +1,10 @@
 package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperation;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationAssign;
+import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationBlockReturn;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationDuplicate;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationPopTop;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeOperationPushArray;
@@ -34,6 +36,7 @@ public class InterpreterSuite {
         sOperations[BytecodeType.STACK_RETURN.ordinal()] = new BytecodeOperationStackReturn();
         sOperations[BytecodeType.SELF_RETURN.ordinal()] = new BytecodeOperationSelfReturn();
         sOperations[BytecodeType.SEND_MESSAGE.ordinal()] = new BytecodeOperationSendMessage();
+        sOperations[BytecodeType.BLOCK_RETURN.ordinal()] = new BytecodeOperationBlockReturn();
     }
 
     public static BytecodeOperation get(int index) {
@@ -42,12 +45,11 @@ public class InterpreterSuite {
 
     public static void performOperation(int index, int argument, Routine routine) {
         BytecodeOperation operation = get(index);
-        
-        if(Universe.isOnDebug == true) {
-            System.out.printf("OP %s arg: %d\n", operation.getClass().getName(),
-                    argument);
-        }
-        
+
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_INTERPRETER,
+                "OP %s arg: %d", operation.getClass().getSimpleName(), argument);
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_INTERPRETER,
+                routine.getStack().toString() + "\n");
         operation.setRoutine(routine);
         operation.perform(argument);
     }

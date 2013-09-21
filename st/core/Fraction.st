@@ -1,6 +1,6 @@
 Fraction extend [
     
-    numerator: topNumber denominator: bottomNumber [
+   (+) numerator: topNumber denominator: bottomNumber [
         ^self basicNew
     	initializeNumerator: topNumber denominator: bottomNumber;
     	yourself

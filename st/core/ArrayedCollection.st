@@ -1,16 +1,16 @@
 ArrayedCollection extend [
-    new: size [
+   (+) new: size [
         self subclassResponsibility
     ]
     
-    with: anObject [
+   (+) with: anObject [
         "Create a collection with a single element"
         ^(self new: 1)
             at: 1 put: anObject;
             yourself
     ]
     
-    with: firstObject with: secondObject [
+   (+) with: firstObject with: secondObject [
         "Create a collection with the two given elements"
         ^(self new: 2)
             at: 1 put: firstObject;
@@ -18,7 +18,7 @@ ArrayedCollection extend [
             yourself
     ]
     
-    with: firstObject with: secondObject with: thirdObject [
+   (+) with: firstObject with: secondObject with: thirdObject [
         "Create a collection with the three given elements"
         ^(self new: 4)
             at: 1 put: firstObject;
@@ -27,7 +27,7 @@ ArrayedCollection extend [
             yourself
     ]
     
-    with: firstObject with: secondObject with: thirdObject with: fourthObject [
+   (+) with: firstObject with: secondObject with: thirdObject with: fourthObject [
         "Create a collection with the four given elements"
         ^(self new: 4)
             at: 1 put: firstObject;
@@ -37,19 +37,19 @@ ArrayedCollection extend [
             yourself
     ]
     
-    new: aSize withAll: aCollection [
+   (+) new: aSize withAll: aCollection [
         "Answer an arrayed collection of the given size with the elements of aCollection"
         ^(self new: aSize)
     	replaceFrom: 1 to: (aSize min: aCollection size) with: aCollection;
     	yourself
     ]
     
-    withAll: aCollection [
+   (+) withAll: aCollection [
         "Answer an arrayed collection with the same elements of aCollection"
         ^self new: aCollection size withAll: aCollection
     ]
     
-    withAll: aCollection startingAt: anIndex [
+   (+) withAll: aCollection startingAt: anIndex [
         "Answer an arrayed collection with the same elements of aCollection starting at the given index"
         | size |
         size := aCollection size.
@@ -62,10 +62,7 @@ ArrayedCollection extend [
         self shouldNotImplement
     ]
     
-    size [
-    	self subclassResponsibility
-    ]
-    
+   
     copyFrom: startIndex to: stopIndex [
         | coll i |
         stopIndex < startIndex ifTrue: [ ^self copyEmpty: 0 ].

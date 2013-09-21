@@ -2,7 +2,7 @@ Block extend [
     
     newProcess  [
         "Return a new Process from self. The Process is suspended"
-        <primitive: 'BlockClosure_newProcess'>
+        <primitive: 'Block_newProcess'>
     	self primitiveFailed
     ]
     
@@ -13,7 +13,7 @@ Block extend [
     
     on: anExceptionClass do: aBlock  [
         "If anExceptionClass, or its subclasses, are signaled, aBlock is evaluated with the exception as argument"
-        <primitive: 'BlockClosure_on_do'>
+        <primitive: 'Block_on_do'>
         self primitiveFailed
     ]
      
@@ -35,18 +35,19 @@ Block extend [
     
     value  [
         "Call my block without arguments"
-        <primitive: 'BlockClosure_value'>
+        <primitive: 'Block_value'>
     	WrongArgumentCount signal
     ]
     
     value: anObject  [
         "Call my block with anObject as single argument"
-        <primitive: 'BlockClosure_value'>
+        <primitive: 'Block_value'>
     	WrongArgumentCount signal
     ]
     
     value: firstObject value: secondObject  [
-        <primitive: 'BlockClosure_value'>
+        <primitive: 'Block_value'>
+        WrongArgumentCount signal
     ]
     
     repeat [
@@ -54,23 +55,24 @@ Block extend [
         [true] whileTrue: self
     ]
     
+    
     whileTrue [
-        "Loop until self evaluation is false"
-        self whileTrue: [nil]
+        self whileTrue: []
     ]
     
     whileFalse [
         "Loop until self evaluation is true"
-        self whileFalse: [nil]
-    ]
-    
-    whileTrue: aBlock [
-        "Do aBlock until self is false"
-        self whileTrue: aBlock
+        self whileFalse: []
     ]
     
     whileFalse: aBlock [
-        "Do aBlock until self is true"
-        self whileFalse: aBlock
+        [ self value not ] whileTrue: aBlock
     ]
+        
+    whileTrue: block [
+        ( self value ) ifTrue:
+            [   block value. 
+                self whileTrue: block ]
+    ]
+    
 ]

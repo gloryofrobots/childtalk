@@ -1,6 +1,6 @@
 DateTime extend [
   
-    now [
+    (+) now [
         ^self new initializeGMTime
     ]
     

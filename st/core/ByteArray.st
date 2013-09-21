@@ -1,15 +1,18 @@
 ByteArray extend [
     
-        new: size [
-            <primitive: 'ByteArray_newColon'>
-        	self primitiveFailed
+       (+) new: size [
+            ^ self basicNew:size
         ]
         
-        basicNew: size [
+       (+) basicNew: size [
             <primitive: 'ByteArray_newColon'>
         	self primitiveFailed
         ] 
-    
+        
+        basicSize [
+            <primitive: 'ByteArray_size'>
+        ]
+        
         at: anIndex [
             <primitive: 'ByteArray_at'>
         	self primitiveFailed
@@ -39,11 +42,17 @@ ByteArray extend [
             <primitive: 'ByteArray_at_put'>
         	self primitiveFailed
         ] 
+            
+        growTo: anInteger [
+            <primitive: 'ByteArray_growTo'>
+            self primitiveFailed
+        ]
     
         replaceFrom: startIndex to: stopIndex with: aCollection startingAt: anIndex [
-        	| element j |
-        	j := anIndex.
-        	startIndex to: (stopIndex min: aCollection size) do: [ :i |
+        	| element j endIndex|
+        	j := anIndex - 1.
+        	
+        	startIndex to: stopIndex do: [ :i |
         	    element := aCollection at: (j := j + 1).
         	    (element isCharacter or: [ element isSmallInteger & (element >= 0) & (element <= 255) ])
         		ifTrue: [ self at: i put: element ]

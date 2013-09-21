@@ -1,16 +1,16 @@
 Interval extend [
 
-    new: count [
+    (+) new: count [
         self shouldNotImplement
     ]
     
-    from: start to: stop by: step [
+    (+) from: start to: stop by: step [
         step = 0
     	ifTrue: [ ^self error: 'Zero step has been given' ].
         ^self basicNew initializeFrom: start to: stop by: step; yourself
     ]
     
-    from: start to: stop [
+    (+) from: start to: stop [
         ^self from: start to: stop by: 1
     ]
     

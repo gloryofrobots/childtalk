@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 
 
@@ -20,15 +21,17 @@ public abstract class STPrimitive extends STObject {
         }
         //we don`t need write result to stack
         if(result == Universe.objects().NIL) {
+            routine.complete();
             return true;
         }
         
-        stack.push(result);
+        routine.compliteWithResult(result);
         return true;
     }
     
     public void primitiveError(Routine routine, String format, Object... args) {
-        routine.signal(Universe.signals().PrimitiveError, String.format(format, args));
+        SignalSuite.error(format, args);
+        //SignalSuite.raiseError(routine, format, args);
     }
     
     protected abstract STObject onExecute(Routine routine, STObject receiver, STStack stack);

@@ -15,7 +15,8 @@ public class STDictionary extends STObject implements DictionaryInterface<STObje
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Dictionary;
+                return null;
+                //return Universe.classes().Dictionary;
             }
         });
         

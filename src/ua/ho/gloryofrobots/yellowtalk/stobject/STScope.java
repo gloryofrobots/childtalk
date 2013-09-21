@@ -103,6 +103,7 @@ public class STScope extends STInternalDictionary {
         return clone;
     }
     
+    @Override
     public String toString() {
         String result = "";
         for(STObject obj : mData) {

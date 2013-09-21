@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.BlockRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.MethodRoutine;
@@ -51,5 +52,21 @@ public class STBlock extends STExecutableObject implements ExceptionHandler {
     public Routine createRoutine() {
         Routine routine = new BlockRoutine(this);
         return routine;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("<Block : %s>", getCompileInfo().toString());
+    }
+
+    public STBlock copySelf() {
+        STBlock block = STBlock.create();
+        try {
+            super.fillExecutable(block);
+        } catch (DuplicateVariableException e) {
+            return null;
+        }
+        
+        return block;
     }
 }

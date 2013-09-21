@@ -1,15 +1,14 @@
 True extend [
    
-    
     isBoolean [
         ^true
     ]
-    
-    
+     
     ifTrue: trueBlock ifFalse: falseBlock [
         ^trueBlock value
     ]
     
+   
     ifTrue: trueBlock [
         ^trueBlock value
     ]

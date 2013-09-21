@@ -1,10 +1,10 @@
 PositionableStream extend [
     
-    on: aCollection [
+   (+) on: aCollection [
         ^self new initializeOn: aCollection
     ]
     
-    with: aCollection [
+   (+) with: aCollection [
         ^self new initializeOn: aCollection; setToEnd
     ]
     
@@ -68,20 +68,26 @@ PositionableStream extend [
     nextPut: anObject [
         self ensureWriteable.
         curPos := curPos + 1.
+        
         self atEnd
     	ifTrue: [ (endPos := curPos) >= collection size
     		      ifTrue: [ collection growTo: endPos + 10 ] ].
+       
         ^collection at: curPos put: anObject
     ]
     
     nextPutAll: aCollection [
         | pos |
+        
+        
         self ensureWriteable.
         pos := curPos + 1.
         curPos := curPos + aCollection size.
+        
         self atEnd
     	ifTrue: [ (endPos := curPos) >= collection size
     		      ifTrue: [ collection growTo: endPos + 10 ] ].
+        
         collection replaceFrom: pos to: curPos with: aCollection.
         ^aCollection
     ]

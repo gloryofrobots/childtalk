@@ -23,7 +23,12 @@ public class STLargeInteger extends STNumber {
         largeInteger.setSTClass(Universe.classes().LargeInteger);
         return largeInteger;
     }
-
+    
+    public static STObject create(long data) {
+        BigInteger bigInt = BigInteger.valueOf(data);
+        return create(bigInt);
+    }
+    
     public static STLargeInteger create(int data) {
         BigInteger bigInt = BigInteger.valueOf((long) data);
         return create(bigInt);
@@ -180,4 +185,6 @@ public class STLargeInteger extends STNumber {
     public String toString() {
         return mData.toString();
     }
+
+    
 }

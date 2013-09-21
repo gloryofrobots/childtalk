@@ -2,11 +2,11 @@ Object extend [
         
     initialize [yourself]
     finalize [yourself]
-    
+
     copy [
         ^ self shallowCopy
     ]
-    
+   
     shallowCopy [
         <primitive: 'Object_copy'>
         ^self
@@ -16,16 +16,23 @@ Object extend [
         <primitive: 'Object_hash'>
         self primitiveFailed
     ]
-
+    
     isKindOf: aClass [
-        "Answer true if the receiver's class is a subclass of aClass"
+          "Answer true if the receiver's class is a subclass of aClass"
         | class |
-        aClass ifNil: [ ^false ].
+        aClass
+        ifNil: [ ^false ].
         class := self class.
-        class = aClass ifTrue: [ ^true ].
-        aClass allSubclassesDo: [ :ea |  ea = class ifTrue: [ ^true ] ].
+        class = aClass
+        ifTrue: [ ^true ].
+    
+        aClass allSubclassesDo: [ :ea |
+        ea = class
+            ifTrue: [ ^true ] ].
         ^false
     ]
+    
+    
     isMemberOf: aClass [
         "Answer true whenever the receiver is an instance of the given class"
         ^self class = aClass
@@ -46,6 +53,15 @@ Object extend [
     notNil [
         ^true
     ] 
+    
+    echo [
+        <primitive: 'Object_echo'>
+    ]
+    
+    echo: aObject [
+        self echo.
+        aObject echo.
+    ]
     
     class [
         <primitive: 'Object_class'>
@@ -70,8 +86,8 @@ Object extend [
         ^(self == anObject) not
     ] 
     
-    
     error: messageText [
+        "<primitive: 'Object_fatalError'>"
         Error signal: messageText
     ]
     
@@ -169,23 +185,10 @@ Object extend [
         ^aBlock value
     ] 
     
-    
     yourself [
         "Answer the receiver"
         ^self
     ] 
-    
-    briefInspect [
-        ^self
-    ] 
-    
-    display [
-        Transcript show: self displayString
-    ]
-    
-    displayNl [
-        Transcript showCr: self displayString
-    ]
     
     print [
         Transcript show: self printString
@@ -195,11 +198,6 @@ Object extend [
         Transcript showCr: self printString
     ]
     
-    displayOn: aStream [
-        "Append to aStream a String representation of the receiver for being displayed"
-        self printOn: aStream
-    ]
-    
     printOn: aStream [
         "Append to aStream a String representation of the receiver"
         aStream
@@ -207,29 +205,20 @@ Object extend [
             space;
             nextPutAll: self class name
     ]
-    
-    displayString [
-        "Answer a String repsenentation of the receiver for being displayed"
-        | stream |
-        stream := WriteStream on: String new.
-        self displayOn: stream.
-        ^stream contents
-    ]
-    
+  
     printString [
         "Answer a String representation of the receiver"
-        | stream |
-        stream := WriteStream on: String new.
+        | stream string|
+        string := String new.
+        
+        stream := WriteStream on: string.
         self printOn: stream.
         ^stream contents
     ]
-    
-    
     species [
-        "Answer the same class as that of the receiver.
-         Some Collection classes may override it"
-        ^self class
-    ] 
+        ^ self class
+    ]
+    
 ] 
 
 

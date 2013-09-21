@@ -1,6 +1,6 @@
 Stack extend [
     
-    new [
+   (+) new [
         ^self basicNew initialize
     ]
     

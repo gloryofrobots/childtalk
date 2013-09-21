@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.yellowtalk.compilation.Token.Type;
 import ua.ho.gloryofrobots.yellowtalk.node.*;
@@ -77,7 +78,7 @@ public class Parser{
         mLexer.next();
         
         EvalNode eval = new EvalNode();
-        
+        parseExecutableTemporaries(eval);
         int startPosition = mLexer.getCurrentTokenPosition();
         BodyNode body = eval.getBody();
         parseBody(body);
@@ -445,21 +446,15 @@ public class Parser{
         default:
             parsingError("Invalid message pattern\n", token);
             break;
-
         }
-
     }
-    
-    
-    
+
     public void DEBUG_LOG(String message, Token token) {
-        if(Universe.isOnDebug == false) return;
-        System.out.printf("LOG : %s Token : %s\n", message, token);
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER, "LOG : %s Token : %s\n", message, token.toString());
     }
 
     public void DEBUG_LOG(String function, String message) {
-        if(Universe.isOnDebug == false) return;
-        System.out.printf("LOG : %s  %s\n", function, message);
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER, "LOG : %s  %s\n", function, message);
     }
 
     protected void parseBody(BodyNode body) throws FileEvalException {
@@ -635,7 +630,7 @@ public class Parser{
             statement.addNode(messageStatement);
             MessageSelectorNode message = new MessageSelectorNode();
             message.setSelector(selector);
-            message.setCountArguments(messageStatement.getSize());
+            message.setCountArguments(1);
             statement.addNode(message);
             // token = m_lexer.next();
             token = mLexer.current();
@@ -875,12 +870,14 @@ public class Parser{
     public static void main(String[] args) {
         FileInputStream fileStream = null;
         try {
+            
             fileStream = new FileInputStream(
                     "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/tests/parser_test.st");
             /*fileStream = new FileInputStream(
                     "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/core/Behaviour.st");*/
             ProgramTextStreamInterface programStream = new ProgramTextStream(
                     fileStream);
+            DebugSuite.setDebugMode(DebugSuite.DEBUG_MODE_PARSER, DebugSuite.DEBUG_MODE_LEXER);
             Lexer lexer = Lexer.create(programStream);
             Node node = CompileSuite.parseWithLexer(lexer);
             

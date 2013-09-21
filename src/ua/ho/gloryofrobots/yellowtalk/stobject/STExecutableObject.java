@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
 
+import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeWriter;
 import ua.ho.gloryofrobots.yellowtalk.compilation.CompileInfo;
@@ -52,26 +53,30 @@ public abstract class STExecutableObject extends STObject {
     }
 
     public STObject getLiteral(int index) {
-        return mLiterals.get(index);
+        return mLiterals.at(index);
     }
     
     public void addArgument(STSymbol name) throws DuplicateVariableException{
         if (mArguments.has(name)) {
             throw new DuplicateVariableException(name.toString());
         }
-
+        mArgumentsValues.add(Universe.objects().NIL);
         mArguments.add(name);
     }
     
     public void setArguments(String[] names){
         mArguments.clear();
         for(String name : names) {
-            mArguments.add(STSymbol.unique(name));
+            try {
+                addArgument(STSymbol.unique(name));
+            } catch (DuplicateVariableException e) {
+                continue;
+            }
         }
     }
     
     public void addArgumentValue(int index, STObject value)  {
-        mArgumentsValues.set(index, value);
+        mArgumentsValues.put(index, value);
     }
     
     public int getCountArguments() {
@@ -105,16 +110,42 @@ public abstract class STExecutableObject extends STObject {
         int count = getCountArguments();
         for(int i = 0; i < count; i++){
             STSymbol varName = mArguments.getAndCast(i);
-            STObject value = mArgumentsValues.get(i);
+            STObject value = mArgumentsValues.at(i);
+            //System.out.println(varName.toString());
             scope.put(varName, value);
         }
         
         count = mTemporaries.size();
         for(int i = 0; i < count; i++) {
             STSymbol varName  = mTemporaries.getAndCast(i);
-            scope.put(varName, null);
+            scope.put(varName, Universe.objects().NIL);
         }
     }
 
     public abstract Routine createRoutine();
+    
+    
+    public void fillExecutable(STExecutableObject executable) throws DuplicateVariableException {
+        int count = getCountArguments();
+        for(int i = 0; i < count; i++){
+            STSymbol varName = mArguments.getAndCast(i);
+            executable.addArgument(varName);
+        }
+        
+        count = mTemporaries.size();
+        for(int i = 0; i < count; i++) {
+            STSymbol varName  = mTemporaries.getAndCast(i);
+            executable.addTemporary(varName);
+        }
+        
+        count = mLiterals.size();
+        for(int i = 0; i < count; i++) {
+            STObject literal = mLiterals.at(i);
+            executable.placeLiteral(literal);
+        }
+        
+        executable.mBytecodeWriter = mBytecodeWriter;
+        executable.mBytecode = mBytecode;
+        executable.mCompileInfo = mCompileInfo;
+    }
 }

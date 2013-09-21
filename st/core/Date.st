@@ -1,6 +1,6 @@
 Date extend [
    
-    initialize [
+    (+) initialize [
         DayNames := IdentityDictionary new.
         MonthNames := IdentityDictionary new.
         self
@@ -8,7 +8,7 @@ Date extend [
             initializeMonthNames
     ]
     
-    initializeDayNames [
+    (+) initializeDayNames [
         DayNames
             at: #monday put: 1; at: #mon put: 1;
             at: #tuesday put: 2; at: #tue put: 2;
@@ -19,7 +19,7 @@ Date extend [
             at: #sunday put: 7; at: #sun put: 7
     ]
     
-    initializeMonthNames [
+    (+) initializeMonthNames [
         MonthNames
             at: #january put: 1; at: #jan put: 1;
             at: #february put: 2; at: #feb put: 2;

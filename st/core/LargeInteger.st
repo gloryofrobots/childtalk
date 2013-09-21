@@ -3,11 +3,6 @@ LargeInteger extend [
         <primitive: 'LargeInteger_newColon'>
     ]
     
-    initialize [
-        finalizationRequest := true
-    ]
-    
-    
     clear [
         <primitive: 'LargeInteger_clear'>
     	self primitiveFailed
