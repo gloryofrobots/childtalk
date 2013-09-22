@@ -1,9 +1,5 @@
 Signal extend [
   
-    (+) new [
-        <primitive: 'Signal_new'>
-    ]
-    
     (+) signal: messageText [
         self new signal: messageText
     ]
@@ -30,7 +26,12 @@ Signal extend [
     ]
     
     raise: anObject [
-         <primitive: 'Signal_rise'>
+         <primitive: 'Signal_raise'>
+         self primitiveFailed.
+    ]
+    
+    pass: anObject [
+         self raise
     ]
     
     printOn: aStream [

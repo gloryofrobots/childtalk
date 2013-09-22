@@ -4,6 +4,7 @@ import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 
 public class SignalSuite {

@@ -1,5 +1,5 @@
 TestCase subclass: FalseTest [
-    test [
+    doTest [
         self testFalse.
         self testIfTrue.
         self testIfFalse.

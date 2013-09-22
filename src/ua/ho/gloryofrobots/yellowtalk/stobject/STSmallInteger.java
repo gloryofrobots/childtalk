@@ -64,9 +64,65 @@ public class STSmallInteger extends STNumber {
         return null;
     }
 
+    static final boolean isPreventAddOverfow(int left, int right) {
+        if (right > 0 ? left > Integer.MAX_VALUE - right
+                : left < Integer.MIN_VALUE - right) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    static final boolean isPreventSubstractOverfow(int left, int right) {
+        if (right > 0 ? left < Integer.MIN_VALUE + right
+                : left > Integer.MAX_VALUE + right) {
+            return true;
+        }
+        return false;
+    }
+
+    static final boolean isPreventMultiplyOverfow(int left, int right) {
+        if (right > 0 ? left > Integer.MAX_VALUE / right
+                || left < Integer.MIN_VALUE / right
+                : (right < -1 ? left > Integer.MIN_VALUE / right
+                        || left < Integer.MAX_VALUE / right : right == -1
+                        && left == Integer.MIN_VALUE)) {
+            return true;
+        }
+        return false;
+    }
+    
+    static final boolean isPreventDivideOverfow(int left, int right) {
+        if ((left == Integer.MIN_VALUE) && (right == -1)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    static final boolean isPreventAbsOverflow(int a) {
+        if (a == Integer.MIN_VALUE) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    static final boolean isPreventNegateOverflow(int a) {
+        if (a == Integer.MIN_VALUE) {
+            return true;
+        }
+        
+        return false;
+    }
+
     @Override
     protected STNumber _add(STNumber other) {
         STSmallInteger second = other.castToSubclass();
+        if(isPreventAddOverfow(mData, second.mData)) {
+            return add(this.asLargeInteger(), second.asLargeInteger());
+        }
+        
         int result = mData + second.mData;
         return STSmallInteger.create(result);
     }
@@ -74,6 +130,10 @@ public class STSmallInteger extends STNumber {
     @Override
     protected STNumber _substract(STNumber other) {
         STSmallInteger second = other.castToSubclass();
+        if(isPreventSubstractOverfow(mData, second.mData)) {
+            return substract(this.asLargeInteger(), second.asLargeInteger());
+        }
+        
         int result = mData - second.mData;
         return STSmallInteger.create(result);
     }
@@ -81,6 +141,10 @@ public class STSmallInteger extends STNumber {
     @Override
     protected STNumber _multiply(STNumber other) {
         STSmallInteger second = other.castToSubclass();
+        if(isPreventMultiplyOverfow(mData, second.mData)) {
+            return multiply(this.asLargeInteger(), second.asLargeInteger());
+        }
+        
         int result = mData * second.mData;
         return STSmallInteger.create(result);
     }
@@ -88,6 +152,11 @@ public class STSmallInteger extends STNumber {
     @Override
     protected STNumber _divide(STNumber other) {
         STSmallInteger second = other.castToSubclass();
+        
+        if(isPreventDivideOverfow(mData, second.mData)) {
+            return divide(this.asLargeInteger(), second.asLargeInteger());
+        }
+        
         int result = mData / second.mData;
         return STSmallInteger.create(result);
     }
@@ -158,7 +227,7 @@ public class STSmallInteger extends STNumber {
 
         return Universe.objects().FALSE;
     }
-    
+
     public String toString() {
         return Integer.toString(mData);
     }

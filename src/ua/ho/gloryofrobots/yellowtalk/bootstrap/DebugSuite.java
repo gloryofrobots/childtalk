@@ -1,7 +1,9 @@
 package ua.ho.gloryofrobots.yellowtalk.bootstrap;
 
 import ua.ho.gloryofrobots.yellowtalk.inout.InOutSuite;
+import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 
 public class DebugSuite {
@@ -53,6 +55,6 @@ public class DebugSuite {
     }
     
     public static void printTraceBackString(Routine routine) {
-        InOutSuite.toStdOut(getTraceBackString(routine));
+        SignalSuite.warning(getTraceBackString(routine));
     }
 }

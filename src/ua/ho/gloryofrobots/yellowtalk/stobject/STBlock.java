@@ -3,14 +3,12 @@ package ua.ho.gloryofrobots.yellowtalk.stobject;
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.BlockRoutine;
-import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
-import ua.ho.gloryofrobots.yellowtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
-import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.classprovider.BindingClassProvider;
 
-public class STBlock extends STExecutableObject implements ExceptionHandler {
+public class STBlock extends STExecutableObject {
     private static final long serialVersionUID = 1L;
+    
     STContext mContext = STContext.create();
     Routine mContinuation;
 
@@ -40,14 +38,9 @@ public class STBlock extends STExecutableObject implements ExceptionHandler {
         
         return block;
     }
-
-    @Override
-    public void onException(STObject exception, Routine routine) {
-        STStack stack = routine.getStack();
-        stack.push(exception);
-        SchedulingSuite.callExecutable(routine, this);
-    }
-
+    
+   
+   
     @Override
     public Routine createRoutine() {
         Routine routine = new BlockRoutine(this);

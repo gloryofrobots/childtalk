@@ -3,7 +3,7 @@
 
 TestCase subclass: ObjectTest [
 
-     test [
+     doTest [
         self testHasInitializeMethods.
         self testComparingMethods.
         self testAccessingMethods.
@@ -27,7 +27,7 @@ TestCase subclass: ObjectTest [
      testAccessingMethods [
         "Assert Object has the expected accessing methods."
         self assertTrue: (Object yourself == Object) withMessage: 'should evaluate to self.'.
-        self assertTrue: ('' class == Object) withMessage: '"" class == String'.
+        self assertTrue: ('' class == String) withMessage: '"" class == String'.
     ]
     
      testClassMembershipMethods [

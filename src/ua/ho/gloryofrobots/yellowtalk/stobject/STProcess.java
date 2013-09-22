@@ -1,7 +1,5 @@
 package ua.ho.gloryofrobots.yellowtalk.stobject;
 
-import java.util.ArrayList;
-
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
@@ -14,8 +12,7 @@ public class STProcess extends STObject {
     Routine mActiveRoutine;
     State mState;
     STStack mStack;
-    ArrayList<Routine> mRoutines = new ArrayList<Routine>();
- 
+
     public enum State {
         TERMINATED, SUSPENDED, ACTIVE, IDLE;
     }
@@ -52,52 +49,26 @@ public class STProcess extends STObject {
         Routine routine = executable.createRoutine();
         routine.call(this);
     }
-    static Routine sLastRoutine;
+
     public void setActiveRoutine(Routine routine) {
-        
+
         if (mActiveRoutine == routine) {
             return;
         }
-        
-        if(mRoutines.contains(routine) == false){
-            mRoutines.add(routine);
-        }
+
         mActiveRoutine = routine;
         // routine.setProcess(this);
     }
-    public static int sMark = 0;
+
     public void execute() {
-        
         findRoutineToExecute();
-        
-        
-        
-        /*if(sLastRoutine!=mActiveRoutine && mActiveRoutine!=null){
-            if(sMark > 0) {
-                sMark++;
-            }
-            
-            System.out.println("!!!!!!!!!!!!!! "+mActiveRoutine);
-            STContext c = mActiveRoutine.getContext();
-            STObject b = c.lookup(Universe.symbols().SELF);
-            if(sMark == 11 ) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+b.toString());
-                int bdsm = 1;
-                int x = bdsm;
-            }
-            sLastRoutine = mActiveRoutine;
-        }*/
-        
+
         if (mActiveRoutine == null) {
             terminate();
         } else {
             DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_SCHEDULER,
                     "Process run \n%s", mActiveRoutine.toString());
-            
-            
-            /*System.out.println("!!!!!!!!!!!!!!1");
-            DebugSuite.printTraceBackString(mActiveRoutine);
-            System.out.println(mActiveRoutine);*/
+
             mActiveRoutine.execute();
         }
     }
@@ -105,7 +76,7 @@ public class STProcess extends STObject {
     private void findRoutineToExecute() {
         Routine routine = mActiveRoutine;
         while (routine != null && routine.isComplete() == true) {
-            routine.uncomplete();
+            // routine.uncomplete();
             routine = routine.getCaller();
         }
         mActiveRoutine = routine;
@@ -115,7 +86,8 @@ public class STProcess extends STObject {
         mActiveRoutine = mActiveRoutine.getCaller();
     }
 
-    public void explicitCompliteRoutineWithResult(STObject result, Routine continuation) {
+    public void explicitCompliteRoutineWithResult(STObject result,
+            Routine continuation) {
         Routine top = mActiveRoutine;
         while (top != continuation) {
             if (top == null) {
@@ -155,9 +127,34 @@ public class STProcess extends STObject {
 
     public STObject getResult() {
         if (mStack.getCurrentIndex() != 0) {
-            return null;
+            return Universe.objects().NIL;
         }
 
         return mStack.peek();
     }
+
+    public void raiseFromRoutine(Routine routine, STObject signal) {
+        Routine current = routine;
+        while (current != null) {
+            if (current.canHandleSignal(signal)) {
+                setActiveRoutine(current);
+                current.handleSignal(signal);
+                return;
+            }
+
+            current = current.getCaller();
+        }
+
+        onUnhandledSignal(routine, signal);
+    }
+
+    private void onUnhandledSignal(Routine routine, STObject signal) {
+        //TODO Process name. Good TraceBack
+        SignalSuite.warning("Unhandled signal");
+       
+        DebugSuite.printTraceBackString(mActiveRoutine);
+        terminate();
+    }
+
+   
 }

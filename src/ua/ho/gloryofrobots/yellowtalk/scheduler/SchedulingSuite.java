@@ -23,13 +23,13 @@ public class SchedulingSuite {
         return sScheduler;
     }
 
-    public static void callForSelector(Routine caller, STObject receiver,
+    public static Routine callForSelector(Routine caller, STObject receiver,
             STSymbol selector) {
         STClass superClass = receiver.getSTClass();
         if(superClass == null) {
             SignalSuite.warning("Super class is null %s for %s",
                     selector.toString(), receiver.toString());
-            return;
+            return null;
         }
         //STClass supersuperclass = superClass.getSTClass();
         //STClass meta = Universe.classes().Metaclass;
@@ -42,14 +42,14 @@ public class SchedulingSuite {
                     selector.toString(), superClass.toString());
             SignalSuite.raiseError(caller, "Unknown method %s in class %s",
                     selector.toString(), superClass.toString());
-            return;
+            return null;
         }
 
-        callExecutable(caller, executable);
+        return callExecutable(caller, executable);
 
     }
 
-    public static void callForSelectorWithArguments(Routine caller,
+    public static Routine callForSelectorWithArguments(Routine caller,
             STObject receiver, STSymbol selector, STObject... args) {
         STStack stack = caller.getStack();
         
@@ -65,23 +65,22 @@ public class SchedulingSuite {
                     selector.toString(), superClass.toString());
         }
 
-        callExecutable(caller, executable);
-
+        return callExecutable(caller, executable);
     }
 
-    public static void callExecutable(Routine caller,
+    public static Routine callExecutable(Routine caller,
             STExecutableObject executable) {
         Routine routine = executable.createRoutine();
         routine.callFrom(caller);
+        return routine;
     }
 
     public static void callExecutableWithExceptionHandling(Routine caller,
-            STExecutableObject executable, STObject exception,
-            ExceptionHandler handler) {
+            STExecutableObject executable, STObject signal,
+            STExecutableObject handler) {
+        
         Routine routine = executable.createRoutine();
-
-        routine.setHandledException(exception);
-        routine.setExceptionHandler(handler);
+        routine.initSignalHandling(handler, signal);
         routine.callFrom(caller);
     }
 
@@ -95,10 +94,6 @@ public class SchedulingSuite {
         process.callExecutable(executable);
         runProcess(process);
         return process;
-    }
-
-    public static void raiseSignal(STSignal signal, Routine routine) {
-        routine.raise(signal);
     }
 
     public static void runProcess(STProcess process) {

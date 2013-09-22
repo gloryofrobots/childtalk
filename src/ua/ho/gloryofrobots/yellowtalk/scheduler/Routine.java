@@ -33,10 +33,11 @@ public abstract class Routine {
     
     protected STArray mArguments;
     
-    protected ExceptionHandler mExceptionHandler;
-
-    protected STObject mHandledException;
+    protected STExecutableObject mSignalHandler;
+    protected STObject mHandledSignal;
+    
     protected int mStackEnterPosition;
+    
     public Routine(STExecutableObject executable) {
         mExecutable = executable;
         mBytecode = mExecutable.getBytecode();
@@ -130,7 +131,6 @@ public abstract class Routine {
         return mExecutable;
     }
 
-    // TODO REMOVE TO METHOD
     public STContext getContext() {
         return mContext;
     }
@@ -139,33 +139,12 @@ public abstract class Routine {
         return mProcess;
     }
 
-    public void compliteWithResult(STObject result) {
-        onCompliteWithResult(result);
-    }
-    
-    public void setExceptionHandler(ExceptionHandler handler) {
-        mExceptionHandler = handler;
-    }
-
-    public void setHandledException(STObject exception) {
-        mHandledException = exception;
-    }
-
-    protected boolean handleException(STObject exception) {
-        if(mHandledException != exception) {
-            return false;
-        }
-        
-        mExceptionHandler.onException(exception, this);
-        return true;
-    }
-    protected abstract void onCompliteWithResult(STObject result);
-
     public STObject getArgument(int index) {
         if(index < 0 || index > mArguments.size()) {
             //FIXME signal
             throw new RuntimeException();
         }
+        
         return mArguments.at(index);
     }
 
@@ -185,13 +164,43 @@ public abstract class Routine {
         }
     }
     
-    public void raise(STSignal signal) {
-        throw new RuntimeException();
-    }
-
     public Routine getCaller() {
         return mCaller;
     }
+    
+    public void compliteWithResult(STObject result) {
+        onCompliteWithResult(result);
+    }
+    
+    ///SIGNALS
+    
+    public void initSignalHandling(STExecutableObject handler, STObject signal) {
+        mSignalHandler = handler;
+        mHandledSignal = signal;
+    }
+    
+    public boolean canHandleSignal(STObject signalInstance) {
+        if(mHandledSignal == null) {
+            return false;
+        }
+
+        STObject signal = signalInstance.getSTClass();
+        if(mHandledSignal != signalInstance.getSTClass()) {
+            return false;
+        }
+
+        return true;
+    }
+        
+    public void handleSignal(STObject signal) {
+        mStack.push(mHandledSignal);
+        SchedulingSuite.callExecutable(this, mSignalHandler);
+    }
+
+    public void raise(STObject receiver) {
+        mProcess.raiseFromRoutine(this, receiver);
+    }
+
     
     @Override
     public String toString() {
@@ -203,5 +212,6 @@ public abstract class Routine {
         return data;
     }
     
+    protected abstract void onCompliteWithResult(STObject result);
     abstract public String createErrorString();
 }

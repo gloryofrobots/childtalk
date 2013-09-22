@@ -1,17 +1,18 @@
 Object extend [
         
-    initialize [yourself]
-    finalize [yourself]
-
-    copy [
-        ^ self shallowCopy
-    ]
-   
-    shallowCopy [
-        <primitive: 'Object_copy'>
-        ^self
+    initialize [
+        yourself
     ]
     
+    finalize [
+        yourself
+    ]
+
+    copy [
+        <primitive: 'Object_copy'>
+        self primitiveFailed
+    ]
+   
     hash [
         <primitive: 'Object_hash'>
         self primitiveFailed
@@ -56,6 +57,10 @@ Object extend [
     
     echo [
         <primitive: 'Object_echo'>
+    ]
+    
+    pln [
+        <primitive: 'Object_println'>
     ]
     
     echo: aObject [

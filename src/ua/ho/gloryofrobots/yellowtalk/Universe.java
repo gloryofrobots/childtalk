@@ -129,6 +129,7 @@ public class Universe {
         public STSymbol SUPER;
         public STSymbol ERROR_COLON;
         public STSymbol THIS_CONTEXT;
+        public STSymbol PRINT;
     }
     
     
@@ -171,6 +172,7 @@ public class Universe {
         public  STClass Behaviour;
         public  STClass DateTime;
         public  STClass Signal;
+        public  STClass UndefinedObject;
     }
     
     private static Classes sClasses;
@@ -191,6 +193,7 @@ public class Universe {
         sSymbols.SUPER = STSymbol.unique("super");
         sSymbols.ERROR_COLON = STSymbol.unique("error:");
         sSymbols.THIS_CONTEXT = STSymbol.unique("thisContext");
+        sSymbols.PRINT = STSymbol.unique("print");
         
         sObjects.FALSE = STLabeledObject.create("false");
         
@@ -251,7 +254,9 @@ public class Universe {
         sClasses.DateTime = sImage.getAndCast("DateTime");
         sClasses.Signal = sImage.getAndCast("Signal");
         sClasses.Collection = sImage.getAndCast("Collection");
+        sClasses.UndefinedObject = sImage.getAndCast("UndefinedObject");
         
+        sObjects.NIL.setSTClass(sClasses.UndefinedObject);
         sObjects.FALSE.setSTClass(sClasses.False);
         sObjects.TRUE.setSTClass(sClasses.True);
         STProtoObject.get().setSuperClass(sClasses.Object);

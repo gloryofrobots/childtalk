@@ -1,12 +1,9 @@
 package ua.ho.gloryofrobots.yellowtalk.bootstrap;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
-import ua.ho.gloryofrobots.yellowtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
-import ua.ho.gloryofrobots.yellowtalk.scheduler.ExceptionHandler;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
-import ua.ho.gloryofrobots.yellowtalk.stobject.STArray;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STByteObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STCharacter;
@@ -115,8 +112,8 @@ public class PrimitivesSuite {
 
                 STNumber second = getStrictCastedObject(routine,
                         routine.getArgument(0), "Number");
-                //DebugSuite.printTraceBackString(routine);
-                
+                // DebugSuite.printTraceBackString(routine);
+
                 return STNumber.lessEqual(first, second);
             }
         };
@@ -209,10 +206,23 @@ public class PrimitivesSuite {
         initialiseDateTime();
         initialiseSmalltalk();
         intitaliseContext();
+        
+        intitaliseSignal();
+    }
+
+    private static void intitaliseSignal() {
+        STClass signal = Universe.classes().Signal;
+        signal.setPrimitive("Signal_raise", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                routine.raise(receiver);
+                return Universe.objects().NIL;
+            }
+        });
     }
 
     private static void intitaliseContext() {
-        // TODO Auto-generated method stub
         STClass context = Universe.classes().Context;
         context.setPrimitive("Context_echo", new STPrimitive() {
             @Override
@@ -479,6 +489,16 @@ public class PrimitivesSuite {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 // TODO DELETE
+                System.out.print(receiver);
+                return Universe.objects().NIL;
+            }
+        });
+        
+        object.setPrimitive("Object_println", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                // TODO DELETE
                 System.out.println(receiver);
                 return Universe.objects().NIL;
             }
@@ -502,12 +522,11 @@ public class PrimitivesSuite {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                STObject exception = stack.pop();
-                STBlock block = (STBlock) stack.pop();
+                STObject exception = routine.getArgument(0);
+                STBlock block = routine.getArgument(1).castToSubclass();
 
                 SchedulingSuite.callExecutableWithExceptionHandling(routine,
-                        (STExecutableObject) receiver, exception,
-                        (ExceptionHandler) block);
+                        (STExecutableObject) receiver, exception, block);
 
                 return Universe.objects().NIL;
             }
@@ -570,23 +589,23 @@ public class PrimitivesSuite {
                 return Universe.objects().NIL;
             }
         });
-        
+
         behaviour.setPrimitive("Behavior_doesUnderstand", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STObject key = routine.getArgument(0);
                 STClass klass = receiver.castToSubclass();
-                
-                if(klass.findMethod(key) != null) {
+
+                if (klass.findMethod(key) != null) {
                     return Universe.objects().TRUE;
                 }
-                
+
                 return Universe.objects().FALSE;
             }
         });
     }
-    
+
     private static void initialiseByteArray() {
         STClass byteArray = Universe.classes().ByteArray;
 

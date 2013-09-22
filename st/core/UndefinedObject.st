@@ -3,6 +3,10 @@ UndefinedObject extend [
             aStream nextPutAll: 'nil'
         ] 
         
+        copy [
+            ^ self.
+        ]
+        
         ifNil: aBlock [
             ^aBlock value
         ]

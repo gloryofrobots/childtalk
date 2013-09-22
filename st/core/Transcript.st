@@ -5,6 +5,10 @@ Transcript extend [
         anObject echo.
     ]
     
+    (+) showCr: anObject [
+        self show: anObject; cr;
+    ]
+    
     (+) cr [
         self show: '\n'
     ]

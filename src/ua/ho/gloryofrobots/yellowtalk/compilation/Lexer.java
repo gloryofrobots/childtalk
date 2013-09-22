@@ -309,8 +309,7 @@ public class Lexer{
 
     private String getStringFromStream() throws FileEvalException {
         char lastChar;
-        String str = new String();
-        
+        StringBuilder builder = new StringBuilder();
         while (true) {
             //Yes, i know this is very inefficient:)
             while ((lastChar = forwardChar()) != '\0' && lastChar != '\'') {
@@ -321,24 +320,24 @@ public class Lexer{
                     else if(special == 'f') lastChar = '\f';
                     else if(special == 'r') lastChar = '\r';
                     else if(special == '\\') lastChar = '\\';
-                    else if(special == '"') lastChar = '"';
+                    //else if(special == '"') lastChar = '"';
                     else {
                         pushBackChar(1);
                     }
                 }
-                str += lastChar;
+                builder.append(lastChar);
             }
 
             lastChar = forwardChar();
 
             if (lastChar == '\'') {
-                str += lastChar;
+                builder.append(lastChar);
             } else {
                 pushBackChar(1);
                 break;
             }
         }
-        return str;
+        return builder.toString();
     }
 
     private void matchString(Token token, char lastChar)
@@ -349,7 +348,7 @@ public class Lexer{
 
     private void matchSymbol(Token token, char lastChar)
             throws FileEvalException {
-
+        
         String str = new String();
         /* check for symbol enclosed by quotes like a string #'symbol' */
         lastChar = forwardChar();
@@ -394,18 +393,19 @@ public class Lexer{
 
     private void matchNumber(Token token, char lastChar)
             throws FileEvalException {
-        String str = new String();
-
+        StringBuilder builder = new StringBuilder(2);
+        String data;
         int radix = 10;
         boolean sign = false;
-
+        
         do {
-            str += lastChar;
+            builder.append(lastChar);
             lastChar = forwardChar();
         } while (lastChar != '\0' && isDigit(lastChar));
         
-        if (token.evalInteger(str, radix) == false) {
-            if (token.evalLargeInteger(str, radix) == false) {
+        data = builder.toString();
+        if (token.evalInteger(data, radix) == false) {
+            if (token.evalLargeInteger(data, radix) == false) {
                 lexerError("Error in integer format", token);
             }
         }
@@ -413,24 +413,35 @@ public class Lexer{
         /* a radix? */
         if (toLowerChar(lastChar) == 'r') {
             radix = token.integerValue();
+            if(radix < 0) {
+                sign = true;
+                radix = Math.abs(radix);
+            }
+            
             if (radix < 2 || radix > 36) {
                 lexerError("Invalid integer radix", token);
             }
-
-            str = "";
+            
+            builder.setLength(0);
+            
             while ((lastChar = forwardChar()) != '\0' && isXDigit(lastChar)) {
-                str += lastChar;
+                builder.append(lastChar);
             }
 
-            if (str.length() == 0) {
+            if (builder.length() == 0) {
                 pushBackChar(1);
                 return;
             }
 
             token.clear();
-           
-            if (token.evalInteger(str, radix) == false) {
-                if (token.evalLargeInteger(str, radix) == false) {
+            
+            if(sign == true) {
+                builder.insert(0, '-');
+            }
+            
+            data = builder.toString();
+            if (token.evalInteger(data, radix) == false) {
+                if (token.evalLargeInteger(data, radix) == false) {
                     lexerError("Error in integer format after radix", token);
                 }
             }
@@ -439,15 +450,16 @@ public class Lexer{
         /* a float? */
         if (lastChar == '.') {
             if ((lastChar = forwardChar()) != '\0' && isDigit(lastChar)) {
-                str += '.';
+                builder.append('.');
                 do {
-                    str += lastChar;
+                    builder.append(lastChar);
                     lastChar = forwardChar();
                 } while (lastChar != '\0' && isDigit(lastChar));
 
                 token.clear();
-
-                if (token.evalFloat(str) == false) {
+                
+                data = builder.toString();
+                if (token.evalFloat(data) == false) {
                     lexerError("Error in float format", token);
                 }
             } else {
@@ -464,17 +476,18 @@ public class Lexer{
             }
 
             if (lastChar != '\0' && isDigit(lastChar)) {
-                str += 'e';
-                if (sign)
-                    str += '-';
+                builder.append('e');
+                if (sign) {
+                    builder.append('-');
+                }
                 do {
-                    str += lastChar;
+                    builder.append(lastChar);
                     lastChar = forwardChar();
                 } while (lastChar != '\0' && isDigit(lastChar));
 
                 pushBackChar(1);
-
-                if (token.evalFloat(str) == false) {
+                data = builder.toString();
+                if (token.evalFloat(data) == false) {
                     lexerError("Error in float format", token);
                 }
 

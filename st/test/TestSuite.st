@@ -6,19 +6,18 @@ Object subclass: TestSuite [
         self show: '-------------------------------------------------------'.
         self show: '--- S m a l l t a l k  T e s t s'.
         self show: '-------------------------------------------------------'.
-        self show: 'Running ObjectTests'.
-        ObjectTest new test.
-        self show: 'Running TrueTests'.
-        TrueTest new test.
-        self show: 'Running FalseTests'.
-        FalseTest new test.
         
+        (ObjectTest new:'Object') test.
+        
+        (TrueTest new:'True') test.
+        
+        (FalseTest new:'False') test.
+        
+        (UndefinedObjectTest new:'UndefinedObject') test.
+        
+        (CommonTest new:'CommonTest') test.
         "
-        self show: 'Running SimpleTest'.
         SimpleTest new test.
-        self show: 'Running UndefinedObjectTests'.
-        UndefinedObjectTest new test.
-        
         "
     ]
     show: message [
