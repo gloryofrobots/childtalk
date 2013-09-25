@@ -18,7 +18,7 @@ public class SymbolNode extends Node implements NodeFactory{
     @Override
     public STObject createObject() {
         // TODO Auto-generated method stub
-        return  STSymbol.unique(mData);
+        return  STSymbol.create(mData);
     }
     
     

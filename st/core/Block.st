@@ -12,11 +12,15 @@ Block extend [
     ]
     
     on: anExceptionClass do: aBlock  [
-        "If anExceptionClass, or its subclasses, are signaled, aBlock is evaluated with the exception as argument"
-        <primitive: 'Block_on_do'>
-        self primitiveFailed
+       ^ self on: anExceptionClass do: aBlock withEnsured: nil.
     ]
      
+     on: anExceptionClass do: aBlock withEnsured: aEnsuredBlock  [
+        "If anExceptionClass, or its subclasses, are signaled, aBlock is evaluated with the exception as argument"
+        <primitive: 'Block_on_do_ensure'>
+        self primitiveFailed
+    ]
+    
     ifCurtailed: aBlock  [
         "Be sure aBlock is called if an error occurs evaluating the receiver"
         ^self on: Signal do: [ :ex | aBlock value. ex pass. ^nil ]
@@ -24,13 +28,7 @@ Block extend [
     
     ensure: aBlock [ 
         "Be sure aBlock is called if an error occurs or not"
-        | ctx |
-        ctx := self asContextWithArguments: #().
-        ctx
-    	handledException: Signal;
-    	handlerBlock: [ :ex | aBlock value. ex pass. ^nil ];
-    	ensureBlock: aBlock.
-        ^Processor enter: ctx
+         ^ self on: Signal do:[ :ex | aBlock value. ^nil] withEnsured:aBlock.
     ]
     
     value  [
@@ -46,6 +44,16 @@ Block extend [
     ]
     
     value: firstObject value: secondObject  [
+        <primitive: 'Block_value'>
+        WrongArgumentCount signal
+    ]
+    
+    value: firstObject value: secondObject value: thirdObject [
+        <primitive: 'Block_value'>
+        WrongArgumentCount signal
+    ]
+    
+    value: firstObject value: secondObject value: thirdObject value: fourthObject[
         <primitive: 'Block_value'>
         WrongArgumentCount signal
     ]

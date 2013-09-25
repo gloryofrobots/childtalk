@@ -9,7 +9,7 @@ public class STSymbol extends STString {
     private static final long serialVersionUID = 1L;
     private static HashMap<String, STSymbol> mStorage = new HashMap<String, STSymbol>();
     
-    public static STSymbol unique(String str) {
+    public static STSymbol create(String str) {
         STSymbol symbol = mStorage.get(str);
         if(symbol == null) {
             symbol = new STSymbol(str);
@@ -32,6 +32,10 @@ public class STSymbol extends STString {
     }
     
     public STString toSTString() {
+        return this;
+    }
+    
+    public STSymbol toSymbol() {
         return this;
     }
 }

@@ -12,10 +12,7 @@ public class BytecodeOperationPushObject extends BytecodeOperation {
     void perform(int argument)  {
         STContext context = mRoutine.getContext();
         STObject name = mRoutine.getExecutable().getLiteral(argument);
-        if(name.toString().equals("block2")) {
-            int bdsm = 1;
-            int x =bdsm;
-        }
+      
         STObject obj = context.lookup(name);
         if(obj == null) {
             obj = context.lookup(name);

@@ -45,4 +45,10 @@ public class LoopRoutine extends Routine {
         return null;
     }
 
+    @Override
+    protected void initContext() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

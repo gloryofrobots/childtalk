@@ -55,17 +55,14 @@ Object extend [
         ^true
     ] 
     
-    echo [
-        <primitive: 'Object_echo'>
-    ]
-    
     pln [
         <primitive: 'Object_println'>
+        self primitiveFailed
     ]
     
-    echo: aObject [
-        self echo.
-        aObject echo.
+    pln: aObject [
+        self pln.
+        aObject pln.
     ]
     
     class [
@@ -92,7 +89,6 @@ Object extend [
     ] 
     
     error: messageText [
-        "<primitive: 'Object_fatalError'>"
         Error signal: messageText
     ]
     
@@ -214,10 +210,12 @@ Object extend [
     printString [
         "Answer a String representation of the receiver"
         | stream string|
+        
         string := String new.
         
         stream := WriteStream on: string.
         self printOn: stream.
+        
         ^stream contents
     ]
     species [

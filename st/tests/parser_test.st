@@ -58,7 +58,7 @@ Rectangle extend [
 EMPTY ARRAY!!!!!!!!"
 
 Eval [
-    'sa\n' echo.
+    SmallTalk at:#X pln.
 ]
 "
 Object subclass: R [

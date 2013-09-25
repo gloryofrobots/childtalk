@@ -52,6 +52,7 @@ public class STMethod extends STExecutableObject {
 
     public STPrimitive getPrimitive() {
         if (mOwnerClass == null) {
+            //System.out.printf("Owner class null %s\n",this.toString());
             return null;
         }
 
@@ -91,7 +92,7 @@ public class STMethod extends STExecutableObject {
     @Override
     public String toString() {
         String result = String.format(
-                "<Method %s from %s>",
+                "%s->%s",
                 (mSelector != null) ? mSelector.toString() : "",
                 (mOwnerClass != null) ? mOwnerClass.toString() : "");
 

@@ -26,7 +26,7 @@ Eval [
     
     Object subclass: #Transcript
            instanceVariableNames: ''
-           classVariableNames: ''.
+           classVariableNames: 'lineSeparator'.
     
     "Collections"
     
@@ -83,7 +83,10 @@ Eval [
     Object subclass: #Method
            instanceVariableNames: ''
            classVariableNames: ''.
-    
+           
+    Object subclass: #Process
+           instanceVariableNames: ''
+           classVariableNames: ''.
     
     "Streams"
     
@@ -115,15 +118,17 @@ Eval [
             instanceVariableNames: ''
                     classVariableNames: ''.
     
-    ByteStream subclass: #FileStream
+    "ByteStream subclass: #FileStream
            instanceVariableNames: 'handle name filePtr peek'
                classVariableNames: ''.
     
     FileStream subclass: #StdIOStream
            instanceVariableNames: ''
-           classVariableNames: ''.
+           classVariableNames: ''."
+    
     
     "Basic data types"
+    
     
     ByteArray subclass: #String
           instanceVariableNames: ''
@@ -203,14 +208,14 @@ Eval [
            instanceVariableNames: 'tally'
            classVariableNames: ''.
     
-    Dictionary subclass: #IdentityDictionary
-           instanceVariableNames: ''
-           classVariableNames: ''.
+    Object subclass: #InternalDictionary
+            instanceVariableNames: ''
+            classVariableNames: ''.
     
-    IdentityDictionary subclass: #SystemDictionary
-               instanceVariableNames: 'systemInitializationRequests commandLine startupProcess startupObject'
-               classVariableNames: ''.
-    
+    InternalDictionary subclass: #System
+            instanceVariableNames: ''
+            classVariableNames: ''.
+            
     "Exceptions"
     
     Object subclass: #Signal

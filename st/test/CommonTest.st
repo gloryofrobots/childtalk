@@ -22,27 +22,83 @@ A subclass: B [
     ]
 ]
 
+Object subclass: ArgTest [
+    sum: arg1 with: arg2 with: arg3 [
+        ^ (arg1 + arg2 + arg3).
+    ]
+]
+
+
 TestCase subclass: CommonTest [
     doTest [
         self testMethods.
         self testBlocks.
         self testPrimitiveNumbers.
         self testExceptions.
+        self testMultipleArguments.
     ]
+    
+    "-------------------------------------"
+    testMultipleArguments [
+        |argTest|
+        argTest := ArgTest new.
+        self assertTrue:((argTest sum:40 with:1 with:1) = 42) withMessage: 'ArgTest sum:40 with:1 with 1 = 42'.
+        self assertTrue:((argTest perform:#sum:with:with: with:40 with:1 with:1) = 42) withMessage: 'ArgTest perform:#sum:with:with with:40 with:1 with:1 = 42'.
+        self assertTrue:((argTest perform:'sum:with:with:' with:40 with:1 with:1) = 42) withMessage: 'ArgTest perform:"sum:with:with" with:40 with:1 with:1 = 42'.
+        self assertTrue:((argTest perform:#sum:with:with: withArguments:#(40 1 1)) = 42) withMessage: 'ArgTest perform:#sum:with:with withArguments:#(40 1 1) = 42'.
+        self assertTrue:(([:arg1 :arg2 | arg1 - arg2] value:43 value:1) = 42) withMessage: '[:arg1 :arg2 | arg1 - arg2] value:43 value:1 = 42'.
+    ]
+    
+    "------------------------------------"
     
     testExceptions [
         self assertTrue:(self testOnSignalDo) withMessage: 'testOnSignalDo = true'.
+        "self assertTrue:(self testOnSignalDo2) withMessage: 'testOnSignalDo2 = true'."
+        "self assertTrue:(self testResume) withMessage: 'testResume = true'."
+        self assertTrue:(self testEnsure1) withMessage: 'testEnsure1 = true'.
+        self assertTrue:(self testEnsure2 = nil) withMessage: 'testEnsure2 = nil'.
+        self assertTrue:(self testEnsure3) withMessage: 'testEnsure3 = true'.
+        self assertTrue:(self testEnsure4) withMessage: 'testEnsure4 = true'.
+        self assertTrue:(self testEnsure5 = false) withMessage: 'testEnsure5 = false'.
     ]
     
     testOnSignalDo [
         ^[Signal signal] on: Signal do: [:ex | true]
     ]
+    testOnSignalDo2 [
+        ^[[Error signal. 123] on: Error do: [ :ex | ex pass. 213]] on: Exception do: [:ex | true]
+    ]
+    
+    testResume [
+        ^[Signal signal. true] on: Signal do: [ :ex | ex resume. 321]
+    ]
+    
+    testEnsure1 [
+        ^[Signal signal] ensure:[^true]
+    ]
+    
+    testEnsure2 [
+        ^[Signal signal] ensure:[true]
+    ]
+    
+    testEnsure3 [
+        ^[^true] ensure:[false]
+    ]
+    
+    testEnsure4 [
+        ^[true] ensure:[false]
+    ]
+     
+    testEnsure5 [
+        ^[true] ensure:[^false]
+    ]
+    
+    "------------------------------------"
     
     testMethods[
         self assertTrue:(self testMethodAssignment = 559) withMessage: '123 + 16r2AE + -2r100 = 559'.
         self assertTrue:(self testMethodAssignmentAndBlock = 3) withMessage: 'self testAssignmentAndBlock = 3'.
         self assertTrue:(self testMethodIfTrueIfFalse = 123) withMessage: 'self testMethodIfTrueIfFalse = 123'.
-        
     ]
     
     testMethodAssignment [

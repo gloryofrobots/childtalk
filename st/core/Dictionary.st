@@ -36,7 +36,7 @@ Dictionary extend [
     	d at: k put: v ].
         ObjectMemory atData: self put: d
     ]
-    
+ 
     indexOf: aKey [
         | i n size |
         size := self basicSize.

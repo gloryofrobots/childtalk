@@ -17,6 +17,8 @@ public class BytecodeWriter {
         mCompileInfo = info;
     }
     
+    
+    
     public void append(BytecodeType codeType, int argument, Node node) {
         short command = (short) codeType.ordinal();
         mBytecode.set(mIndex, command, argument);
@@ -32,5 +34,10 @@ public class BytecodeWriter {
     
     public void pushConstant(BytecodeType.Constant constant, Node node) {
         append(BytecodeType.PUSH_CONSTANT, constant.ordinal(), node);
+    }
+
+    public BytecodeType getCodeFromEnd(int count) {
+        int code = mBytecode.getHigh(mIndex - count);
+        return BytecodeType.values()[code];
     }
 }

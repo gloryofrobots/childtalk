@@ -68,7 +68,7 @@ public abstract class STExecutableObject extends STObject {
         mArguments.clear();
         for(String name : names) {
             try {
-                addArgument(STSymbol.unique(name));
+                addArgument(STSymbol.create(name));
             } catch (DuplicateVariableException e) {
                 continue;
             }

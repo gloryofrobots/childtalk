@@ -1,7 +1,7 @@
 Collection extend [
     
     (+) newWithSize: aSize [
-        <primitive: 'Collection_new'>
+        <primitive: 'Collection_newColon'>
         self primitiveFailed
     ]
     

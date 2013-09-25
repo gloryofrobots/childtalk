@@ -111,20 +111,6 @@ LargeInteger extend [
     	 ^super * aNumber
     ]
     
-    // aNumber [
-         <primitive: 'LargeInteger_intDiv'>
-    	 self generality > aNumber generality
-    	     ifTrue: [ ^self // (self coerce: aNumber) ]
-    	     ifFalse: [ ^(aNumber coerce: self) // aNumber ]
-    ]
-    
-    quo: aNumber [
-         <primitive: 'LargeInteger_quo'>
-    	 self generality > aNumber generality
-    	     ifTrue: [ ^self // (self coerce: aNumber) ]
-    	     ifFalse: [ ^(aNumber coerce: self) // aNumber ]
-    ]
-    
     \\ aNumber [
          <primitive: 'LargeInteger_mod'>
     	 ^super \\ aNumber

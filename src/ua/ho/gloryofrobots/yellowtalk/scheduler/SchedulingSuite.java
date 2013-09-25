@@ -2,6 +2,9 @@ package ua.ho.gloryofrobots.yellowtalk.scheduler;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.Loader;
+import ua.ho.gloryofrobots.yellowtalk.compilation.CompileSuite;
+import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStreamInterface;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
@@ -23,25 +26,24 @@ public class SchedulingSuite {
         return sScheduler;
     }
 
-    public static Routine callForSelector(Routine caller, STObject receiver,
-            STSymbol selector) {
-        STClass superClass = receiver.getSTClass();
-        if(superClass == null) {
-            SignalSuite.warning("Super class is null %s for %s",
-                    selector.toString(), receiver.toString());
+    public static Routine callForSelector(Routine caller, STClass klass,
+            STObject selector) {
+        
+        if (klass == null) {
+            SignalSuite.warning("Super class is null for selector %s ",
+                    selector.toString());
             return null;
         }
-        //STClass supersuperclass = superClass.getSTClass();
-        //STClass meta = Universe.classes().Metaclass;
-        STExecutableObject executable = superClass.findMethod(selector);
+       
+        STExecutableObject executable = klass.findMethod(selector);
 
         if (executable == null) {
             // TODO ST exception here
             DebugSuite.printTraceBackString(caller);
             SignalSuite.error("Unknown method %s in class %s",
-                    selector.toString(), superClass.toString());
+                    selector.toString(), klass.toString());
             SignalSuite.raiseError(caller, "Unknown method %s in class %s",
-                    selector.toString(), superClass.toString());
+                    selector.toString(), klass.toString());
             return null;
         }
 
@@ -52,11 +54,11 @@ public class SchedulingSuite {
     public static Routine callForSelectorWithArguments(Routine caller,
             STObject receiver, STSymbol selector, STObject... args) {
         STStack stack = caller.getStack();
-        
-        for(STObject arg : args) {
+
+        for (STObject arg : args) {
             stack.push(arg);
         }
-        
+
         STClass superClass = receiver.getSTClass();
         STExecutableObject executable = superClass.findMethod(selector);
 
@@ -77,10 +79,10 @@ public class SchedulingSuite {
 
     public static void callExecutableWithExceptionHandling(Routine caller,
             STExecutableObject executable, STObject signal,
-            STExecutableObject handler) {
-        
+            STExecutableObject handler, STExecutableObject ensured) {
+
         Routine routine = executable.createRoutine();
-        routine.initSignalHandling(handler, signal);
+        routine.initSignalHandling(signal, handler, ensured);
         routine.callFrom(caller);
     }
 
@@ -102,4 +104,5 @@ public class SchedulingSuite {
             scheduler().enable();
         }
     }
+    
 }

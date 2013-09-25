@@ -13,12 +13,12 @@ public class EvalNode extends ExecutableNode implements NodeFactory{
     public STObject createObject() throws NodeFactoryException {
         //represent Eval as method
         STMethod method = STMethod.create();
-        method.setSelector(STSymbol.unique("Eval"));
+        method.setSelector(STSymbol.create("Eval"));
         method.setCompileInfo(mCompileInfo);
         List<String> temporaries = getTemporaries();
         for (String varName : temporaries) {
             try {
-                method.addTemporary(STSymbol.unique(varName));
+                method.addTemporary(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 throw new NodeFactoryException(
                         "Duplicate method temporary variable " + varName);

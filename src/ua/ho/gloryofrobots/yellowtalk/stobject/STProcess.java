@@ -40,7 +40,9 @@ public class STProcess extends STObject {
     public State getState() {
         return mState;
     }
-
+    
+  
+    
     private void setState(State state) {
         mState = state;
     }
@@ -132,8 +134,13 @@ public class STProcess extends STObject {
 
         return mStack.peek();
     }
-
-    public void raiseFromRoutine(Routine routine, STObject signal) {
+    
+    public void terminateFromRoutine(Routine routine) {
+        DebugSuite.printTraceBackString(routine);
+        terminate();
+    }
+    
+    public void raiseFromRoutine(Routine routine, STObject signal) {    
         Routine current = routine;
         while (current != null) {
             if (current.canHandleSignal(signal)) {
@@ -155,6 +162,4 @@ public class STProcess extends STObject {
         DebugSuite.printTraceBackString(mActiveRoutine);
         terminate();
     }
-
-   
 }

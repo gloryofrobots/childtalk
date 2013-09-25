@@ -356,4 +356,13 @@ Number extend [
         ^self * self
     ]
     
+    printString[
+        <primitive: 'Number_toString'>
+    ]
+    
+    printOn: aStream [
+        "Append to aStream a String representation of the receiver"
+        aStream
+            nextPutAll: self printString; 
+    ]
 ]

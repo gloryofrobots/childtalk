@@ -23,7 +23,7 @@ public class STClass extends STObject {
     Class<?> mInternalObjectClass = null;
 
     public static STClass create(String name) {
-        return create(STSymbol.unique(name));
+        return create(STSymbol.create(name));
     }
 
     public static STClass create(STSymbol name) {
@@ -43,8 +43,8 @@ public class STClass extends STObject {
         mPrimitives = STDictionary.create();
         mSubclasses = STArray.create();
         transformToScopedObject();
-        mScope.put(STSymbol.unique("classSubclasses"), mSubclasses);
-        mScope.put(STSymbol.unique("instanceVariableNames"), mInstanceVariables);
+        mScope.put(STSymbol.create("classSubclasses"), mSubclasses);
+        mScope.put(STSymbol.create("instanceVariableNames"), mInstanceVariables);
     }
 
     public void setInternalObjectClass(Class<?> _class) {
@@ -57,7 +57,7 @@ public class STClass extends STObject {
 
     public void setSuperClass(STClass _class) {
         mSuperClass = _class;
-        mScope.put(STSymbol.unique("classSuperclass"), mSuperClass);
+        mScope.put(STSymbol.create("classSuperclass"), mSuperClass);
     }
 
     public STClass getSuperClass() {
@@ -141,7 +141,7 @@ public class STClass extends STObject {
 
     public void setName(STSymbol name) {
         mName = name;
-        mScope.put(STSymbol.unique("className"), mName);
+        mScope.put(STSymbol.create("className"), mName);
     }
 
     public STSymbol getName() {
@@ -159,7 +159,7 @@ public class STClass extends STObject {
     }
 
     public void setPrimitive(String name, STPrimitive primitive) {
-        STSymbol symbolName = STSymbol.unique(name);
+        STSymbol symbolName = STSymbol.create(name);
         setPrimitive(symbolName, primitive);
     }
 
@@ -208,10 +208,9 @@ public class STClass extends STObject {
     public String toString() {
         return "<STClass  " + mName + ">";
     }
-
-    public List<STSymbol> getUnknownPrimitives() {
-        List<STSymbol> primitives = new ArrayList<STSymbol>();
-        List<STObject> objects = mScope.asList();
+    
+    public void _getUnknownPrimitives(List<STSymbol> primitives, STScope scope) {
+        List<STObject> objects = scope.asList();
         for(STObject obj : objects) {
             if((obj instanceof STMethod) == false) {
                 continue;
@@ -221,10 +220,27 @@ public class STClass extends STObject {
             if(method.hasPrimitive() == false) {
                 continue;
             }
+            
             if(method.getPrimitive() == null) {
+                method.getPrimitive();
+                
+                if(primitives.contains(method.getPrimitiveName())) {
+                    continue;
+                }
+                
                 primitives.add(method.getPrimitiveName());
             }
         }
+    }
+
+    public List<STSymbol> getUnknownPrimitives(List<STSymbol> primitives) {
+        _getUnknownPrimitives(primitives, mScope);
+        STClass klass = getSTClass();
+        
+        if(klass != null && klass.getScope() != null) {
+            _getUnknownPrimitives(primitives, klass.getScope());
+        }
+        
         return primitives;
     }
 

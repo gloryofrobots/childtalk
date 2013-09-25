@@ -47,6 +47,11 @@ public class PrimitiveRoutine extends Routine {
     @Override
     protected void createContext() {
         mContext = STContext.create();
+        mContext.setRoutine(this);
+    }
+    
+    @Override
+    protected void initContext() {
         STObject receiver = mStack.pop();
         mContext.setReceiver(receiver);
     }
@@ -59,11 +64,16 @@ public class PrimitiveRoutine extends Routine {
         }
 
         if (mPrimitive.execute(this) == false) {
-            mFailed = true;
-            // Primitive failed. Execute method bytecodes
-            Routine routine = new MethodRoutine(mExecutable);
-            routine.callFrom(this);
+            onFailed();
         } 
+    }
+    
+ // Primitive failed. Execute method bytecodes
+    private void onFailed() {
+        mFailed = true;
+        Routine routine = new MethodRoutine(mExecutable);
+        mStack.push(mContext.getReceiver());
+        routine.callFrom(this);
     }
 
     @Override

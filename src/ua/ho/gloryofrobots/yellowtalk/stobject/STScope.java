@@ -69,6 +69,7 @@ public class STScope extends STInternalDictionary {
     
     public STObject lookup(STObject key) {
         STScope scope = this;
+        ArrayList<STObject> data = mData;
         while(scope != null) {
             STObject  value = scope.at(key);
             if(value != null) {

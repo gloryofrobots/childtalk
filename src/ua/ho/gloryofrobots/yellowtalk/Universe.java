@@ -147,6 +147,10 @@ public class Universe {
     }
     */
     public static class Classes{
+        public  STClass InternalDictionary;
+        public  STClass System;
+        public  STClass Number;
+        public  STClass Transcript;
         public  STClass Collection;
         public  STClass Stack;
         public  STClass Scope;
@@ -189,11 +193,11 @@ public class Universe {
         sSymbols = new Symbols();
         sClasses = new Classes();
         
-        sSymbols.SELF = STSymbol.unique("self");
-        sSymbols.SUPER = STSymbol.unique("super");
-        sSymbols.ERROR_COLON = STSymbol.unique("error:");
-        sSymbols.THIS_CONTEXT = STSymbol.unique("thisContext");
-        sSymbols.PRINT = STSymbol.unique("print");
+        sSymbols.SELF = STSymbol.create("self");
+        sSymbols.SUPER = STSymbol.create("super");
+        sSymbols.ERROR_COLON = STSymbol.create("error:");
+        sSymbols.THIS_CONTEXT = STSymbol.create("thisContext");
+        sSymbols.PRINT = STSymbol.create("print");
         
         sObjects.FALSE = STLabeledObject.create("false");
         
@@ -203,7 +207,7 @@ public class Universe {
     }
     
     public static STClass getClassFromImage(String name) {
-        STSymbol symbol = STSymbol.unique(name);
+        STSymbol symbol = STSymbol.create(name);
         return  sImage.getAndCast(symbol);
     }
     
@@ -229,6 +233,7 @@ public class Universe {
 
 
     public static void beginToGrow() {
+        //All basic creatures
         sClasses.Stack = sImage.getAndCast("Stack");
         sClasses.Scope = sImage.getAndCast("Scope");
         sClasses.Process = sImage.getAndCast("Process");
@@ -255,10 +260,19 @@ public class Universe {
         sClasses.Signal = sImage.getAndCast("Signal");
         sClasses.Collection = sImage.getAndCast("Collection");
         sClasses.UndefinedObject = sImage.getAndCast("UndefinedObject");
+        sClasses.Transcript = sImage.getAndCast("Transcript");
+        sClasses.Number = sImage.getAndCast("Number");
+        sClasses.InternalDictionary = sImage.getAndCast("InternalDictionary");
+        sClasses.System = sImage.getAndCast("System");
         
+        //Quarks an gravitons
         sObjects.NIL.setSTClass(sClasses.UndefinedObject);
         sObjects.FALSE.setSTClass(sClasses.False);
         sObjects.TRUE.setSTClass(sClasses.True);
         STProtoObject.get().setSuperClass(sClasses.Object);
+        
+        //And God
+        sImage.setSTClass(sClasses.System);
+        sImage.put(STSymbol.create("SmallTalk"), sImage);
     }
 }

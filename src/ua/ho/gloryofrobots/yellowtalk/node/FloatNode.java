@@ -6,9 +6,9 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 
 public class FloatNode extends Node implements NodeFactory{
-    private float mData;
+    private double mData;
 
-    public FloatNode(float data) {
+    public FloatNode(double data) {
         mData = data;
     }
 
@@ -17,7 +17,7 @@ public class FloatNode extends Node implements NodeFactory{
         writer.write("%f", mData);
     }
 
-    public float getData() {
+    public double getData() {
         return mData;
     }
     

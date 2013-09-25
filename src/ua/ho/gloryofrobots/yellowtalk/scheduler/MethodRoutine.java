@@ -4,6 +4,7 @@ import javax.management.RuntimeErrorException;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMethod;
@@ -36,16 +37,20 @@ public class MethodRoutine extends Routine {
     
     @Override
     protected void createContext() {
-        // STContext context = mExecutable.createContext();
         mContext = STContext.create();
+    }
+    
+    @Override
+    protected void initContext() {
         fillExecutableArguments();
 
         STObject receiver = mStack.pop();
         mContext.setReceiver(receiver);
-        mContext.setRouitne(this);
+        mContext.setRoutine(this);
         STScope scope = mExecutable.createScope();
+        //STClass klass = receiver.getSTClass();
         scope.put(Universe.symbols().SELF, receiver);
-        scope.put(Universe.symbols().SUPER, receiver.getSTClass());
+        scope.put(Universe.symbols().SUPER, receiver);
         scope.put(Universe.symbols().THIS_CONTEXT, mContext);
         //scope.append(receiver.getScope());
         mContext.setScope(scope);
@@ -53,7 +58,6 @@ public class MethodRoutine extends Routine {
 
     @Override
     protected void onCompliteWithResult(STObject result) {
-        
         setReturnValue(result);
         complete();
     }
@@ -89,4 +93,12 @@ public class MethodRoutine extends Routine {
         onCompliteWithResult(result);
     }
     
+    @Override
+    public String toString() {
+        String data =  mExecutable.toString() + "( " + Integer.toHexString(this.hashCode()) + " ) ";
+        if(mArguments != null && mArguments.size() > 0) {
+            data += "( args:" + mArguments.toString() + " )";
+        }
+        return data;
+    }
 }

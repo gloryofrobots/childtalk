@@ -4,9 +4,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.yellowtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.yellowtalk.compilation.Token.Type;
+import ua.ho.gloryofrobots.yellowtalk.inout.InOutSuite;
 import ua.ho.gloryofrobots.yellowtalk.node.*;
 import ua.ho.gloryofrobots.yellowtalk.node.NodeWithMetaData.UnknownMetaDataException;
 
@@ -545,10 +547,8 @@ public class Parser{
             Node term = parseTerm();
             statement.addNode(term);
         }
-
         /* After we got the initial object, we can do message continuation on it */
         parseContinuation(statement);
-
     }
 
     private void parseContinuation(StatementNode statement)
@@ -585,7 +585,6 @@ public class Parser{
 
         MessageSelectorNode message = new MessageSelectorNode();
         message.itIsYourToken(messageBegin);
-        
         
         int count = 0;
         while (token.type == Token.Type.NAME_COLON) {
@@ -687,9 +686,10 @@ public class Parser{
         case BINARY:
             if (token.equalValue("(")) {
                 token = mLexer.next();
-                result = new StatementNode();
-                parseExpression((StatementNode) result);
-
+                //result = new StatementNode();
+                
+                //parseExpression((StatementNode) result);
+                result = parseStatement();
                 token = mLexer.current();
                 if ((token.type == Token.Type.CLOSING && token.charValue() == ')') == false) {
                     parsingError("Expected ) after sub expression", token);
@@ -868,13 +868,13 @@ public class Parser{
    
 
     public static void main(String[] args) {
+        
+        InOutSuite.init(System.in, System.out, System.err);
         FileInputStream fileStream = null;
+        
         try {
-            
             fileStream = new FileInputStream(
                     "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/tests/parser_test.st");
-            /*fileStream = new FileInputStream(
-                    "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/core/Behaviour.st");*/
             ProgramTextStreamInterface programStream = new ProgramTextStream(
                     fileStream);
             DebugSuite.setDebugMode(DebugSuite.DEBUG_MODE_PARSER, DebugSuite.DEBUG_MODE_LEXER);

@@ -1,32 +1,15 @@
 package ua.ho.gloryofrobots.yellowtalk.compilation;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
-import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeType;
 import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeWriter;
-import ua.ho.gloryofrobots.yellowtalk.bytecode.BytecodeType.Constant;
-import ua.ho.gloryofrobots.yellowtalk.command.CommandStack;
-import ua.ho.gloryofrobots.yellowtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.node.*;
 import ua.ho.gloryofrobots.yellowtalk.node.ClassNode.VariableNames;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.yellowtalk.stobject.*;
 
-/*TODO!!!
- * if(assign_name.equals("true")) {
-
- } else if(assign_name.equals("false")) {
-
- } else if(assign_name.equals("nil")) {
-
- } 
- * */
 
 public class Compiler {
     public class UnsupportedNodeException extends Exception {
@@ -76,7 +59,7 @@ public class Compiler {
             statement.accept(this);
 
             String assignString = node.getAssignName();
-            STSymbol assignName = STSymbol.unique(assignString);
+            STSymbol assignName = STSymbol.create(assignString);
             
             int index = mExecutable.placeLiteral(assignName);
 
@@ -121,8 +104,10 @@ public class Compiler {
                 mBytecode.pushConstant(BytecodeType.Constant.TRUE, node);
             } else if (name.equals("nil")) {
                 mBytecode.pushConstant(BytecodeType.Constant.NIL, node);
-            }  else {
-                STSymbol symbol = STSymbol.unique(name);
+            } else if (name.equals("super")) {
+                mBytecode.append(BytecodeType.PUSH_SUPER, 0, node);
+            } else {
+                STSymbol symbol = STSymbol.create(name);
                 int index = mExecutable.placeLiteral(symbol);
 
                 mBytecode.append(BytecodeType.PUSH_OBJECT, index, node);
@@ -136,11 +121,17 @@ public class Compiler {
                 compileError(node, "Illegal message selector %s",
                         node.getSelector());
             }
-
-            STSymbol selector = STSymbol.unique(node.getSelector());
+            
+            STSymbol selector = STSymbol.create(node.getSelector());
             int index = mExecutable.placeLiteral(selector);
             mBytecode.append(BytecodeType.PUSH_LITERAL, index, node);
-            mBytecode.append(BytecodeType.SEND_MESSAGE, countArguments, node);
+            
+            BytecodeType receiverCode = mBytecode.getCodeFromEnd(countArguments + 2);
+            if(receiverCode == BytecodeType.PUSH_SUPER) {
+                mBytecode.append(BytecodeType.SEND_MESSAGE_TO_SUPER, countArguments, node);
+            } else {
+                mBytecode.append(BytecodeType.SEND_MESSAGE, countArguments, node);
+            }
         }
 
         @Override
@@ -216,7 +207,7 @@ public class Compiler {
     }
     
     private void compileExtend(ExtendNode node, STScope scope) {
-        STSymbol className = STSymbol.unique(node.getClassName());
+        STSymbol className = STSymbol.create(node.getClassName());
         STClass stclass = scope.getAndCast(className);
 
         if (stclass == null) {
@@ -257,7 +248,7 @@ public class Compiler {
     }
 
     private void compileClass(ClassNode classNode, STScope scope) {
-        STSymbol className = STSymbol.unique(classNode.getClassName());
+        STSymbol className = STSymbol.create(classNode.getClassName());
         STClass existed = scope.getAndCast(className);
 
         if (existed != null) {
@@ -266,7 +257,7 @@ public class Compiler {
         }
 
         STSymbol superClassName = STSymbol
-                .unique(classNode.getSuperclassName());
+                .create(classNode.getSuperclassName());
         STClass superclass = scope.getAndCast(superClassName);
         
         if (superclass == null) {
@@ -277,7 +268,7 @@ public class Compiler {
         STMetaclass metaclass = null;
         if(classNode.getMetaClassName() != null) {
             STSymbol metaClassName = STSymbol
-                    .unique(classNode.getMetaClassName());
+                    .create(classNode.getMetaClassName());
             metaclass = scope.getAndCast(metaClassName);
         }
         else {
@@ -286,15 +277,15 @@ public class Compiler {
         
         STClass stclass = metaclass.createSubclassOf(className, superclass);
         
-        stclass.setComment(STSymbol.unique(classNode.getComment()));
-        stclass.setCategory(STSymbol.unique(classNode.getCategory()));
+        stclass.setComment(STSymbol.create(classNode.getComment()));
+        stclass.setCategory(STSymbol.create(classNode.getCategory()));
         stclass.setName(className);
 
         VariableNames instanceVariables = classNode.getInstanceVariableNames();
 
         for (String varName : instanceVariables) {
             try {
-                stclass.addInstanceVariable(STSymbol.unique(varName));
+                stclass.addInstanceVariable(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 compileError(classNode, "Duplicate instance variable %s",
                         varName);
@@ -305,7 +296,7 @@ public class Compiler {
 
         for (String varName : classVariableNames) {
             try {
-                stclass.addClassVariable(STSymbol.unique(varName));
+                stclass.addClassVariable(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 compileError(classNode, "Duplicate class variable %s", varName);
             }
@@ -320,7 +311,7 @@ public class Compiler {
     }
 
     private void compileMethod(MethodNode methodNode, STClass stclass) {
-        STSymbol selector = STSymbol.unique(methodNode.getSelector());
+        STSymbol selector = STSymbol.create(methodNode.getSelector());
         STMethod method = null;
        
         try {

@@ -10,6 +10,9 @@ public class STContext extends STObject {
     private static final long serialVersionUID = 1L;
     STObject mReceiver;
     Routine mRoutine;
+    protected STExecutableObject mSignalHandler = null;
+    protected STObject mHandledSignal = Universe.objects().NIL;
+    protected STExecutableObject mEnsuredBlock;
     
     private STContext() {
         transformToScopedObject();
@@ -26,7 +29,7 @@ public class STContext extends STObject {
         return obj;
     }
     
-    public void setRouitne(Routine routine) {
+    public void setRoutine(Routine routine) {
         mRoutine = routine;
     }
     
@@ -78,5 +81,49 @@ public class STContext extends STObject {
     public void pushScope(STScope scope) {
         scope.append(mScope);
         setScope(scope);
+    }
+
+    public STExecutableObject getSignalHandler() {
+        return mSignalHandler;
+    }
+
+    public void setSignalHandler(STExecutableObject signalHandler) {
+        this.mSignalHandler = signalHandler;
+    }
+
+    public STObject getHandledSignal() {
+        return mHandledSignal;
+    }
+
+    public void setHandledSignal(STObject handledSignal) {
+        this.mHandledSignal = handledSignal;
+    }
+
+    public STObject getParentContext() {
+        if(mRoutine.getCaller() == null) {
+            return Universe.objects().NIL;
+        }
+        
+        return mRoutine.getCaller().getContext();
+    }
+
+    public STObject getExecutable() {
+        return mRoutine.getExecutable();
+    }
+
+    public int getCountArguments() {
+        return mRoutine.getCountArguments();
+    }
+
+    public STProcess getProcess() {
+        return mRoutine.getProcess();
+    }
+
+    public STExecutableObject getEnsuredBlock() {
+        return mEnsuredBlock;
+    }
+
+    public void setEnsuredBlock(STExecutableObject ensuredBlock) {
+        this.mEnsuredBlock = ensuredBlock;
     }
 }

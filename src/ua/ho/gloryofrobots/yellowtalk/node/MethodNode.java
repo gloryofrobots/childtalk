@@ -118,32 +118,32 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData,
 
         String selector = getSelector();
         if (selector != null) {
-            method.setSelector(STSymbol.unique(selector));
+            method.setSelector(STSymbol.create(selector));
         }
 
         String className = getClassName();
         if (className != null) {
-            method.setClassName(STSymbol.unique(className));
+            method.setClassName(STSymbol.create(className));
         }
 
         String comment = getComment();
         if (comment != null) {
-            method.setComment(STSymbol.unique(comment));
+            method.setComment(STSymbol.create(comment));
         }
 
         String category = getCategory();
         if (category != null) {
-            method.setCategory(STSymbol.unique(category));
+            method.setCategory(STSymbol.create(category));
         }
 
         if (mPrimitiveName.length() > 0) {
-            method.setPrimitiveName(STSymbol.unique(mPrimitiveName));
+            method.setPrimitiveName(STSymbol.create(mPrimitiveName));
         }
 
         List<String> temporaries = getTemporaries();
         for (String varName : temporaries) {
             try {
-                method.addTemporary(STSymbol.unique(varName));
+                method.addTemporary(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 throw new NodeFactoryException(
                         "Duplicate method temporary variable " + varName);
@@ -155,7 +155,7 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData,
 
         for (String varName : arguments) {
             try {
-                method.addArgument(STSymbol.unique(varName));
+                method.addArgument(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 throw new NodeFactoryException("Duplicate method argument "
                         + varName);

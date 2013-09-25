@@ -11,12 +11,17 @@ public class STMetaclass extends STClass {
     STClass mInstanceClass;
     
     protected STMetaclass() {
+        //Little tricky. When classes not loaded we need to send first message to nil
+        //nil subclass: #Object instanceVariableNames: '' classVariableNames: ''.
+        //So we need to fake this method in Metaclass
+        
         STMethod creator = new STMethod();
-        creator.setPrimitiveName(STSymbol.unique("Behaviour_createSubclass"));
+        creator.setOwnerClass(this);
+        creator.setPrimitiveName(STSymbol.create("Behaviour_createSubclass"));
         creator.setArguments(new String[] { "name", "instVarNames",
                 "classVarNames" });
         mScope.put(STSymbol
-                .unique("subclass:instanceVariableNames:classVariableNames:"),
+                .create("subclass:instanceVariableNames:classVariableNames:"),
                 creator);
 
         setPrimitive("Behaviour_createSubclass", new STPrimitive() {
@@ -39,7 +44,7 @@ public class STMetaclass extends STClass {
         mInstanceClass.setSTClass(this);
         mInstanceClass.setName(className);
         superclass.addSubclass(mInstanceClass);
-        mScope.put(STSymbol.unique("instanceClass"), mInstanceClass);
+        mScope.put(STSymbol.create("instanceClass"), mInstanceClass);
         return mInstanceClass;
     }
 

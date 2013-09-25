@@ -8,6 +8,10 @@ Signal extend [
         self new signal
     ]
     
+    (+) fatal: messageText [
+       <primitive: 'Signal_fatal'>
+    ]
+    
     description [
         ^'A signal has been sent.'
     ]
@@ -22,10 +26,24 @@ Signal extend [
     
     signal [
         "Raises a signal. If it's not handled, debug the process"
+        signalerContext := thisContext parent.
         self raise: self
     ]
     
-    raise: anObject [
+    raise: aSignal [
+        | context |
+        context := signalerContext.
+        [context = nil]
+            whileFalse:
+               [ (context handles:aSignal) 
+                    ifTrue: [ context handle:aSignal. ^ true]
+                    ifFalse: [ context := context parent. ] ].
+        
+        'Unhandled signal ' print. self print. '\n' print.
+        signalerContext die.
+    ]
+    
+    baseRaise: anObject [
          <primitive: 'Signal_raise'>
          self primitiveFailed.
     ]
@@ -37,10 +55,13 @@ Signal extend [
     printOn: aStream [
         "Append to aStream a String representation of the receiver"
         super printOn: aStream.
-        aStream
-             nextPutAll: self description;
-             space;
-             nextPutAll: self messageText.
+        "self description notNil ifTrue:
+                    [aStream
+                         nextPutAll: self description;
+                                    space].        
+        self messageText notNil ifTrue:
+                     [aStream 
+                        nextPutAll: self messageText.]."
     ]
     
     signal: aMessageText [

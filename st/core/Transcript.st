@@ -2,14 +2,17 @@
 
 Transcript extend [
     (+) show: anObject [
-        anObject echo.
+        <primitive: 'Transcript_show'>
     ]
     
+    (+) initialize [
+        lineSeparator = SmallTalk getProperty:'line.separator'.
+    ]
     (+) showCr: anObject [
         self show: anObject; cr;
     ]
-    
+
     (+) cr [
-        self show: '\n'
+        self show: lineSeparator.
     ]
 ]

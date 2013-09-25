@@ -4,9 +4,11 @@ import ua.ho.gloryofrobots.yellowtalk.Universe;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.node.EvalNode;
 import ua.ho.gloryofrobots.yellowtalk.node.ProgramNode;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STClass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STImage;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STScope;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STString;
 
 public class CompileSuite {
     public static ProgramNode parseWithLexer(Lexer lexer) throws FileEvalException {
@@ -21,8 +23,7 @@ public class CompileSuite {
             ProgramNode program = parseWithLexer(lexer);            
             compile(program, image);
         } catch (FileEvalException e) {
-            e.printStackTrace();
-            //SignalSuite.error("Parse error %s", e.getMessage());
+            SignalSuite.error("Parse error %s", e.getMessage());
         }
     }
     

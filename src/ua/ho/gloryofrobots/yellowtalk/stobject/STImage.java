@@ -5,7 +5,21 @@ public class STImage extends STScope {
     
     public <T extends STObject> 
     T getAndCast(String key) {
-      STSymbol symbol = STSymbol.unique(key);
+      STSymbol symbol = STSymbol.create(key);
       return getAndCast(symbol);
+    }
+    
+    @Override
+    public String toString() {
+        /*String result = "";
+        for(STObject obj : mData) {
+            if(obj == this) {
+                continue;
+            }
+            result += obj.toString() + "\n";
+        }
+        
+        return result;*/
+        return "Image";
     }
 }

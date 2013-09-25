@@ -1,9 +1,14 @@
 package ua.ho.gloryofrobots.yellowtalk.bootstrap;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import ua.ho.gloryofrobots.yellowtalk.Universe;
+import ua.ho.gloryofrobots.yellowtalk.inout.InOutSuite;
 import ua.ho.gloryofrobots.yellowtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.yellowtalk.scheduler.SchedulingSuite;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STArray;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STBlock;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STByteObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STCharacter;
@@ -12,9 +17,11 @@ import ua.ho.gloryofrobots.yellowtalk.stobject.STCollection;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STContext;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STFloating;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STInternalDictionary;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STLargeInteger;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STMetaclass;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STNumber;
+import ua.ho.gloryofrobots.yellowtalk.stobject.STProcess;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STSmallInteger;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STObject;
 import ua.ho.gloryofrobots.yellowtalk.stobject.STPrimitive;
@@ -31,9 +38,9 @@ public class PrimitivesSuite {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STNumber first = receiver.castToSubclass();
-
+                STObject arg = routine.getArgument(0);
                 STNumber second = getStrictCastedObject(routine,
-                        routine.getArgument(0), "Number");
+                        arg, "Number");
 
                 return STNumber.add(first, second);
             }
@@ -169,6 +176,15 @@ public class PrimitivesSuite {
                 return STNumber.mod(first, second);
             }
         };
+        
+        public STPrimitive toSTString = new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STNumber first = receiver.castToSubclass();
+                return first.toSTString();
+            }
+        };
     }
 
     public static <T extends STObject> T getStrictCastedObject(Routine routine,
@@ -195,6 +211,8 @@ public class PrimitivesSuite {
         initialiseBlock();
         initialiseObject();
         initialiseByteArray();
+        
+        initialiseNumber();
         initialiseSmallInteger();
         initialiseLargeInteger();
         initialiseFloat();
@@ -204,13 +222,127 @@ public class PrimitivesSuite {
         initialiseArray();
         initialiseCollection();
         initialiseDateTime();
-        initialiseSmalltalk();
-        intitaliseContext();
+        initialiseContext();
+
+        initialiseSignal();
+        initialiseInternalDictionary();
+        initialiseTranscript();
+        initialiseSystem();
+        initialiseProcess();
         
-        intitaliseSignal();
     }
 
-    private static void intitaliseSignal() {
+    private static void initialiseProcess() {
+        STClass process = Universe.classes().Process;
+        process.setPrimitive("Process_resume", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STProcess process = receiver.castToSubclass();
+                if(process.isTerminated() == true) {
+                    return Universe.objects().FALSE;
+                }
+                
+                process.activate();
+                return Universe.objects().TRUE;
+            }
+        });
+        process.setPrimitive("Process_suspend", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STProcess process = receiver.castToSubclass();
+                if(process.isTerminated() == true) {
+                    return Universe.objects().FALSE;
+                }
+                
+                process.suspend();
+                return Universe.objects().TRUE;
+            }
+        });
+    }
+
+    private static void initialiseInternalDictionary() {
+        STClass dict = Universe.classes().InternalDictionary;
+        dict.setPrimitive("InternalDictionary_at_put", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject key = routine.getArgument(0);
+                STObject val = routine.getArgument(1);
+                STInternalDictionary dict = receiver.castToSubclass();
+                dict.put(key, val);
+                
+                return Universe.objects().NIL;
+            }
+        });
+        
+        dict.setPrimitive("InternalDictionary_at", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject key = routine.getArgument(0);
+                
+                STInternalDictionary dict = receiver.castToSubclass();
+                STObject result = dict.at(key);
+                
+                if(result == null) {
+                    return Universe.objects().NIL;
+                }
+                
+                return result;
+            }
+        });
+        
+    }
+
+    private static void initialiseSystem() {
+        STClass system = Universe.classes().System;
+        system.setPrimitive("System_getEnv", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject arg = routine.getArgument(0);
+                String argStr = arg.toString();
+                String var = System.getenv(argStr);
+                return STString.create(var);
+            }
+        });
+        system.setPrimitive("System_getProperty", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject arg = routine.getArgument(0);
+                String argStr = arg.toString();
+                String var = System.getProperty(argStr);
+                return STString.create(var);
+            }
+        });
+        
+    }
+
+    private static void initialiseNumber() {
+        STClass number = Universe.classes().Number;
+        number.setPrimitive("Number_toString", sNumberPrimitives.toSTString);
+    }
+
+    private static void initialiseTranscript() {
+        // TODO Auto-generated method stub
+        
+        STClass transcript = Universe.classes().Transcript;
+        transcript.setPrimitive("Transcript_show", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STByteObject obj = routine.getArgument(0).castToSubclass();
+                InOutSuite.toStdOut(obj);
+                
+                return Universe.objects().NIL;
+            }
+        });
+    }
+
+    private static void initialiseSignal() {
         STClass signal = Universe.classes().Signal;
         signal.setPrimitive("Signal_raise", new STPrimitive() {
             @Override
@@ -220,9 +352,20 @@ public class PrimitivesSuite {
                 return Universe.objects().NIL;
             }
         });
+        
+        signal.setPrimitive("Signal_fatal", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject obj = routine.getArgument(0);
+                SignalSuite.error(obj.toString());
+
+                return Universe.objects().NIL;
+            }
+        });
     }
 
-    private static void intitaliseContext() {
+    private static void initialiseContext() {
         STClass context = Universe.classes().Context;
         context.setPrimitive("Context_echo", new STPrimitive() {
             @Override
@@ -256,6 +399,107 @@ public class PrimitivesSuite {
                 return traceBackString;
             }
         });
+
+        context.setPrimitive("Context_parent", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                return context.getParentContext();
+            }
+        });
+
+        context.setPrimitive("Context_signalHandler", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                STObject obj =  context.getSignalHandler();
+                
+                if(obj == null) {
+                    return Universe.objects().NIL;
+                }
+                
+                return obj;
+            }
+        });
+
+        context.setPrimitive("Context_handledSignal", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                STObject obj =  context.getHandledSignal();
+                if(obj == null) {
+                    return Universe.objects().NIL;
+                }
+                
+                return obj;
+            }
+        });
+
+        context.setPrimitive("Context_method", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                return context.getExecutable();
+            }
+        });
+
+        context.setPrimitive("Context_receiver", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                return context.getReceiver();
+            }
+        });
+
+        context.setPrimitive("Context_countArguments", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                int count = context.getCountArguments();
+
+                return STSmallInteger.create(count);
+            }
+        });
+        context.setPrimitive("Context_handle", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+
+                STContext context = receiver.castToSubclass();
+                Routine contextRoutine = context.getRouitne();
+                STObject signal = routine.getArgument(0);
+                contextRoutine.handleSignal(signal);
+
+                return Universe.objects().NIL;
+            }
+        });
+
+        context.setPrimitive("Context_process", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                return context.getProcess();
+            }
+        });
+
+        context.setPrimitive("Context_die", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STContext context = receiver.castToSubclass();
+                Routine contextRoutine = context.getRouitne();
+                STProcess process = context.getProcess();
+                process.terminateFromRoutine(contextRoutine);
+                return Universe.objects().NIL;
+            }
+        });
     }
 
     public static int getJavaColectionIndexFromSmalltalk(STSmallInteger index) {
@@ -273,7 +517,48 @@ public class PrimitivesSuite {
                 return STSmallInteger.create(collection.size());
             }
         });
+        
+        collection.setPrimitive("Collection_newColon", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STSmallInteger sizeArg = routine.getArgument(0).castToSubclass();
+                int size = sizeArg.toInt();
+                STClass klass = receiver.castToSubclass();
+                
+                STCollection collection = STCollection.create(size, klass);
+                return collection;
+            }
+        });
+        
+        collection.setPrimitive("Collection_growTo", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STCollection collection = receiver.castToSubclass();
+                
+                STSmallInteger arg = routine.getArgument(0).castToSubclass();
 
+                if (arg == null) {
+                    primitiveError(routine, "Invalid Collection index %s",
+                            routine.getArgument(0).toString());
+
+                    return null;
+                }
+
+                int size = arg.toInt();
+                if (size <= collection.size() || size < 0) {
+                    primitiveError(routine, "Invalid Collection grow index %d ",
+                            size);
+
+                    return null;
+                }
+                
+                collection.growTo(size);
+                return Universe.objects().NIL;
+            }
+        });
+        
         collection.setPrimitive("Collection_at", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
@@ -348,29 +633,37 @@ public class PrimitivesSuite {
     }
 
     private static void initialiseArray() {
-        // TODO Auto-generated method stub
-
+        STClass array = Universe.classes().Array;
+        array.setPrimitive("Array_newColon", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                
+                STSmallInteger sizeArg = routine.getArgument(0).castToSubclass();
+                
+                int size = sizeArg.toInt();                
+                STArray array = STArray.create(size);
+                return array;
+            }
+        });
+        
+        array.setPrimitive("Array_add", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                
+                STObject obj = routine.getArgument(0);
+                
+                STArray array = receiver.castToSubclass();
+                
+                array.add(obj);
+                
+                return Universe.objects().NIL;
+            }
+        });
+        
     }
 
-    private static void initialiseSmalltalk() {
-        /*
-         * STClass smallTalk = Universe.classes().Smalltalk;
-         * smallTalk.setPrimitive("Smalltalk_quit", new STPrimitive() {
-         * 
-         * @Override protected STObject onExecute(Routine routine, STObject
-         * receiver, STStack stack) { throw new RuntimeException(); } });
-         * 
-         * smallTalk.setPrimitive("Smalltalk_environmentVariableAt", new
-         * STPrimitive() {
-         * 
-         * @Override protected STObject onExecute(Routine routine, STObject
-         * receiver, STStack stack) { STObject arg = routine.getArgument(0);
-         * 
-         * String name = arg.toString();
-         * 
-         * return STString.create(System.getenv(name)); } });
-         */
-    }
 
     private static void initialiseDateTime() {
         STClass dateTime = Universe.classes().DateTime;
@@ -378,7 +671,20 @@ public class PrimitivesSuite {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                throw new RuntimeException();
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                
+                STArray data = STArray.create(8);
+                
+                data.put(0, STSmallInteger.create(calendar.get(Calendar.SECOND)));
+                data.put(1, STSmallInteger.create(calendar.get(Calendar.MINUTE)));
+                data.put(2, STSmallInteger.create(calendar.get(Calendar.HOUR)));
+                data.put(3, STSmallInteger.create(calendar.get(Calendar.DAY_OF_MONTH)));
+                data.put(4, STSmallInteger.create(calendar.get(Calendar.MONTH)));
+                data.put(5, STSmallInteger.create(calendar.get(Calendar.YEAR)));
+                data.put(6, STSmallInteger.create(calendar.get(Calendar.DAY_OF_WEEK)));
+                data.put(7, STSmallInteger.create(calendar.get(Calendar.DAY_OF_YEAR)));
+                
+                return  data;
             }
         });
     }
@@ -390,7 +696,7 @@ public class PrimitivesSuite {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STString str = receiver.castToSubclass();
-                return STSymbol.unique(str.toString());
+                return STSymbol.create(str.toString());
             }
         });
 
@@ -413,16 +719,6 @@ public class PrimitivesSuite {
                     STStack stack) {
                 STClass klass = receiver.getSTClass();
                 return klass;
-            }
-        });
-        object.setPrimitive("Object_fatalError", new STPrimitive() {
-            @Override
-            protected STObject onExecute(Routine routine, STObject receiver,
-                    STStack stack) {
-                STObject obj = routine.getArgument(0);
-                SignalSuite.error(obj.toString());
-
-                return Universe.objects().NIL;
             }
         });
 
@@ -475,21 +771,26 @@ public class PrimitivesSuite {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                // FIXME May be String here
-                STSymbol selector = (STSymbol) routine.getArgument(0);
-                routine.flushArgumentsToStack(stack);
-                SchedulingSuite.callForSelector(routine, receiver, selector);
+                
+                STObject selector = routine.getArgument(0).toSymbol();
+                //flush all arguments except first=selector.
+                routine.flushArgumentsToStack(stack, 1, routine.getCountArguments());
+                SchedulingSuite.callForSelector(routine, receiver.getSTClass(), selector);
 
                 return Universe.objects().NIL;
             }
         });
-
-        object.setPrimitive("Object_echo", new STPrimitive() {
+        
+        object.setPrimitive("Object_performWithArguments", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                // TODO DELETE
-                System.out.print(receiver);
+                STObject selector = routine.getArgument(0).toSymbol();
+                STObject args = routine.getArgument(1);
+                STCollection collection = getStrictCastedObject(routine, args, "Collection");
+                stack.flushCollection(collection);
+                
+                SchedulingSuite.callForSelector(routine, receiver.getSTClass(), selector);
                 return Universe.objects().NIL;
             }
         });
@@ -499,7 +800,7 @@ public class PrimitivesSuite {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 // TODO DELETE
-                System.out.println(receiver);
+                InOutSuite.toStdOut(receiver.toString());
                 return Universe.objects().NIL;
             }
         });
@@ -518,15 +819,23 @@ public class PrimitivesSuite {
             }
         });
 
-        block.setPrimitive("Block_on_do", new STPrimitive() {
+        block.setPrimitive("Block_on_do_ensure", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STObject exception = routine.getArgument(0);
                 STBlock block = routine.getArgument(1).castToSubclass();
-
+                STExecutableObject ensuredBlock;
+                STObject ensured = routine.getArgument(2);
+                
+                if(ensured == Universe.objects().NIL){
+                    ensuredBlock = null;
+                } else {
+                    ensuredBlock = (STExecutableObject) ensured;
+                }
+                
                 SchedulingSuite.callExecutableWithExceptionHandling(routine,
-                        (STExecutableObject) receiver, exception, block);
+                        (STExecutableObject) receiver, exception, block, ensuredBlock);
 
                 return Universe.objects().NIL;
             }
@@ -536,7 +845,11 @@ public class PrimitivesSuite {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
-                throw new RuntimeException();
+                
+                STBlock block = (STBlock) receiver;
+                STProcess process = SchedulingSuite.callExecutableInNewProcess(block);
+                process.suspend();
+                return process;
             }
         });
 
@@ -545,7 +858,7 @@ public class PrimitivesSuite {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                 STBlock block = (STBlock) receiver;
-                stack.push(block);
+                //stack.push(block);
                 routine.flushArgumentsToStack(stack);
                 SchedulingSuite.callExecutable(routine, block);
                 return Universe.objects().NIL;

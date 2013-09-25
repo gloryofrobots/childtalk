@@ -27,21 +27,9 @@ Float extend [
         ^aNumber asFloat
     ]
     
-    
-    printNl [
-        ^self print
-    ]
-    
-    print [
-        <primitive: 'Float_print'>
-    	self primitiveFailed
-    ]
-    
-    
     isFloat [
         ^true
     ]
-    
     
     < aNumber [
          <primitive: 'Float_lt'>
@@ -101,13 +89,8 @@ Float extend [
     
     / aNumber [
          <primitive: 'Float_div'>
-             ^super / aNumber
+         ^super / aNumber
     ]
-    
-    \\ aNumber [
-         self notYetImplemented
-    ]
-    
     
     ceiling [
         <primitive: 'Float_ceil'>

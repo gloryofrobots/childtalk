@@ -6,15 +6,15 @@ public enum BytecodeType {
     PUSH_CONSTANT,
     PUSH_ARRAY,
     PUSH_BLOCK,
-    
+    PUSH_SUPER,
     
     ASSIGN,
     
     
     MARK_ARGUMENTS,
+    
     SEND_MESSAGE,
-    SEND_TO_SUPER,
-    SEND_TO_SELF,
+    SEND_MESSAGE_TO_SUPER,
     
     POP_TOP,
     

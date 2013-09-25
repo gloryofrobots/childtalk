@@ -7,7 +7,7 @@ String extend [
     
     (+) new [
         "Add 1 to anIndex to make room for NULL character"
-        ^ self basicNew: 20.
+        ^ self basicNew: 16.
     ]
     
     at: anIndex [
@@ -37,9 +37,9 @@ String extend [
     
     printOn: aStream [
         aStream
-            nextPut: $';
+           
             nextPutAll: self;
-            nextPut: $'
+            
     ]
     
     storeOn: aStream [
@@ -78,24 +78,6 @@ String extend [
     	    stream nextPut: (self copyFrom: index to: subindex - 1).
     	    index := subindex + size ].
         ^stream contents
-    ]
-    
-    
-    primParse: aString on: aMethod for: aClass [
-        <primitive: 'Compiler_parse'>
-    	self primitiveFailed
-    ]
-    
-    compileFor: aClass [
-        | method |
-        method := CompiledMethod new.
-        ^self primParse: self on: method for: aClass    
-    ]
-    
-    doIt [
-        | method context |
-        method := ('goDoIt ', self) compileFor: nil class.
-        ^method runOn: nil withArguments: #()
     ]
     
     asSymbol [

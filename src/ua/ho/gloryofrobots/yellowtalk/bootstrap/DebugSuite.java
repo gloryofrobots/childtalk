@@ -13,7 +13,9 @@ public class DebugSuite {
     public static final int DEBUG_MODE_PARSER = 2;
     public static final int DEBUG_MODE_COMPILER = 3;
     public static final int DEBUG_MODE_INTERPRETER = 4;
-    public static final int DEBUG_MODE_SCHEDULER = 4;
+    public static final int DEBUG_MODE_BYTECODE = 5;
+    public static final int DEBUG_MODE_SCHEDULER = 6;
+    
     
     public static void setDebugMode(Integer... modes) {
         for(int mode : modes) {
@@ -29,7 +31,9 @@ public class DebugSuite {
         if(isOnDebugMode(mode) == false) {
             return;
         }
-        System.out.printf(message + "\n", args);
+        
+        String format = String.format(message + InOutSuite.cr, args);
+        InOutSuite.toStdOut(format);
     }
     
     public static void debugPrint(int mode, String message, Object... args) {
@@ -40,21 +44,25 @@ public class DebugSuite {
     }
     
     public static String getTraceBackString(Routine routine) {
+        
         StringBuilder builder = new StringBuilder();
-        builder.append(routine.toString() + " called from : \n");
+        builder.append(routine.toString() + " called from : ");
+        builder.append(InOutSuite.cr);
         Routine current = routine.getCaller();
         int count = 1;
         while(current != null) {
             count++;
-            builder.append(current.toString() + "\n");
+            builder.append(current.toString());
+            builder.append(InOutSuite.cr);
             current = current.getCaller();
         }
         
-        builder.append("Trace length " + Integer.toString(count));
+        builder.append("Trace length ");
+        builder.append(count);
         return builder.toString();
     }
     
     public static void printTraceBackString(Routine routine) {
-        SignalSuite.warning(getTraceBackString(routine));
+        InOutSuite.toStdErr(getTraceBackString(routine));
     }
 }

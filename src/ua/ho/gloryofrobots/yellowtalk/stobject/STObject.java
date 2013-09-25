@@ -119,7 +119,8 @@ public class STObject implements Serializable {
     <T extends STObject>
     T castToSubclass() {
         try {
-            return (T) this;    
+            T res =  (T) this;
+            return res;
         } catch(ClassCastException e) {
             //FIXME
             return null;
@@ -151,6 +152,14 @@ public class STObject implements Serializable {
        }
        
        return klass.lookup(selector);
+   }
+   
+   public STSymbol toSymbol() {
+       return STSymbol.create(toString());
+   }
+   
+   public STString toSTString() {
+       return STString.create(toString());
    }
 }
 

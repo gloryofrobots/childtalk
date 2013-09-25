@@ -55,11 +55,12 @@ public class STByteObject extends STObject {
         return mData.length;
     }
     
+  
     public String toString() {
         return new String(mData);
     }
     
-    protected byte[] getBytes() {
+    public byte[] getBytes() {
         return mData;
     }
     
@@ -84,5 +85,9 @@ public class STByteObject extends STObject {
         }
        
         return hash;
+    }
+
+    public char[] toCharArray() {
+        return new String(mData).toCharArray();
     }
 }

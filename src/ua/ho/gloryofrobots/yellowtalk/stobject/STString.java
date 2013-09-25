@@ -23,10 +23,6 @@ public class STString extends STByteObject {
         super(value.getBytes());
     }
 
-    public STSymbol toSymbol() {
-        return STSymbol.unique(super.toString());
-    }
-
     public STArray splitToSymbols(
             String splitter) {
         String data = toString();
@@ -39,7 +35,7 @@ public class STString extends STByteObject {
         STArray arr = STArray.create(strings.length);
         int index = 0;
         for(String str : strings) {
-            STSymbol symb = STSymbol.unique(str);
+            STSymbol symb = STSymbol.create(str);
             arr.put(index, symb);
             index++;
         }

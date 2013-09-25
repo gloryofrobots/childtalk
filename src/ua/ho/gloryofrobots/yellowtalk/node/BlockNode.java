@@ -48,7 +48,7 @@ public class BlockNode extends ExecutableNode implements NodeFactory {
 
         for (String varName : arguments) {
             try {
-                block.addArgument(STSymbol.unique(varName));
+                block.addArgument(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 throw new NodeFactoryException("Duplicate block argument "
                         + varName);
@@ -58,7 +58,7 @@ public class BlockNode extends ExecutableNode implements NodeFactory {
         List<String> temporaries = getTemporaries();
         for (String varName : temporaries) {
             try {
-                block.addTemporary(STSymbol.unique(varName));
+                block.addTemporary(STSymbol.create(varName));
             } catch (DuplicateVariableException e) {
                 throw new NodeFactoryException("Duplicate method temporary variable " + varName);
                 

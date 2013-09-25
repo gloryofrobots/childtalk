@@ -20,7 +20,7 @@ public class Token {
     
     int mIntValue;
     BigInteger mLargeIntValue;
-    float mFloatValue;
+    double mFloatValue;
     private String mData;
     public Type type;
 
@@ -69,8 +69,8 @@ public class Token {
 
     public boolean evalFloat(String data) {
         try {
-            mFloatValue = Float.parseFloat(data);
-            mData = Float.toString(mFloatValue);
+            mFloatValue = Double.parseDouble(data);
+            mData = Double.toString(mFloatValue);
             this.type = Type.FLOAT_CONST;
             return true;
         } catch (NumberFormatException e) {
@@ -90,7 +90,7 @@ public class Token {
         return mIntValue;
     }
 
-    public float floatValue() {
+    public double floatValue() {
         return mFloatValue;
     }
 

@@ -84,4 +84,15 @@ public class STStack extends STCollection implements StackInterface<STObject> {
         data += ">";
         return data;
     }
+
+    public void flushCollection(STCollection collection) {
+        collection.foreach(new ForeachFunction() {
+            
+            @Override
+            public boolean call(STObject obj) {
+                push(obj);
+                return true;
+            }
+        });
+    }
 }
