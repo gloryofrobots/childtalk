@@ -6,13 +6,17 @@ Transcript extend [
     ]
     
     (+) initialize [
-        lineSeparator = SmallTalk getProperty:'line.separator'.
+        crSymbol = SmallTalk getProperty:'line.separator'.
     ]
     (+) showCr: anObject [
         self show: anObject; cr;
     ]
-
+    
+    (+) lineSeparator [
+        ^ crSymbol.
+    ]
+    
     (+) cr [
-        self show: lineSeparator.
+        self show: self lineSeparator.
     ]
 ]

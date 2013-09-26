@@ -26,7 +26,7 @@ Eval [
     
     Object subclass: #Transcript
            instanceVariableNames: ''
-           classVariableNames: 'lineSeparator'.
+           classVariableNames: 'crSymbol'.
     
     "Collections"
     

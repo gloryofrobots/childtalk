@@ -143,6 +143,11 @@ String extend [
         ^(self compare: aString) >= 0
     ]
     
+    + aString [
+        <primitive: 'String_concat'>
+        self primitiveFailed.
+    ]
+    
     compare: aString [
         1 to: (self size min: aString size) do: [ :i |
     	| n1 n2 |
