@@ -2,6 +2,7 @@ package ua.ho.gloryofrobots.childtalk.compilation;
 
 import java.util.List;
 
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeType;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeWriter;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
@@ -9,7 +10,6 @@ import ua.ho.gloryofrobots.childtalk.node.*;
 import ua.ho.gloryofrobots.childtalk.node.ClassNode.VariableNames;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.*;
-
 
 public class Compiler {
     public class UnsupportedNodeException extends Exception {
@@ -60,13 +60,13 @@ public class Compiler {
 
             String assignString = node.getAssignName();
             STSymbol assignName = STSymbol.create(assignString);
-            
+
             int index = mExecutable.placeLiteral(assignName);
 
             if (index < 0) {
                 compileError(node, "Unknown variable %s", assignString);
             }
-            
+
             mBytecode.append(BytecodeType.ASSIGN, index, node);
         }
 
@@ -83,7 +83,7 @@ public class Compiler {
 
         @Override
         public void visit(ReturnNode node) {
-            if(mExecutable instanceof STBlock) {
+            if (mExecutable instanceof STBlock) {
                 mBytecode.append(BytecodeType.BLOCK_RETURN, 0, node);
             } else {
                 mBytecode.append(BytecodeType.STACK_RETURN, 0, node);
@@ -121,16 +121,19 @@ public class Compiler {
                 compileError(node, "Illegal message selector %s",
                         node.getSelector());
             }
-            
+
             STSymbol selector = STSymbol.create(node.getSelector());
             int index = mExecutable.placeLiteral(selector);
             mBytecode.append(BytecodeType.PUSH_LITERAL, index, node);
-            
-            BytecodeType receiverCode = mBytecode.getCodeFromEnd(countArguments + 2);
-            if(receiverCode == BytecodeType.PUSH_SUPER) {
-                mBytecode.append(BytecodeType.SEND_MESSAGE_TO_SUPER, countArguments, node);
+
+            BytecodeType receiverCode = mBytecode
+                    .getCodeFromEnd(countArguments + 2);
+            if (receiverCode == BytecodeType.PUSH_SUPER) {
+                mBytecode.append(BytecodeType.SEND_MESSAGE_TO_SUPER,
+                        countArguments, node);
             } else {
-                mBytecode.append(BytecodeType.SEND_MESSAGE, countArguments, node);
+                mBytecode.append(BytecodeType.SEND_MESSAGE, countArguments,
+                        node);
             }
         }
 
@@ -189,23 +192,22 @@ public class Compiler {
         }
 
     }
-    
-    //////////////////////////////////////////////////////////////////
-    
-    public void compileProgram(ProgramNode program, STScope scope){
+
+    // ////////////////////////////////////////////////////////////////
+
+    public void compileProgram(ProgramNode program, STScope scope) {
         List<Node> nodes = program.getNodes();
         for (Node node : nodes) {
-            if(node instanceof EvalNode) {
+            if (node instanceof EvalNode) {
                 compileAndExecuteEval((EvalNode) node);
-            } else if( node instanceof ClassNode) {
+            } else if (node instanceof ClassNode) {
                 compileClass((ClassNode) node, scope);
-            } 
-            else if( node instanceof ExtendNode) {
+            } else if (node instanceof ExtendNode) {
                 compileExtend((ExtendNode) node, scope);
-            } 
+            }
         }
     }
-    
+
     private void compileExtend(ExtendNode node, STScope scope) {
         STSymbol className = STSymbol.create(node.getClassName());
         STClass stclass = scope.getAndCast(className);
@@ -218,33 +220,37 @@ public class Compiler {
         List<MethodNode> methods = node.getMethods();
         for (MethodNode method : methods) {
             compileMethod(method, stclass);
-        }        
+        }
     }
 
-    private void compileAndExecuteEval(EvalNode node) {
+    public STProcess compileAndExecuteEval(EvalNode node) {
         STExecutableObject executable = compileEval(node);
-        //call Object immediately
-        SchedulingSuite.callExecutableInNewProcess(executable);
+        // call Object immediately
+        return SchedulingSuite.callExecutableInNewProcess(executable,
+                ImageSuite.image().objects().NIL);
     }
-    
+
     public STExecutableObject compileEval(EvalNode node) {
-      
+
         STExecutableObject executable = null;
         try {
             executable = (STExecutableObject) node.createObject();
         } catch (NodeFactoryException e) {
             compileError(node, e.getMessage());
         }
-        executable.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL, null);
+        executable.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL,
+                null);
         BodyNode body = node.getBody();
         compileExecutableObjectBody(body, executable);
-        
-        executable.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
+
+        executable.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0,
+                null);
         return executable;
     }
-    
+
     private void compileError(Node node, String message, Object... args) {
-        SignalSuite.error("Compile Error in " + node.getClass().getSimpleName() + " " + message, args);
+        SignalSuite.error("Compile Error in " + node.getClass().getSimpleName()
+                + " " + message, args);
     }
 
     private void compileClass(ClassNode classNode, STScope scope) {
@@ -252,31 +258,33 @@ public class Compiler {
         STClass existed = scope.getAndCast(className);
 
         if (existed != null) {
-            compileError(classNode, "class %s already exist",
-                    className.toString());
+            return;
+            /*
+             * compileError(classNode, "class %s already exist",
+             * className.toString());
+             */
         }
 
         STSymbol superClassName = STSymbol
                 .create(classNode.getSuperclassName());
         STClass superclass = scope.getAndCast(superClassName);
-        
+
         if (superclass == null) {
             compileError(classNode, "superclass %s not found",
                     superClassName.toString());
         }
-        
+
         STMetaclass metaclass = null;
-        if(classNode.getMetaClassName() != null) {
-            STSymbol metaClassName = STSymbol
-                    .create(classNode.getMetaClassName());
+        if (classNode.getMetaClassName() != null) {
+            STSymbol metaClassName = STSymbol.create(classNode
+                    .getMetaClassName());
             metaclass = scope.getAndCast(metaClassName);
-        }
-        else {
+        } else {
             metaclass = STMetaclass.create();
         }
-        
+
         STClass stclass = metaclass.createSubclassOf(className, superclass);
-        
+
         stclass.setComment(STSymbol.create(classNode.getComment()));
         stclass.setCategory(STSymbol.create(classNode.getCategory()));
         stclass.setName(className);
@@ -306,39 +314,40 @@ public class Compiler {
         for (MethodNode method : methods) {
             compileMethod(method, stclass);
         }
-        
+
         scope.put(className, stclass);
     }
 
     private void compileMethod(MethodNode methodNode, STClass stclass) {
         STSymbol selector = STSymbol.create(methodNode.getSelector());
         STMethod method = null;
-       
+
         try {
             method = (STMethod) methodNode.createObject();
         } catch (NodeFactoryException e) {
-           compileError(methodNode, e.getMessage());
+            compileError(methodNode, e.getMessage());
         }
-        
-        //method.getBytecodeWriter().pushConstant(BytecodeType.Constant.SELF, null);
+
+        // method.getBytecodeWriter().pushConstant(BytecodeType.Constant.SELF,
+        // null);
         BodyNode body = methodNode.getBody();
         compileExecutableObjectBody(body, method);
-        //FAKE RETURN
+        // FAKE RETURN
         method.getBytecodeWriter().append(BytecodeType.SELF_RETURN, 0, null);
-        
-        if(methodNode.isStatic()) {
+
+        if (methodNode.isStatic()) {
             stclass.addStaticMethod(selector, method);
-        }
-        else {
+        } else {
             stclass.addMethod(selector, method);
         }
     }
-    
-    private void compileExecutableObjectBody(Node node, STExecutableObject executable) {
+
+    private void compileExecutableObjectBody(Node node,
+            STExecutableObject executable) {
         MethodCompiler compiler = new MethodCompiler(executable);
         node.accept(compiler);
     }
-    
+
     private STBlock compileBlock(BlockNode blockNode) {
         STBlock block = null;
         try {
@@ -346,17 +355,16 @@ public class Compiler {
         } catch (NodeFactoryException e) {
             compileError(blockNode, e.getMessage());
         }
-        
+
         block.getBytecodeWriter().pushConstant(BytecodeType.Constant.NIL, null);
-        
+
         BodyNode body = blockNode.getBody();
         compileExecutableObjectBody(body, block);
-        
-        //FAKE RETURN TOP ELEMENT
+
+        // FAKE RETURN TOP ELEMENT
         block.getBytecodeWriter().append(BytecodeType.STACK_RETURN, 0, null);
-        
+
         return block;
     }
 
-    
 }

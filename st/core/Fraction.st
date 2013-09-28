@@ -1,9 +1,19 @@
-Fraction extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Number subclass: Fraction [
+    |numerator denominator|
     
    (+) numerator: topNumber denominator: bottomNumber [
-        ^self basicNew
-    	initializeNumerator: topNumber denominator: bottomNumber;
-    	yourself
+        ^ self basicNew
+    	initializeNumerator: topNumber denominator: bottomNumber.
     ]
     
     
@@ -165,6 +175,17 @@ Fraction extend [
         ^numerator asFloat / denominator asFloat
     ]
     
+    printString [
+        "Answer a String representation of the receiver"
+        | stream string|
+        
+        string := String new.
+        
+        stream := WriteStream on: string.
+        self printOn: stream.
+        
+        ^stream contents
+    ]
     
     printOn: aStream [
         aStream

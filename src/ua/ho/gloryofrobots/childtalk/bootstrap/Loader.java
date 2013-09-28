@@ -21,7 +21,7 @@ public class Loader {
             fileStream = new FileInputStream(path);
             programStream = new ProgramTextStreamFile(fileStream,path);
         } catch (IOException x) {
-            SignalSuite.warning("IO error in file %s - %s", path, x.getMessage());
+            SignalSuite.error("IO error in file %s - %s", path, x.getMessage());
         } catch (ProgramReadException e) {
             SignalSuite.error("Program code reading error  %s - %s", path, e.getMessage());
         } finally {
@@ -52,7 +52,7 @@ public class Loader {
     }
 
     private String createClassPath(String folder, String className) {
-        return String.format("%s/%s.st", folder, className);
+        return String.format("%s/%s", folder, className);
     }
 
     public void loadAndCompileClassesFromFolder(String folderPath, String[] classNames,

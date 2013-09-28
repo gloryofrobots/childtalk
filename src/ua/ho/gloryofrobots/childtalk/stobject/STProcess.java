@@ -1,7 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
@@ -27,7 +27,7 @@ public class STProcess extends STObject {
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Process;
+                return ImageSuite.image().classes().Process;
             }
         });
         return obj;
@@ -129,7 +129,7 @@ public class STProcess extends STObject {
 
     public STObject getResult() {
         if (mStack.getCurrentIndex() != 0) {
-            return Universe.objects().NIL;
+            return ImageSuite.image().objects().NIL;
         }
 
         return mStack.peek();

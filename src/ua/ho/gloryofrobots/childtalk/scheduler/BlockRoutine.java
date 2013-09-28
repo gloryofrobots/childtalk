@@ -79,7 +79,6 @@ public class BlockRoutine extends MethodRoutine {
 
         STScope scope = block.createScope();
         mContext.pushScope(scope);
-
     }
     
     public void disableStackReturn() {
@@ -89,5 +88,15 @@ public class BlockRoutine extends MethodRoutine {
     public boolean isEnabledStackReturn() {
         return mStackReturnEnabled;
     }
-
+    
+    //search method routine in routines call chain. 
+    //this is not method we push function through call stack
+    @Override
+    public Routine getLastMethodRoutine() {
+        if(getCaller() == null) {
+            return null;
+        }
+        
+        return getCaller().getLastMethodRoutine();
+    }
 }

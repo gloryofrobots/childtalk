@@ -1,4 +1,14 @@
-SmallInteger extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Integer subclass: SmallInteger [
     (+) new: aNumber [
         <primitive: 'SmallInteger_newColon'>
     ]
@@ -64,18 +74,17 @@ SmallInteger extend [
     	 ^super ~~ aNumber
     ]
     
+    
     / aNumber [
-         <primitive: 'SmallInteger_div'>
-           	 ^aNumber isSmallInteger
-    	      ifTrue: [ (Fraction numerator: self denominator: aNumber) reduce ]
-    	      ifFalse: [ super / aNumber ]
+        <primitive: 'SmallInteger_div'>
+        ^ super / aNumber
     ]
     
+
     \\ aNumber [
-         <primitive: 'SmallInteger_mod'>
-    	 ^super \\ aNumber
+     <primitive: 'SmallInteger_mod'>
+     ^super \\ aNumber 
     ]
-    
     
     bitAnd: aNumber [
         <primitive: 'SmallInteger_bitAnd'>

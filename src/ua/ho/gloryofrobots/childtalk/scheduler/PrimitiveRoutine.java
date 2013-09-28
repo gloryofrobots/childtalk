@@ -62,7 +62,7 @@ public class PrimitiveRoutine extends Routine {
         if (mFailed) {
             complete();
         }
-
+        
         if (mPrimitive.execute(this) == false) {
             onFailed();
         } 
@@ -72,7 +72,9 @@ public class PrimitiveRoutine extends Routine {
     private void onFailed() {
         mFailed = true;
         Routine routine = new MethodRoutine(mExecutable);
-        mStack.push(mContext.getReceiver());
+        STObject receiver = mContext.getReceiver();
+        mStack.push(receiver);
+        flushArgumentsToStack(mStack);
         routine.callFrom(this);
     }
 
@@ -99,5 +101,10 @@ public class PrimitiveRoutine extends Routine {
     protected void onExplicitCompleteWithResult(STObject result) {
         SignalSuite
         .error("Error in interpreter logic onExplicitCompleteWithResult of PrimitiveRoutine should not called");
+    }
+
+    @Override
+    public Routine getLastMethodRoutine() {
+        return getCaller().getLastMethodRoutine();
     }
 }

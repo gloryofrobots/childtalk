@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STByteObject extends STObject {
@@ -14,7 +14,7 @@ public class STByteObject extends STObject {
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().ByteArray;
+                return ImageSuite.image().classes().ByteArray;
             }
         });
         return obj;
@@ -25,7 +25,7 @@ public class STByteObject extends STObject {
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().ByteArray;
+                return ImageSuite.image().classes().ByteArray;
             }
         });
         return obj;
@@ -89,5 +89,15 @@ public class STByteObject extends STObject {
 
     public char[] toCharArray() {
         return new String(mData).toCharArray();
+    }
+    
+    public STByteObject merge(STByteObject second) {
+        byte[] data = second.getBytes();
+        int size = data.length + mData.length;
+        byte [] newData = new byte[size];
+        System.arraycopy(mData, 0, newData, 0, mData.length);
+        System.arraycopy(data, 0, newData, mData.length, data.length);
+        
+        return STByteObject.create(newData);
     }
 }

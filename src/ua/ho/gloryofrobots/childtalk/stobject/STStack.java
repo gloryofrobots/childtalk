@@ -1,10 +1,9 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.StackInterface;
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
-public class STStack extends STCollection implements StackInterface<STObject> {
+public class STStack extends STCollection  {
     private static final long serialVersionUID = 1L;
     
     private int mIndex;
@@ -20,7 +19,7 @@ public class STStack extends STCollection implements StackInterface<STObject> {
             @Override
             protected STClass _getSTClass() {
                
-                return Universe.classes().Stack;
+                return ImageSuite.image().classes().Stack;
             }
         });
         return obj;
@@ -28,7 +27,7 @@ public class STStack extends STCollection implements StackInterface<STObject> {
     
     public static STStack create(int size) {
         STStack obj = new STStack(size);
-        obj.setSTClass(Universe.classes().Stack);
+        obj.setSTClass(ImageSuite.image().classes().Stack);
         return obj;
     }
     

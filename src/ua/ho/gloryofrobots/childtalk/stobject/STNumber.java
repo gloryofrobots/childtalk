@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 
 public abstract class STNumber extends STObject {
     private static final long serialVersionUID = 1L;
@@ -129,18 +129,4 @@ public abstract class STNumber extends STObject {
     protected abstract STObject _equal(STNumber other);
 
     protected abstract STObject _notEqual(STNumber other);
-    
-    public static void main(String[] args) {
-        Universe.bigbang();
-        int[] check = new int[20];
-        check[0] = STFloating.create(2.2).getPriority();
-        check[1] = STSmallInteger.create(2).getPriority();
-        check[2] = STLargeInteger.create(2).getPriority();
-        check[3] = STLargeInteger.create(2).getPriority();
-        check[4] = STSmallInteger.create(2).getPriority();
-        check[5] = STFloating.create(2.2).getPriority();
-        for(int val: check) {
-            System.out.println(val);
-        }
-    }
 }

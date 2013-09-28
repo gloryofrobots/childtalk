@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.childtalk.scheduler.PrimitiveRoutine;
@@ -22,12 +22,16 @@ public class STMethod extends STExecutableObject {
         mOwnerClass = owner;
     }
 
+    public STClass getOwnerClass() {
+        return mOwnerClass;
+    }
+    
     public static STMethod create() {
         STMethod obj = new STMethod();
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Method;
+                return ImageSuite.image().classes().Method;
             }
         });
 
@@ -92,7 +96,7 @@ public class STMethod extends STExecutableObject {
     @Override
     public String toString() {
         String result = String.format(
-                "%s->%s",
+                "%s::%s",
                 (mSelector != null) ? mSelector.toString() : "",
                 (mOwnerClass != null) ? mOwnerClass.toString() : "");
 

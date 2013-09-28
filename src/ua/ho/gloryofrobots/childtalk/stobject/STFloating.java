@@ -5,8 +5,9 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STFloating extends STNumber {
 
@@ -21,7 +22,12 @@ public class STFloating extends STNumber {
         
     public static STFloating create(double data) {
         STFloating floating = new STFloating(data);
-        floating.setSTClass(Universe.classes().Float);
+        floating.setClassProvider(new BindingClassProvider(floating) {
+            @Override
+            protected STClass _getSTClass() {
+                return ImageSuite.image().classes().Float;
+            }
+        });
         return floating;
     }
     
@@ -113,60 +119,60 @@ public class STFloating extends STNumber {
     protected STObject _lessThen(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData < second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _greaterThen(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData > second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _lessEqual(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData <= second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _greaterEqual(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData >= second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _equal(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData == second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _notEqual(STNumber other) {
         STFloating second = other.castToSubclass();
         if (mData != second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
         
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
     
     public String toString() {

@@ -25,8 +25,7 @@ public abstract class BytecodeOperation {
     public void runtimeError(String message, Object... args){
         
         String lineString = mRoutine.createErrorString();
-        String errorMessage = "Runtime Error: " + message + " at line " + lineString + "\n bytecode :" 
-                    + mRoutine.getExecutable().getBytecode().toString();
+        String errorMessage = "Runtime Error: " + message + " at line " + lineString;
         DebugSuite.printTraceBackString(mRoutine);
         SignalSuite.error(errorMessage, args);
     }

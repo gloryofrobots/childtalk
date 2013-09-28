@@ -1,7 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.scheduler;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeOperation;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeOperationAssign;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeOperationBlockReturn;

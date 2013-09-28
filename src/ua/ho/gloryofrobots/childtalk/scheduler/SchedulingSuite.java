@@ -1,7 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.scheduler;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.Loader;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamInterface;
@@ -29,16 +29,11 @@ public class SchedulingSuite {
     public static Routine callForSelector(Routine caller, STClass klass,
             STObject selector) {
         
-        if (klass == null) {
-            SignalSuite.warning("Super class is null for selector %s ",
-                    selector.toString());
-            return null;
-        }
-       
         STExecutableObject executable = klass.findMethod(selector);
-
+        
         if (executable == null) {
             // TODO ST exception here
+            klass.findMethod(selector);
             DebugSuite.printTraceBackString(caller);
             SignalSuite.error("Unknown method %s in class %s",
                     selector.toString(), klass.toString());
@@ -46,7 +41,8 @@ public class SchedulingSuite {
                     selector.toString(), klass.toString());
             return null;
         }
-
+        
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_INTERPRETER, "Execute method %s", executable.toString());
         return callExecutable(caller, executable);
 
     }
@@ -87,22 +83,27 @@ public class SchedulingSuite {
     }
 
     public static STProcess callExecutableInNewProcess(
-            STExecutableObject executable) {
+            STExecutableObject executable, STObject receiver) {
         STProcess process = STProcess.create();
 
         // push default receiver for executable (may be create Eval executable
         // for it)
-        process.getStack().push(Universe.objects().NIL);
+        process.getStack().push(receiver);
         process.callExecutable(executable);
         runProcess(process);
         return process;
     }
-
+    
+    public static STProcess callSelectorInNewProcess(
+            STObject selector, STClass klass, STObject receiver) {
+        STExecutableObject executable = klass.findMethod(selector);
+        return callExecutableInNewProcess(executable, receiver);
+    }
+    
     public static void runProcess(STProcess process) {
         scheduler().addProcess(process);
         if (scheduler().isEnabled() == false) {
             scheduler().enable();
         }
     }
-    
 }

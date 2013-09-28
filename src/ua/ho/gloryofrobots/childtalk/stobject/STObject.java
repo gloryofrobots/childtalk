@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.ClassProvider;
@@ -63,7 +63,7 @@ public class STObject implements Serializable {
         try {
             return (STObject)this.clone();
         } catch (CloneNotSupportedException e) {
-            return Universe.objects().NIL;
+            return ImageSuite.image().objects().NIL;
         }
     }
      
@@ -81,7 +81,7 @@ public class STObject implements Serializable {
     
     public STClass getSTClass() {
         //We use ClassProvider for later binding default types with ST classes
-        STObject nil = Universe.objects().NIL;
+        STObject nil = ImageSuite.image().objects().NIL;
         return mClassProvider.getSTClass();
     }
     
@@ -107,7 +107,7 @@ public class STObject implements Serializable {
     }
     
     public static boolean isNotNilOrNull(STObject object) {
-        if(object == null || object == Universe.objects().NIL) {
+        if(object == null || object == ImageSuite.image().objects().NIL) {
             return false;
         }
         

@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.scheduler;
 
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.Loader;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamInterface;
@@ -13,7 +14,7 @@ public class EvalSuite {
                 .createProgramStream(path);
         STExecutableObject executable = CompileSuite.compileEval(programStream);
         STProcess process = SchedulingSuite
-                .callExecutableInNewProcess(executable);
+                .callExecutableInNewProcess(executable, ImageSuite.image().objects().NIL);
         STObject result = process.getResult();
 
         return result;

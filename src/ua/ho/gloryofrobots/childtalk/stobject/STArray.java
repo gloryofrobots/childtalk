@@ -3,7 +3,7 @@ package ua.ho.gloryofrobots.childtalk.stobject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STCollection.ForeachFunction;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
@@ -18,7 +18,7 @@ public class STArray extends STCollection {
         array.setClassProvider(new BindingClassProvider(array) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Array;
+                return ImageSuite.image().classes().Array;
             }
         });
         return array;
@@ -29,7 +29,7 @@ public class STArray extends STCollection {
         array.setClassProvider(new BindingClassProvider(array) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Array;
+                return ImageSuite.image().classes().Array;
             }
         });
         return array;

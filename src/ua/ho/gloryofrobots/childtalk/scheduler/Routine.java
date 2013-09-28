@@ -239,4 +239,9 @@ public abstract class Routine {
     protected abstract void onCompliteWithResult(STObject result);
 
     public abstract String createErrorString();
+    
+    //search method routine in routines call chain. 
+    //it`s necessary for searching context for dispatching messages to super
+    public abstract Routine getLastMethodRoutine();
+       
 }

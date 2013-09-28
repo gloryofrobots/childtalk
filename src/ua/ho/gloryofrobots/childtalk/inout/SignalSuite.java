@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.inout;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
@@ -21,7 +21,7 @@ public class SignalSuite {
         STString error = STString.create(txt);
         STExecutableObject object = routine.getExecutable();
         SchedulingSuite.callForSelectorWithArguments(routine, object,
-                Universe.symbols().ERROR_COLON, error);
+                ImageSuite.image().symbols().ERROR_COLON, error);
     }
 
     public static void warning(String format, Object... args)

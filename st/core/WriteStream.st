@@ -1,22 +1,9 @@
-WriteStream extend [
-   
-    initialize [
-        super initialize.
-        self allowWriteOnly.
-        self truncate
-    ]
-]
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
 
-ReadStream extend [
-    initialize [
-        super initialize.
-        self allowReadOnly
-    ]
-]
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
 
-ReadWriteStream extend [
-    initialize [
-        super initialize.
-        self allowReadAndWrite
-    ]
-]
+Original license of Smalltalk YX may be found in the LICENSE file.
+"

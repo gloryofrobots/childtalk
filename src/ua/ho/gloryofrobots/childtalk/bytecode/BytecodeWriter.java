@@ -1,9 +1,13 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
 
+import java.io.Serializable;
+
 import ua.ho.gloryofrobots.childtalk.compilation.CompileInfo;
 import ua.ho.gloryofrobots.childtalk.node.Node;
 
-public class BytecodeWriter {
+public class BytecodeWriter implements Serializable {
+  
+    private static final long serialVersionUID = 1L;
     private BytecodeArray mBytecode;
     private int mIndex;
     private CompileInfo mCompileInfo;

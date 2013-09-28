@@ -1,4 +1,14 @@
-LargeInteger extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Integer subclass: LargeInteger [
     (+) new: aNumber [
         <primitive: 'LargeInteger_newColon'>
     ]
@@ -111,7 +121,7 @@ LargeInteger extend [
     	 ^super * aNumber
     ]
     
-    \\ aNumber [
+    % aNumber [
          <primitive: 'LargeInteger_mod'>
     	 ^super \\ aNumber
     ]

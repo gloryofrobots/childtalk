@@ -1,4 +1,15 @@
-Interval extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+
+SequenceableCollection subclass: Interval [
 
     (+) new: count [
         self shouldNotImplement

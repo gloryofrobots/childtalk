@@ -1,4 +1,14 @@
-Number extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Magnitude subclass: Number[
     new [
         ^self shouldNotImplement
     ]
@@ -278,10 +288,10 @@ Number extend [
     ]
     
     \\ aNumber [
-        "Coerce aNumber and do modulo"
+      "Coerce aNumber and do modulo"
         ^self generality > aNumber generality
-    	ifTrue: [ self \\ (self coerce: aNumber) ]
-    	ifFalse: [ (aNumber coerce: self) \\ aNumber ]
+        ifTrue: [ self % (self coerce: aNumber) ]
+        ifFalse: [ (aNumber coerce: self) % aNumber ]
     ]
     
     quo: aNumber [
@@ -356,13 +366,18 @@ Number extend [
         ^self * self
     ]
     
-    printString[
+    primPrintString[
         <primitive: 'Number_toString'>
+    ]
+    
+    printString [
+        
+        ^ self primPrintString.
     ]
     
     printOn: aStream [
         "Append to aStream a String representation of the receiver"
         aStream
-            nextPutAll: self printString; 
+            nextPutAll: self primPrintString; 
     ]
 ]

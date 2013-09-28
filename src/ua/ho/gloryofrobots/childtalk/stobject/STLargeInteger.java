@@ -2,7 +2,7 @@ package ua.ho.gloryofrobots.childtalk.stobject;
 
 import java.math.BigInteger;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 
 public class STLargeInteger extends STNumber {
@@ -20,7 +20,7 @@ public class STLargeInteger extends STNumber {
     public static STLargeInteger create(BigInteger data) {
         STLargeInteger largeInteger = new STLargeInteger(data);
 
-        largeInteger.setSTClass(Universe.classes().LargeInteger);
+        largeInteger.setSTClass(ImageSuite.image().classes().LargeInteger);
         return largeInteger;
     }
     
@@ -104,10 +104,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared < 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
@@ -115,10 +115,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared > 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
@@ -126,10 +126,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared < 0 || compared == 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
@@ -137,10 +137,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared > 0 || compared == 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
@@ -148,10 +148,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared == 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
@@ -159,10 +159,10 @@ public class STLargeInteger extends STNumber {
         STLargeInteger second = other.castToSubclass();
         int compared = mData.compareTo(second.mData);
         if (compared != 0) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override

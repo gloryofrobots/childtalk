@@ -1,5 +1,16 @@
+"
+Childtalk standard library is 
+    Copyright (c) 2013 Alex Birulia
 
-Behaviour extend [ 
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Object subclass: Behaviour [ 
+    |className classSuperclass instanceVariableNames instanceSize methodDictionary classSubclasses finalizationRequest|
+    
     subclass: name [
         "Create a new subclass of the receiver. This is a convenience message that delegates to the default."
         ^ self subclass: name instanceVariableNames: '' classVariableNames: ''.
@@ -103,3 +114,6 @@ Behaviour extend [
         ^classVariables
     ]
 ]
+
+Behaviour subclass: Class [ |classVariables| ]
+

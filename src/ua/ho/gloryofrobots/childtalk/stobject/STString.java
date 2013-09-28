@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STString extends STByteObject {
@@ -12,7 +12,7 @@ public class STString extends STByteObject {
         str.setClassProvider(new BindingClassProvider(str) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().String;
+                return ImageSuite.image().classes().String;
             }
         });
         

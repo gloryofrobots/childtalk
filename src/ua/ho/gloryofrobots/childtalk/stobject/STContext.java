@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
@@ -11,7 +11,7 @@ public class STContext extends STObject {
     STObject mReceiver;
     Routine mRoutine;
     protected STExecutableObject mSignalHandler = null;
-    protected STObject mHandledSignal = Universe.objects().NIL;
+    protected STObject mHandledSignal = ImageSuite.image().objects().NIL;
     protected STExecutableObject mEnsuredBlock;
     
     private STContext() {
@@ -23,7 +23,7 @@ public class STContext extends STObject {
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Context;
+                return ImageSuite.image().classes().Context;
             }
         });
         return obj;
@@ -72,7 +72,7 @@ public class STContext extends STObject {
         
         
         if(result == null) {
-            return Universe.image().lookup(varName);
+            return ImageSuite.image().lookup(varName);
         }
         
         return result;
@@ -101,7 +101,7 @@ public class STContext extends STObject {
 
     public STObject getParentContext() {
         if(mRoutine.getCaller() == null) {
-            return Universe.objects().NIL;
+            return ImageSuite.image().objects().NIL;
         }
         
         return mRoutine.getCaller().getContext();

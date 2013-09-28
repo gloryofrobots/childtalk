@@ -1,4 +1,14 @@
-Symbol extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+String subclass: Symbol [
   
    (+) new [
         self shouldNotImplement
@@ -15,12 +25,7 @@ Symbol extend [
     basicAt: anIndex put: anObject [
         self shouldNotImplement
     ]
-    
-    hash [
-        ^hash
-    ]
-    
-    
+  
     asString [
         ^String withAll: self
     ]
@@ -28,7 +33,6 @@ Symbol extend [
     asSymbol [
         ^self
     ]
-    
     
     printOn: aStream [
         aStream
@@ -41,15 +45,4 @@ Symbol extend [
             nextPut: $#;
             nextPutAll: self
     ]
-    
-    
-    isString [
-        ^false
-    ]
-    
-    isSymbol [
-        ^true
-    ]
-    
-    
 ]

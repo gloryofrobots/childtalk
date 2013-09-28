@@ -1,18 +1,27 @@
-"Redline Smalltalk, Copyright (c) James C. Ladd. All rights reserved. See LICENSE in the root of this distribution."
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
 
-Transcript extend [
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Object subclass: Transcript [
+    \crSymbol\
+    
     (+) show: anObject [
         <primitive: 'Transcript_show'>
     ]
     
-    (+) initialize [
-        crSymbol = SmallTalk getProperty:'line.separator'.
-    ]
     (+) showCr: anObject [
         self show: anObject; cr;
     ]
     
     (+) lineSeparator [
+        crSymbol 
+            ifNil: [crSymbol := SmallTalk getProperty:'line.separator'.].
         ^ crSymbol.
     ]
     

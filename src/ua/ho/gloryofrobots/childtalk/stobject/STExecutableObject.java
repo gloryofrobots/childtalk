@@ -1,7 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeWriter;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileInfo;
@@ -60,7 +60,7 @@ public abstract class STExecutableObject extends STObject {
         if (mArguments.has(name)) {
             throw new DuplicateVariableException(name.toString());
         }
-        mArgumentsValues.add(Universe.objects().NIL);
+        mArgumentsValues.add(ImageSuite.image().objects().NIL);
         mArguments.add(name);
     }
     
@@ -118,7 +118,7 @@ public abstract class STExecutableObject extends STObject {
         count = mTemporaries.size();
         for(int i = 0; i < count; i++) {
             STSymbol varName  = mTemporaries.getAndCast(i);
-            scope.put(varName, Universe.objects().NIL);
+            scope.put(varName, ImageSuite.image().objects().NIL);
         }
     }
 
@@ -144,7 +144,6 @@ public abstract class STExecutableObject extends STObject {
             executable.placeLiteral(literal);
         }
         
-        executable.mBytecodeWriter = mBytecodeWriter;
         executable.mBytecode = mBytecode;
         executable.mCompileInfo = mCompileInfo;
     }

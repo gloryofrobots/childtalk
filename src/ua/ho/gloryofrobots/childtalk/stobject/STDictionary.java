@@ -2,11 +2,9 @@ package ua.ho.gloryofrobots.childtalk.stobject;
 
 import java.util.HashMap;
 
-import ua.ho.gloryofrobots.childtalk.DictionaryInterface;
-import ua.ho.gloryofrobots.childtalk.Universe;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
-
-public class STDictionary extends STObject implements DictionaryInterface<STObject, STObject> {
+//TODO MAY be remove completely
+public class STDictionary extends STObject {
     private static final long serialVersionUID = 1L;
     protected HashMap<STObject, STObject> mData;
     
@@ -16,7 +14,7 @@ public class STDictionary extends STObject implements DictionaryInterface<STObje
             @Override
             protected STClass _getSTClass() {
                 return null;
-                //return Universe.classes().Dictionary;
+                //return ImageSuite.image().classes().Dictionary;
             }
         });
         
@@ -41,17 +39,14 @@ public class STDictionary extends STObject implements DictionaryInterface<STObje
         return obj;
     }
     
-    @Override
     public STObject at(STObject name) {
         return mData.get(name);
     }
 
-    @Override
     public boolean has(STObject name) {
         return mData.containsKey(name);
     }
 
-    @Override
     public void put(STObject name, STObject object) {
         mData.put(name, object);        
     }

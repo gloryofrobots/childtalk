@@ -2,6 +2,7 @@ package ua.ho.gloryofrobots.childtalk.node;
 
 import java.util.List;
 
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
@@ -15,6 +16,7 @@ public class EvalNode extends ExecutableNode implements NodeFactory{
         STMethod method = STMethod.create();
         method.setSelector(STSymbol.create("Eval"));
         method.setCompileInfo(mCompileInfo);
+        method.setOwnerClass(ImageSuite.image().classes().UndefinedObject);
         List<String> temporaries = getTemporaries();
         for (String varName : temporaries) {
             try {

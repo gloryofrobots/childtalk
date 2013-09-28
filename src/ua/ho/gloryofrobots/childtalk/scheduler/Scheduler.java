@@ -67,7 +67,7 @@ public class Scheduler {
         
         disable();
     }
-
+    
     private void executeProcesses() {
         ProcessEntry current = mHead;
         while(true) {
@@ -87,10 +87,17 @@ public class Scheduler {
                 current = killProcess(current);
                 continue;
             } else if(state == STProcess.State.IDLE) {
-                process.activate();
-                process.execute();
-            } else if(state == STProcess.State.ACTIVE) {
-                process.execute();
+                process.activate();   
+            }
+           
+            if(process.isActive()) {
+                try {
+                    process.execute();
+                } catch (Exception e) {
+                    killProcess(current);
+                    disable();
+                    throw e;
+                }
             }
             
             current = current.next;

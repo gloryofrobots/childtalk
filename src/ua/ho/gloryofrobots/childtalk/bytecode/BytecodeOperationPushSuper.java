@@ -1,7 +1,5 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
-
-import ua.ho.gloryofrobots.childtalk.Universe;
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STContext;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STStack;
@@ -13,7 +11,7 @@ public class BytecodeOperationPushSuper extends BytecodeOperation {
         STContext context = mRoutine.getContext();
         STStack stack = mRoutine.getStack();
         //We always lookup for super because we can be in block now.
-        STObject obj = context.lookup(Universe.symbols().SUPER);
+        STObject obj = context.lookup(ImageSuite.image().symbols().SUPER);
         if(obj == null) {
             runtimeError("super not exist in scope");
         }

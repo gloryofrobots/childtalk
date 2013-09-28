@@ -1,6 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
+import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STCharacter extends STObject {
  
@@ -17,7 +18,12 @@ public class STCharacter extends STObject {
 
     public static STCharacter create(char value) {
         STCharacter character = new STCharacter(value);
-        character.setSTClass(Universe.classes().Character);
+        character.setClassProvider(new BindingClassProvider(character) {
+            @Override
+            protected STClass _getSTClass() {
+                return ImageSuite.image().classes().Character;
+            }
+        });
         return character;
     }
     

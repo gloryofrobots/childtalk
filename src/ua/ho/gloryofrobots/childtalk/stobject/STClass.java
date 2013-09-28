@@ -3,7 +3,7 @@ package ua.ho.gloryofrobots.childtalk.stobject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
@@ -21,18 +21,27 @@ public class STClass extends STObject {
     STDictionary mPrimitives;
     STArray mSubclasses;
     Class<?> mInternalObjectClass = null;
-
+    boolean mIsInitialised;
+    
     public static STClass create(String name) {
         return create(STSymbol.create(name));
     }
-
+    
+    public boolean isInitialised() {
+        return mIsInitialised;
+    }
+    
+    public void setInitialised() {
+        mIsInitialised = true;
+    }
+    
     public static STClass create(STSymbol name) {
         STClass klass = new STClass();
         klass.setName(name);
         klass.setClassProvider(new BindingClassProvider(klass) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Class;
+                return ImageSuite.image().classes().Class;
             }
         });
         return klass;
@@ -119,7 +128,7 @@ public class STClass extends STObject {
     
     public void addClassVariable(STSymbol varName)
             throws DuplicateVariableException {
-        getScope().putUnique(varName, null);
+        mScope.putUnique(varName, ImageSuite.image().objects().NIL);
     }
     
     public void addClassVariables(STArray vars)
@@ -208,41 +217,6 @@ public class STClass extends STObject {
     public String toString() {
         return "<STClass  " + mName + ">";
     }
-    
-    public void _getUnknownPrimitives(List<STSymbol> primitives, STScope scope) {
-        List<STObject> objects = scope.asList();
-        for(STObject obj : objects) {
-            if((obj instanceof STMethod) == false) {
-                continue;
-            }
-            
-            STMethod method = (STMethod) obj;
-            if(method.hasPrimitive() == false) {
-                continue;
-            }
-            
-            if(method.getPrimitive() == null) {
-                method.getPrimitive();
-                
-                if(primitives.contains(method.getPrimitiveName())) {
-                    continue;
-                }
-                
-                primitives.add(method.getPrimitiveName());
-            }
-        }
-    }
-
-    public List<STSymbol> getUnknownPrimitives(List<STSymbol> primitives) {
-        _getUnknownPrimitives(primitives, mScope);
-        STClass klass = getSTClass();
-        
-        if(klass != null && klass.getScope() != null) {
-            _getUnknownPrimitives(primitives, klass.getScope());
-        }
-        
-        return primitives;
-    }
 
     public STExecutableObject findMethod(STObject selector) {
         STObject obj = lookup(selector);
@@ -266,7 +240,7 @@ public class STClass extends STObject {
                     return false;
                 }
                 STScope scope = object.getScope();
-                scope.put(varName, Universe.objects().NIL);
+                scope.put(varName, ImageSuite.image().objects().NIL);
                 return true;
             }
         });

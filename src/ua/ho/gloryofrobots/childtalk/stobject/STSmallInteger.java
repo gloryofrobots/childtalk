@@ -1,7 +1,8 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
+import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STSmallInteger extends STNumber {
 
@@ -16,7 +17,12 @@ public class STSmallInteger extends STNumber {
 
     public static STSmallInteger create(int value) {
         STSmallInteger integer = new STSmallInteger(value);
-        integer.setSTClass(Universe.classes().SmallInteger);
+        integer.setClassProvider(new BindingClassProvider(integer) {
+            @Override
+            protected STClass _getSTClass() {
+                return ImageSuite.image().classes().SmallInteger;
+            }
+        });
         return integer;
     }
 
@@ -172,60 +178,60 @@ public class STSmallInteger extends STNumber {
     protected STObject _lessThen(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData < second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _greaterThen(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData > second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _lessEqual(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData <= second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _greaterEqual(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData >= second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _equal(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData == second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     @Override
     protected STObject _notEqual(STNumber other) {
         STSmallInteger second = other.castToSubclass();
         if (mData != second.mData) {
-            return Universe.objects().TRUE;
+            return ImageSuite.image().objects().TRUE;
         }
 
-        return Universe.objects().FALSE;
+        return ImageSuite.image().objects().FALSE;
     }
 
     public String toString() {

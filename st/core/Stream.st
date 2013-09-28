@@ -1,5 +1,18 @@
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
 
-Stream extend [
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+   
+Object subclass: Stream [
+
+    |accessMode|
+
     (+) new [
         ^self basicNew initialize
     ]
@@ -146,3 +159,6 @@ Stream extend [
         anObject printOn: self
     ]
 ]
+
+
+    

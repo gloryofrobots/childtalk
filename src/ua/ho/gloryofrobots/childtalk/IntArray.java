@@ -1,6 +1,11 @@
 package ua.ho.gloryofrobots.childtalk;
 
-public class IntArray {
+import java.io.Serializable;
+
+public class IntArray implements Serializable {
+   
+    private static final long serialVersionUID = 1L;
+    
     protected int[] mData;
     protected int mMaxIndex;
     protected final int DEFAULT_SIZE = 50;

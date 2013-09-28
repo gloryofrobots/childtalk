@@ -1,3 +1,20 @@
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Signal subclass: Exception [    
+    description [
+        ^'An exception has been raised.'
+    ]
+]
+
+
 Eval [
     
     Exception subclass: #Error
@@ -52,13 +69,7 @@ Eval [
                     instanceVariableNames: ''
                     classVariableNames: ''.
 ]
-
-Exception extend [    
-    description [
-        ^'An exception has been raised.'
-    ]
-]
-
+  
 MessageNotUnderstood extend [
    (+) message: aMessage receiver: anObject [
         ^self new

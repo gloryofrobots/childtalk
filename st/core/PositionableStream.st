@@ -1,4 +1,18 @@
-PositionableStream extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+    
+           
+Stream subclass: PositionableStream [
+    
+    |collection curPos endPos|
     
    (+) on: aCollection [
         ^self new initializeOn: aCollection
@@ -137,3 +151,28 @@ PositionableStream extend [
         ^endPos = 0
     ]
 ]
+
+    
+PositionableStream subclass: WriteStream [
+   
+    initialize [
+        super initialize.
+        self allowWriteOnly.
+        self truncate
+    ]
+]
+
+PositionableStream subclass: ReadStream [
+    initialize [
+        super initialize.
+        self allowReadOnly
+    ]
+]
+
+ WriteStream subclass: ReadWriteStream [
+    initialize [
+        super initialize.
+        self allowReadAndWrite
+    ]
+]
+

@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.scheduler.BlockRoutine;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
@@ -32,7 +32,7 @@ public class STBlock extends STExecutableObject {
         block.setClassProvider(new BindingClassProvider(block) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Block;
+                return ImageSuite.image().classes().Block;
             }
         });
         

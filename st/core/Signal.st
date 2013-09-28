@@ -1,5 +1,15 @@
-Signal extend [
-  
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Object subclass: Signal [
+     |signalerContext messageText|
     (+) signal: messageText [
         self new signal: messageText
     ]
@@ -38,8 +48,8 @@ Signal extend [
                [ (context handles:aSignal) 
                     ifTrue: [ context handle:aSignal. ^ true]
                     ifFalse: [ context := context parent. ] ].
-        
-        'Unhandled signal ' print. self print. '\n' print.
+        'Unhandled signal ' print.  
+        self print. '\n' print.
         signalerContext die.
     ]
     
@@ -54,14 +64,17 @@ Signal extend [
     
     printOn: aStream [
         "Append to aStream a String representation of the receiver"
-        super printOn: aStream.
-        "self description notNil ifTrue:
+        aStream
+            nextPutAll:
+                    self class name; space.
+                    
+        self description notNil ifTrue:
                     [aStream
                          nextPutAll: self description;
                                     space].        
         self messageText notNil ifTrue:
                      [aStream 
-                        nextPutAll: self messageText.]."
+                        nextPutAll: self messageText.].
     ]
     
     signal: aMessageText [

@@ -1,4 +1,14 @@
-Bag extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+Set subclass: Bag [
     
     indexOf: anObject [
         "This method is similiar to Set>>indexOf: except that return the position only of empty entries"

@@ -1,8 +1,10 @@
 package ua.ho.gloryofrobots.childtalk.compilation;
+import java.io.Serializable;
+
 import ua.ho.gloryofrobots.childtalk.IntArray;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 
-public class CompileInfo {
+public class CompileInfo implements Serializable{
     public static final int UNKNOWN_POSITION = -1; 
     IntArray mPositions;
     char[] mData;

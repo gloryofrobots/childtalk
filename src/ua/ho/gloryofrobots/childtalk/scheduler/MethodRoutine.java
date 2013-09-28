@@ -2,7 +2,7 @@ package ua.ho.gloryofrobots.childtalk.scheduler;
 
 import javax.management.RuntimeErrorException;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STContext;
@@ -49,9 +49,9 @@ public class MethodRoutine extends Routine {
         mContext.setRoutine(this);
         STScope scope = mExecutable.createScope();
         //STClass klass = receiver.getSTClass();
-        scope.put(Universe.symbols().SELF, receiver);
-        scope.put(Universe.symbols().SUPER, receiver);
-        scope.put(Universe.symbols().THIS_CONTEXT, mContext);
+        scope.put(ImageSuite.image().symbols().SELF, receiver);
+        scope.put(ImageSuite.image().symbols().SUPER, receiver);
+        scope.put(ImageSuite.image().symbols().THIS_CONTEXT, mContext);
         //scope.append(receiver.getScope());
         mContext.setScope(scope);
     }
@@ -100,5 +100,12 @@ public class MethodRoutine extends Routine {
             data += "( args:" + mArguments.toString() + " )";
         }
         return data;
+    }
+    
+    //search method routine in routines call chain. 
+    //this is method we just return this
+    @Override
+    public Routine getLastMethodRoutine() {
+        return this;
     }
 }

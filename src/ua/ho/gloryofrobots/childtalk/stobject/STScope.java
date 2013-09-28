@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
@@ -15,7 +15,7 @@ public class STScope extends STInternalDictionary {
     //private STScope previous = null;
     
     protected STScope() {
-        
+        super();
     }
     
     public static STScope create() {
@@ -23,7 +23,7 @@ public class STScope extends STInternalDictionary {
         obj.setClassProvider(new BindingClassProvider(obj) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Scope;
+                return ImageSuite.image().classes().Scope;
             }
         });
         
@@ -86,6 +86,8 @@ public class STScope extends STInternalDictionary {
         if (has(name)) {
             throw new DuplicateVariableException(name.toString());
         }
+        
+        put(name, object);
     }
     
     public List<STObject> asList() {

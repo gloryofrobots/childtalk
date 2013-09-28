@@ -1,6 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 
 public class BytecodeUtils {

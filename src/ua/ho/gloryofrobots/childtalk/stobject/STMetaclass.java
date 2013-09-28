@@ -1,8 +1,9 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
+import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
+import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STMetaclass extends STClass {
@@ -29,7 +30,7 @@ public class STMetaclass extends STClass {
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
                  STMetaclass.createClassInRuntime(this, routine, receiver, stack);
-                 return Universe.objects().NIL;
+                 return ImageSuite.image().objects().NIL;
             }
         });
     }
@@ -45,6 +46,12 @@ public class STMetaclass extends STClass {
         mInstanceClass.setName(className);
         superclass.addSubclass(mInstanceClass);
         mScope.put(STSymbol.create("instanceClass"), mInstanceClass);
+        
+        STSymbol initMethodName = ImageSuite.image().symbols().INITIALIZE;
+        STExecutableObject method = findMethod(initMethodName);
+        if(method != null) {
+            SchedulingSuite.callExecutableInNewProcess(method, this);
+        }
         return mInstanceClass;
     }
 
@@ -77,7 +84,7 @@ public class STMetaclass extends STClass {
                         e.toString());
             }
         }
-        Universe.image().put(className, klass);
+        ImageSuite.image().put(className, klass);
         return klass;
     }
     
@@ -88,7 +95,7 @@ public class STMetaclass extends STClass {
         meta.setClassProvider(new BindingClassProvider(meta) {
             @Override
             protected STClass _getSTClass() {
-                return Universe.classes().Metaclass;
+                return ImageSuite.image().classes().Metaclass;
             }
         });
 

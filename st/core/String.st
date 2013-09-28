@@ -1,4 +1,14 @@
-String extend [
+"
+Childtalk is 
+    Copyright (c) 2013 Alex Birulia
+
+Childtalk standard library is based on the Smalltalk YX which is 
+    Copyright (c) 2007-2008 Luca Bruno
+
+Original license of Smalltalk YX may be found in the LICENSE file.
+"
+
+ByteArray subclass: String [
 
     (+) new: anIndex [
         "Add 1 to anIndex to make room for NULL character"
@@ -29,29 +39,24 @@ String extend [
         "thisContext showTraceBack."
         anIndex > self basicSize
             ifTrue: [ self error: 'Index out of bounds' ].
-        aCharacter isCharacter
-    	ifFalse: [ self error: 'A character is required got ', aCharacter printString ].
-        self byteAt: anIndex put: aCharacter asciiValue.
-        ^aCharacter
+        (aCharacter isKindOf: Character)
+    	ifTrue: [ self byteAt: anIndex put: aCharacter asciiValue. ^aCharacter ].
+        (aCharacter isKindOf: SmallInteger)
+        ifTrue: [self byteAt: anIndex put: aCharacter.  ^aCharacter ].
+        
+        self error: 'A character or SmallInteger required got '+ aCharacter printString
     ]
     
     printOn: aStream [
         aStream
-           
-            nextPutAll: self;
+            nextPutAll: self.
             
     ]
     
     storeOn: aStream [
-        aStream nextPut: $'.
-        self do: [ :ea |
-            ea = $'
-                ifTrue: [ aStream nextPut: $' ].
-            aStream
-                nextPut: ea ].
-        aStream nextPut: $'
+        aStream
+            nextPutAll: self.
     ]
-    
     
     hash [
         <primitive: 'String_hash'>
@@ -141,11 +146,6 @@ String extend [
     
     >= aString [
         ^(self compare: aString) >= 0
-    ]
-    
-    + aString [
-        <primitive: 'String_concat'>
-        self primitiveFailed.
     ]
     
     compare: aString [

@@ -3,22 +3,19 @@ package ua.ho.gloryofrobots.childtalk.compilation;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import ua.ho.gloryofrobots.childtalk.Universe;
-import ua.ho.gloryofrobots.childtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStream.ProgramReadException;
-import ua.ho.gloryofrobots.childtalk.compilation.Token.Type;
 import ua.ho.gloryofrobots.childtalk.inout.InOutSuite;
 import ua.ho.gloryofrobots.childtalk.node.*;
 import ua.ho.gloryofrobots.childtalk.node.NodeWithMetaData.UnknownMetaDataException;
 
-public class Parser{
+public class Parser {
     final String SPECIAL_TOKEN_SUBCLASS = "subclass:";
     final String SPECIAL_TOKEN_EXTEND = "extend";
     final String SPECIAL_TOKEN_EVAL = "Eval";
-    
+
     Lexer mLexer;
-    
+
     public Parser(Lexer lexer) {
         mLexer = lexer;
     }
@@ -27,11 +24,11 @@ public class Parser{
         System.out.println(token.stringValue());
         ((Lexer) mLexer).lexerError(txt, token);
     }
-    
+
     public ProgramNode parse() throws FileEvalException {
-        
+
         ProgramNode node = new ProgramNode();
-        
+
         while (mLexer.current().type != Token.Type.END) {
             _parse(node);
         }
@@ -40,7 +37,7 @@ public class Parser{
     }
 
     protected void _parse(ProgramNode node) throws FileEvalException {
-        
+
         if (parseClass(node) == true) {
             return;
         }
@@ -54,6 +51,14 @@ public class Parser{
         }
 
         parsingError("Unknown parsing object", mLexer.current());
+    }
+
+    private void parseUnknownMethodBody(ProgramNode node)
+            throws FileEvalException {
+        EvalNode eval = new EvalNode();
+        BodyNode body = eval.getBody();
+        parseExecutableBody(body);
+        node.addNode(eval);
     }
 
     private boolean parseEval(ProgramNode node) throws FileEvalException {
@@ -76,26 +81,26 @@ public class Parser{
             parsingError("Missed [ in Eval declaration", token);
             return false;
         }
-        
+
         mLexer.next();
-        
+
         EvalNode eval = new EvalNode();
         parseExecutableTemporaries(eval);
         int startPosition = mLexer.getCurrentTokenPosition();
         BodyNode body = eval.getBody();
-        parseBody(body);
+        parseExecutableBody(body);
         node.addNode(eval);
-        
+
         int endPosition = mLexer.getPreviousTokenPosition();
         ProgramTextStreamInterface stream = mLexer.getStream();
         eval.initCompileInfo(startPosition, endPosition, stream);
-        
+
         token = mLexer.current();
         if ((token.type == Token.Type.CLOSING && token.equalValue(']')) == false) {
             parsingError("Missed closing ]", token);
             return false;
         }
-        
+
         mLexer.next();
         mLexer.endTransaction();
         return true;
@@ -103,11 +108,11 @@ public class Parser{
 
     protected boolean parseExtend(ProgramNode node) throws FileEvalException {
         mLexer.startTransaction();
-        
+
         if (mLexer.lookup(2) == false) {
             return false;
         }
-        
+
         Token tokenClassName = mLexer.current();
 
         if (tokenClassName.type != Token.Type.NAME_CONST) {
@@ -116,7 +121,7 @@ public class Parser{
 
         String className = tokenClassName.stringValue();
         Token token = mLexer.next();
-        
+
         if (token.equalValue(SPECIAL_TOKEN_EXTEND) == false) {
             mLexer.rollBackTransaction();
             return false;
@@ -138,7 +143,7 @@ public class Parser{
             token = mLexer.current();
             if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
                 break;
-            } 
+            }
             if (parseClassMethod(extendNode) == false) {
                 parsingError("extend block can contain only methods", token);
                 return false;
@@ -153,14 +158,14 @@ public class Parser{
 
         node.addNode(extendNode);
         mLexer.next();
-        
+
         mLexer.endTransaction();
         return true;
     }
 
     protected boolean parseClass(ProgramNode node) throws FileEvalException {
         mLexer.startTransaction();
-        
+
         if (mLexer.lookup(2) == false) {
             return false;
         }
@@ -200,17 +205,24 @@ public class Parser{
         classNode.setSuperclassName(superClassName);
         classNode.seClassName(className);
 
+        // In childtalk |args| used for instance variables and also for bitOr:
+        // in Boolean.
+        // instance and class vars must be declared before methods. This is real shit code.
+        boolean methodsBegin = false;
         while (true) {
             token = mLexer.current();
             if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
                 break;
-            } else if (parseMetaData(classNode)) {
-                continue;
-            } else if (parseInstanceVariables(classNode)) {
-                continue;
-            } else if (parseClassVariables(classNode)) {
-                continue;
-            } else if (parseClassMethod(classNode)) {
+            }
+            if (methodsBegin == false) {
+                if (parseInstanceVariables(classNode)) {
+                    continue;
+                } else if (parseClassVariables(classNode)) {
+                    continue;
+                }
+            }
+            if (parseClassMethod(classNode)) {
+                methodsBegin = true;
                 continue;
             } else {
                 parsingError("Class declaration must ended with ]", token);
@@ -251,7 +263,7 @@ public class Parser{
             throws FileEvalException {
         Token token = null;
         token = mLexer.current();
-        if ((token.type == Token.Type.BINARY && token.equalValue('/')) == false) {
+        if ((token.type == Token.Type.BINARY && token.equalValue('\\')) == false) {
             return false;
         }
 
@@ -261,8 +273,8 @@ public class Parser{
             token = mLexer.next();
         }
 
-        if ((token.type == Token.Type.BINARY && token.equalValue('/')) == false) {
-            parsingError("Missed closing /", token);
+        if ((token.type == Token.Type.BINARY && token.equalValue('\\')) == false) {
+            parsingError("Missed closing \\", token);
             return false;
         }
 
@@ -310,23 +322,24 @@ public class Parser{
         MethodNode method = new MethodNode();
         parseMethodModificator(method);
         parseMethodMessagePattern(method);
-        
-        //DEBUG ONLY
-        if(methodsContainerNode instanceof ClassNode) {
-            method.setClassName( ((ClassNode)methodsContainerNode).getClassName());
+
+        // DEBUG ONLY
+        if (methodsContainerNode instanceof ClassNode) {
+            method.setClassName(((ClassNode) methodsContainerNode)
+                    .getClassName());
         }
-        
+
         Token token = mLexer.current();
         if ((token.type == Token.Type.BINARY && token.equalValue('[')) == false) {
             parsingError("Missed [ in method declaration", token);
             return false;
         }
-        
+
         mLexer.next();
         BodyNode body = method.getBody();
-        //catch method body first position
+        // catch method body first position
         int startPosition = mLexer.getCurrentTokenPosition();
-        
+
         while (true) {
             if (parseMetaData(method) == false) {
                 break;
@@ -334,19 +347,19 @@ public class Parser{
         }
 
         parseExecutableTemporaries(method);
-        parseBody(body);
-        
-        //catch method body last position
+        parseExecutableBody(body);
+
+        // catch method body last position
         int endPosition = mLexer.getPreviousTokenPosition();
         ProgramTextStreamInterface stream = mLexer.getStream();
         method.initCompileInfo(startPosition, endPosition, stream);
-        
+
         token = mLexer.current();
         if ((token.type == Token.Type.CLOSING && token.equalValue(']')) == false) {
             parsingError("Missed closing ] in method declaration", token);
             return false;
         }
-        
+
         mLexer.next();
         methodsContainerNode.addMethod(method);
         return true;
@@ -372,39 +385,44 @@ public class Parser{
 
         mLexer.next();
     }
-    
-    protected void parseMethodModificator(MethodNode method) throws FileEvalException {
+
+    protected void parseMethodModificator(MethodNode method)
+            throws FileEvalException {
         Token token = mLexer.current();
-        
-        if(token.type != Token.Type.BINARY || token.equalValue('(') == false) {
+
+        if (token.type != Token.Type.BINARY || token.equalValue('(') == false) {
             return;
         }
-            
+
         token = mLexer.next();
-        if(token.type != Token.Type.BINARY){
-            parsingError("class/instance method modificator must be + or -", token);
+        if (token.type != Token.Type.BINARY) {
+            parsingError("class/instance method modificator must be + or -",
+                    token);
         }
-        
-        if(token.equalValue('+')) {
+
+        if (token.equalValue('+')) {
             method.setStatic(true);
-        } else if(token.equalValue('-')) {
+        } else if (token.equalValue('-')) {
             method.setStatic(false);
         } else {
-            parsingError("class/instance method modificator must be + or -", token);
+            parsingError("class/instance method modificator must be + or -",
+                    token);
         }
-        
+
         token = mLexer.next();
-        
-        if(token.type != Token.Type.CLOSING || token.equalValue(')') == false){
-            parsingError("missed closing ) in class/instance method modificator", token);
+
+        if (token.type != Token.Type.CLOSING || token.equalValue(')') == false) {
+            parsingError(
+                    "missed closing ) in class/instance method modificator",
+                    token);
         }
-        
-        mLexer.next();        
+
+        mLexer.next();
     }
-    
+
     protected void parseMethodMessagePattern(MethodNode method)
             throws FileEvalException {
-        
+
         Token token = mLexer.current();
         switch (token.type) {
         case NAME_CONST:
@@ -452,21 +470,27 @@ public class Parser{
     }
 
     public void DEBUG_LOG(String message, Token token) {
-        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER, "LOG : %s Token : %s\n", message, token.toString());
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER,
+                "LOG : %s Token : %s\n", message, token.toString());
     }
 
     public void DEBUG_LOG(String function, String message) {
-        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER, "LOG : %s  %s\n", function, message);
+        DebugSuite.debugPrint(DebugSuite.DEBUG_MODE_PARSER, "LOG : %s  %s\n",
+                function, message);
     }
 
-    protected void parseBody(BodyNode body) throws FileEvalException {
+    public void parseExecutableBody(BodyNode body) throws FileEvalException {
         Token token = mLexer.current();
 
         while (true) {
             if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
                 return;
             }
-            
+
+            if (token.type == Token.Type.END) {
+                return;
+            }
+
             DEBUG_LOG("parseBody", token);
 
             StatementNode statement = parseStatement();
@@ -484,7 +508,7 @@ public class Parser{
     }
 
     protected void parseBlockBody(BodyNode body) throws FileEvalException {
-        //TODO DELETE DUPPLICATE
+        // TODO DELETE DUPPLICATE
         Token token = mLexer.current();
 
         while (true) {
@@ -492,7 +516,7 @@ public class Parser{
             if (token.type == Token.Type.CLOSING && token.equalValue(']')) {
                 break;
             }
-            
+
             StatementNode statement = parseStatement();
             DEBUG_LOG("getStatement parseBlockBody", statement.toString());
             body.addStatement(statement);
@@ -514,7 +538,7 @@ public class Parser{
         } else {
             parseExpression(statement);
         }
-        
+
         token = mLexer.current();
         while (token.type == Token.Type.CLOSING && token.equalValue('.')) {
             token = mLexer.next();
@@ -561,7 +585,7 @@ public class Parser{
         while (token.type == Token.Type.CLOSING && token.charValue() == ';') {
             mLexer.next();
             statement.onCascade();
-            
+
             parseKeyContinuation(statement);
             token = mLexer.current();
         }
@@ -580,12 +604,12 @@ public class Parser{
         String selector = new String();
         StatementNode messageStatement = new StatementNode();
         messageStatement.itIsYourToken(token);
-        
+
         Token messageBegin = token;
 
         MessageSelectorNode message = new MessageSelectorNode();
         message.itIsYourToken(messageBegin);
-        
+
         int count = 0;
         while (token.type == Token.Type.NAME_COLON) {
             selector += token.stringValue();
@@ -601,7 +625,7 @@ public class Parser{
         }
 
         statement.addNode(messageStatement);
-        
+
         message.setCountArguments(count);
         message.setSelector(selector);
         statement.addNode(message);
@@ -618,10 +642,10 @@ public class Parser{
             String selector = token.stringValue();
 
             mLexer.next();
-            
+
             StatementNode messageStatement = new StatementNode();
             messageStatement.itIsYourToken(mLexer.current());
-            
+
             Node term = parseTerm();
             messageStatement.addNode(term);
 
@@ -686,9 +710,9 @@ public class Parser{
         case BINARY:
             if (token.equalValue("(")) {
                 token = mLexer.next();
-                //result = new StatementNode();
-                
-                //parseExpression((StatementNode) result);
+                // result = new StatementNode();
+
+                // parseExpression((StatementNode) result);
                 result = parseStatement();
                 token = mLexer.current();
                 if ((token.type == Token.Type.CLOSING && token.charValue() == ')') == false) {
@@ -736,20 +760,20 @@ public class Parser{
         if ((token.type == Token.Type.BINARY && token.equalValue('[')) == false) {
             parsingError("Missed [ in block declaration", token);
         }
-        
+
         mLexer.next();
-        
+
         BodyNode body = block.getBody();
-        //catch first position of block body
+        // catch first position of block body
         int startPosition = mLexer.getCurrentTokenPosition();
         parseBlockMessagePattern(block);
         parseExecutableTemporaries(block);
         parseBlockBody(body);
-        //catch last position of block body
+        // catch last position of block body
         int endPosition = mLexer.getPreviousTokenPosition();
         ProgramTextStreamInterface stream = mLexer.getStream();
         block.initCompileInfo(startPosition, endPosition, stream);
-        
+
         token = mLexer.current();
         if ((token.type == Token.Type.CLOSING && token.equalValue(']')) == false) {
             parsingError("Missed closing ] in block declaration", token);
@@ -792,14 +816,16 @@ public class Parser{
         Token token = mLexer.next();
         while ((token.type == Token.Type.END || (token.type == Token.Type.CLOSING && token
                 .charValue() == '}')) == false) {
-            //StatementNode element = new StatementNode();
-            //parseExpression(element);
+            // StatementNode element = new StatementNode();
+            // parseExpression(element);
             StatementNode element = parseStatement();
             array.addElement(element);
 
             token = mLexer.current();
-            /*if (token.type == Token.Type.CLOSING && token.charValue() == '.')
-                token = mLexer.next();*/
+            /*
+             * if (token.type == Token.Type.CLOSING && token.charValue() == '.')
+             * token = mLexer.next();
+             */
         }
 
         return array;
@@ -865,22 +891,21 @@ public class Parser{
         return assign;
     }
 
-   
-
     public static void main(String[] args) {
-        
+
         InOutSuite.init(System.in, System.out, System.err);
         FileInputStream fileStream = null;
-        
+
         try {
             fileStream = new FileInputStream(
                     "/home/gloryofrobots/develop/smalltalk/yellowtalk/st/tests/parser_test.st");
             ProgramTextStreamInterface programStream = new ProgramTextStream(
                     fileStream);
-            DebugSuite.setDebugMode(DebugSuite.DEBUG_MODE_PARSER, DebugSuite.DEBUG_MODE_LEXER);
+            DebugSuite.setDebugMode(DebugSuite.DEBUG_MODE_PARSER,
+                    DebugSuite.DEBUG_MODE_LEXER);
             Lexer lexer = Lexer.create(programStream);
             Node node = CompileSuite.parseWithLexer(lexer);
-            
+
             System.out.println("Result:");
             System.out.println(node.toString());
 
