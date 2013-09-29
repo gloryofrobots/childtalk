@@ -1,14 +1,11 @@
 package ua.ho.gloryofrobots.childtalk.bootstrap;
 
 import ua.ho.gloryofrobots.childtalk.inout.InOutSuite;
-import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
-import ua.ho.gloryofrobots.childtalk.stobject.STObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STString;
 
 public class DebugSuite {
     private static int sDebugMode;
-    private final static boolean sDebugEnable = true;
+    private final static boolean sDebugEnable = false;
     public static final int DEBUG_MODE_LEXER = 1;
     public static final int DEBUG_MODE_PARSER = 2;
     public static final int DEBUG_MODE_COMPILER = 3;
@@ -21,6 +18,10 @@ public class DebugSuite {
         for(int mode : modes) {
             sDebugMode |= (1 << mode);
         }
+    }
+    
+    public static final boolean isDebugEnabled() {
+        return sDebugEnable;
     }
     
     public static boolean isOnDebugMode(int mode) {

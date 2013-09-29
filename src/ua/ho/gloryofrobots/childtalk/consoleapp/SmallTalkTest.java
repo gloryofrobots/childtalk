@@ -1,52 +1,80 @@
 package ua.ho.gloryofrobots.childtalk.consoleapp;
 
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import ua.ho.gloryofrobots.childtalk.ChildtalkApplicationInterface;
 import ua.ho.gloryofrobots.childtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.Loader;
-import ua.ho.gloryofrobots.childtalk.compilation.CompileSuite;
-import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamInterface;
 import ua.ho.gloryofrobots.childtalk.scheduler.EvalSuite;
-import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
-import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
+import ua.ho.gloryofrobots.childtalk.stobject.STImage;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STProcess;
-import ua.ho.gloryofrobots.childtalk.stobject.STScope;
-import ua.ho.gloryofrobots.childtalk.stobject.STString;
-import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
 
 public class SmallTalkTest {
-    private void runSmalltalkTestSuite() {
-        String folder = "/home/gloryofrobots/develop/smalltalk/childtalk/st/tests/";
+    private void runSmalltalkTestSuite(String testsFolder) {
+        
         String[] classNames = { "TestCase.st", "ObjectTest.st", "FalseTest.st",
                 "UndefinedObjectTest.st", "TrueTest.st", "CommonTest.st", "TestSuite.st" };
 
         Loader loader = new Loader();
-        loader.loadAndCompileClassesFromFolder(folder, classNames,
+        loader.loadAndCompileClassesFromFolder(testsFolder, classNames,
                 ImageSuite.image());
         
         System.out.println("----------------------------------------------");
        
-        STObject result = EvalSuite.evalFile(folder + "run.st");
+        STObject result = EvalSuite.evalFile(testsFolder + "run.st");
         System.out.println("    Result: " + result.toString());
     }
-
-    public void run() {
+    
+    public void error(String format, Object... args) {
+        String txt = String.format(format, args);
+        System.err.println(txt);
+        System.exit(-1);
+    }
+    
+    public void _run(String testsFolder) {
         testPrimitives();
-        runSmalltalkTestSuite();
+        runSmalltalkTestSuite(testsFolder);
+    }
+    
+    private void runAfterLoadingImage(String testsFolder , String imagePath) {
+        System.out.println("LOADING EXISTED IMAGE");
+        //first load image
+        if(ImageSuite.loadImage(imagePath) == false) {
+            error("Error loading image %s", imagePath);
+        }
+        BootstrapSuite.bootstrap();
+        System.out.println("RUN TESTS");
+        _run(testsFolder);
+    }
+    private void runAfterBuildingImage(String testsFolder , String coreFolder) {
+        System.out.println("BUILDING IMAGE");
+        //create image from core
+        ImageSuite.clear();
+        ImageBuilder builder = new ImageBuilder();
+        builder.buildDefaultImage(coreFolder);
+        BootstrapSuite.bootstrap();
+        System.out.println("RUN TESTS AGAIN");
+        _run(testsFolder);
+    }
+    
+    public void run(String testsFolder, String coreFolder, String imagePath) {
+        BootstrapSuite.setApplication(new Platform());
+        runAfterLoadingImage(testsFolder, imagePath);
+        runAfterBuildingImage(testsFolder, coreFolder);
     }
 
     private void testPrimitives() {
         new PrimitiveTester().test();
     }
-}
+
+    public static void main(String[] args) {
+        String path = System.getenv("CHILDTALK_PATH");
+        String testsFolder = "/"+path+"/st/tests/";
+        String coreFolder = "/"+path+"/st/core/";
+        String imagePath = "/"+path+"/image/default.sim";
+        
+        SmallTalkTest test = new SmallTalkTest();
+        test.run(testsFolder, coreFolder, imagePath);
+    }
+}       
 
 
 //puts ("- Test class variables");

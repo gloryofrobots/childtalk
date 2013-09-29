@@ -1,27 +1,21 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
 
-import java.io.Serializable;
 
 import ua.ho.gloryofrobots.childtalk.compilation.CompileInfo;
 import ua.ho.gloryofrobots.childtalk.node.Node;
+import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
 
-public class BytecodeWriter implements Serializable {
+public class BytecodeWriter{
   
-    private static final long serialVersionUID = 1L;
     private BytecodeArray mBytecode;
     private int mIndex;
     private CompileInfo mCompileInfo;
 
-    public BytecodeWriter(BytecodeArray array) {
-        mBytecode = array;
+    public BytecodeWriter(STExecutableObject object) {
+        mBytecode = object.getBytecode();
+        mCompileInfo = object.getCompileInfo();
         mIndex = 0;
     }
-    
-    public void setCompileInfo(CompileInfo info) {
-        mCompileInfo = info;
-    }
-    
-    
     
     public void append(BytecodeType codeType, int argument, Node node) {
         short command = (short) codeType.ordinal();

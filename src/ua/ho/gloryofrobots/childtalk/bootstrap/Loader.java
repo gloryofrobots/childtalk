@@ -18,7 +18,7 @@ public class Loader {
         FileInputStream fileStream = null;
         ProgramTextStreamInterface programStream = null;
         try {
-            fileStream = new FileInputStream(path);
+            fileStream = BootstrapSuite.application().openFileInputStream(path);
             programStream = new ProgramTextStreamFile(fileStream,path);
         } catch (IOException x) {
             SignalSuite.error("IO error in file %s - %s", path, x.getMessage());

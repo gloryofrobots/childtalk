@@ -21,8 +21,8 @@ public class Parser {
     }
 
     private void parsingError(String txt, Token token) throws FileEvalException {
-        System.out.println(token.stringValue());
-        ((Lexer) mLexer).lexerError(txt, token);
+        //System.out.println(token.stringValue());
+        mLexer.lexerError(txt, token);
     }
 
     public ProgramNode parse() throws FileEvalException {

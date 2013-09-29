@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.inout;
 
+import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
@@ -11,7 +12,10 @@ public class SignalSuite {
     public static void error(String format, Object... args)
             throws RuntimeException {
         String error = String.format(format, args);
-        InOutSuite.toStdErr(error);
+        if(DebugSuite.isDebugEnabled() == true) {
+            InOutSuite.toStdErr(error);
+        }
+        
         throw new RuntimeException(error);
     }
 

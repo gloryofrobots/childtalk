@@ -1,54 +1,28 @@
 package ua.ho.gloryofrobots.childtalk.consoleapp;
 
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import ua.ho.gloryofrobots.childtalk.ChildtalkApplicationInterface;
 import ua.ho.gloryofrobots.childtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileSuite;
+import ua.ho.gloryofrobots.childtalk.scheduler.EvalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 
 public class ConsoleApplication {
 
     static class Options {
-        boolean runTests;
-        boolean buildDefaultImage;
-
         boolean loadImage;
         String imagePath;
+
         boolean runFiles;
         ArrayList<String> filesToRun;
         boolean runSmallTalk;
-
+        
         boolean showHelp;
     }
-
-    ChildtalkApplicationInterface mApplication = new ChildtalkApplicationInterface() {
-        @Override
-        public void onQuit() {
-            System.exit(0);
-        }
-
-        @Override
-        public PrintStream getOutputStream() {
-            return System.out;
-        }
-
-        @Override
-        public InputStream getInputStream() {
-            return System.in;
-        }
-
-        @Override
-        public PrintStream getErrorStream() {
-            return System.err;
-        }
-    };
 
     private boolean mInitialised;
 
@@ -58,52 +32,44 @@ public class ConsoleApplication {
 
     private void showHelp() {
         StringBuilder builder = new StringBuilder();
+        String spaces = "                             ";
         String separator = System.getProperty("line.separator");
-        builder.append("ChildTalk version 1.0");
-        builder.append(separator);
+        
         builder.append("Usage:");
         builder.append(separator);
 
-        builder.append("-t");
-        builder.append("          ");
-        builder.append("Tun Tests");
-        builder.append(separator);
-
         builder.append("-i FILEPATH");
-        builder.append("          ");
+        builder.append(spaces);
         builder.append("Load image from FILEPATH");
         builder.append(separator);
 
-        builder.append("-d");
-        builder.append("          ");
-        builder.append("Build default image from scratch");
-        builder.append(separator);
-
         builder.append("-e CODE");
-        builder.append("          ");
+        builder.append(spaces+ "    ");
         builder.append("Eval line of code");
         builder.append(separator);
 
         builder.append("-r");
-        builder.append("          ");
+        builder.append(spaces+"         ");
         builder.append("Run Childtalk after loading files or evaluating code");
         builder.append(separator);
 
-        builder.append("-v");
-        builder.append("          ");
-        builder.append("Print version");
+        builder.append("-f FILEPATH1, FILEPATH2");
+        builder.append("                 ");
+
+        builder.append("Load and eval files. For example: -f \"/usr/share/Planet.st\" \"/usr/share/Earth.st\"");
         builder.append(separator);
 
         builder.append("-h");
-        builder.append("          ");
+        builder.append(spaces+"         ");
         builder.append("Print this page");
         builder.append(separator);
 
-        builder.append("-f FILEPATH1, FILEPATH2");
-        builder.append("          ");
+       
+        print(builder.toString());
+    }
 
-        builder.append("Load and eval files. For Example -f \"/usr/share/Planet.st\" \"/usr/share/Earth.st\"");
-        builder.append(separator);
+    private void printVersion() {
+        println("ChildTalk version 1.0");
     }
 
     public Options parseArguments(String[] args) {
@@ -133,12 +99,8 @@ public class ConsoleApplication {
                 opts.loadImage = true;
                 i++;
                 opts.imagePath = args[i];
-            } else if (flag == 't') {
-                opts.runTests = true;
             } else if (flag == 'r') {
                 opts.runSmallTalk = true;
-            } else if (flag == 'd') {
-                opts.buildDefaultImage = true;
             } else {
                 error("Unknown argument -" + flag);
             }
@@ -168,17 +130,13 @@ public class ConsoleApplication {
     }
 
     public void _run(Options opts) {
-        BootstrapSuite.setApplication(mApplication);
-
+        BootstrapSuite.setApplication(new Platform());
+        printVersion();
         if (opts.showHelp) {
             showHelp();
             return;
         }
-
-        if (opts.buildDefaultImage) {
-            buildDefaultImage();
-        }
-
+        
         if (opts.loadImage) {
             loadImage(opts.imagePath);
         }
@@ -186,24 +144,16 @@ public class ConsoleApplication {
         if (!isInitialised()) {
             loadDefaultImage();
         }
+
         BootstrapSuite.bootstrap();
-        
+
         if (opts.runFiles) {
             runFiles(opts.filesToRun);
-        }
-
-        if (opts.runTests) {
-            runTests();
         }
 
         if (opts.runSmallTalk) {
             runSmallTalk();
         }
-    }
-
-    private void runTests() {
-        SmallTalkTest test = new SmallTalkTest();
-        test.run();
     }
 
     private void print(String line) {
@@ -229,20 +179,25 @@ public class ConsoleApplication {
         print("> ");
         try {
             String line = scanner.nextLine();
-            STObject result = CompileSuite.eval(line);
-            if(result == ImageSuite.image().objects().NIL) {
-                println("");
+            STObject result = EvalSuite.eval(line);
+            /*if (result == ImageSuite.image().objects().NIL) {
+                println("nil");
             } else {
-                SchedulingSuite.callSelectorInNewProcess(ImageSuite.image().symbols().PRINTNL, result.getSTClass(), result);
-            }
-            //println(result.toString());
-            
+                SchedulingSuite.callSelectorInNewProcess(ImageSuite.image()
+                        .symbols().PRINTNL, result.getSTClass(), result);
+            }*/
+            SchedulingSuite.callSelectorInNewProcess(ImageSuite.image()
+                    .symbols().PRINTNL, result.getSTClass(), result);
+            // println(result.toString());
+
             return 1;
         } catch (NoSuchElementException e) {
             return 0;
-        } catch(RuntimeException e) {
-            //println(e.getMessage());
-            //e.printStackTrace();
+        } catch (RuntimeException e) {
+            String error = e.getMessage();
+            System.err.println(error);
+            println("");
+            // e.printStackTrace();
             return 1;
         }
     }
@@ -250,18 +205,26 @@ public class ConsoleApplication {
     private void runFiles(ArrayList<String> filesToRun) {
         try {
             String[] arr = (String[]) filesToRun.toArray();
-            BootstrapSuite.loadAndEvalFiles(arr);
+            EvalSuite.loadAndEvalFiles(arr);
         } catch (RuntimeException e) {
-            println(e.getMessage());
-            //e.printStackTrace();
+            e.printStackTrace();
             error("Error evaluate file %s", e.getMessage());
         }
     }
 
-    String defaultImagePath = "/home/gloryofrobots/develop/smalltalk/childtalk/image/default.sim";
-
     private void loadDefaultImage() {
-        loadImage(defaultImagePath);
+        String imagePath = "image/default.sim";
+        String childTalkPath = System.getenv("CHILDTALK_PATH");
+        if (childTalkPath != null) {
+            imagePath = "/" + childTalkPath + "/" + imagePath;
+        } else {
+            String userPath = System.getProperty("user.dir");
+            if (userPath != null) {
+                imagePath = userPath + "/" + imagePath;
+            }
+        }
+
+        loadImage(imagePath);
     }
 
     public void error(String format, Object... args) {
@@ -271,29 +234,18 @@ public class ConsoleApplication {
     }
 
     private void loadImage(String imagePath) {
-        boolean result = BootstrapSuite.loadImage(imagePath);
+        boolean result = ImageSuite.loadImage(imagePath);
+        // boolean result = ImageSuite.loadImageFromResource("ua/default.sim");
         if (!result) {
             error("Image loading error %s", imagePath);
         }
-    }
 
-    private void buildDefaultImage() {
-        try {
-            BootstrapSuite
-                    .buildDefaultImage("/home/gloryofrobots/develop/smalltalk/childtalk/st/core");
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            error("Error building default image %s", e.getMessage());
-        }
-        if (BootstrapSuite.saveCurrentImage(defaultImagePath) == false) {
-            error("Error saving image %s", defaultImagePath);
-        }
         mInitialised = true;
     }
 
     public static void main(String[] args) {
         ConsoleApplication app = new ConsoleApplication();
-        String[] arguments = { "-r", "-t" };
+        String[] arguments = { "-r" };
         app.run(arguments);
     }
 }

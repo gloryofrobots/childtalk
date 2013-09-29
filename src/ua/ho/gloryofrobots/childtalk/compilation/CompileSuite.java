@@ -68,32 +68,5 @@ public class CompileSuite {
         return executable;
     }
 
-    public static STObject eval(String line) {
-        ByteArrayInputStream wrap;
-        String evaledLine = "Eval["+line+"]";
-        
-        try {
-            wrap = new ByteArrayInputStream(evaledLine.getBytes("UTF-8"));
-            ProgramTextStream stream = new ProgramTextStream(wrap);
-            Lexer lexer = Lexer.create(stream);
-            ProgramNode program = parseWithLexer(lexer);
-            EvalNode node = (EvalNode) program.getNode(0);
-
-            Compiler compiler = new Compiler();
-            STProcess process = compiler.compileAndExecuteEval(node);
-            STObject object = process.getResult();
-
-            return object;
-        } catch (UnsupportedEncodingException | ProgramReadException e) {
-            e.printStackTrace();
-            SignalSuite.error("Error decoding evaled string");
-        } catch (FileEvalException e) {
-            e.printStackTrace();
-            SignalSuite.error(e.getMessage());
-        } catch (ClassCastException e) {
-            SignalSuite.error(e.getMessage());
-        }
-
-        return null;
-    }
+   
 }

@@ -26,7 +26,7 @@ public abstract class BytecodeOperation {
         
         String lineString = mRoutine.createErrorString();
         String errorMessage = "Runtime Error: " + message + " at line " + lineString;
-        DebugSuite.printTraceBackString(mRoutine);
+        errorMessage += "\n" + DebugSuite.getTraceBackString(mRoutine);
         SignalSuite.error(errorMessage, args);
     }
 }

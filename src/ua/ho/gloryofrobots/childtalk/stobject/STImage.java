@@ -61,7 +61,8 @@ public class STImage extends STScope {
     private  HashMap<String, STSymbol> mSymbolStorage;
     
     public static STImage create() {
-        return new STImage();
+        STImage image =  new STImage();
+        return image;
     }
 
     private STImage() {

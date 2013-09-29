@@ -15,7 +15,6 @@ public abstract class STExecutableObject extends STObject {
     private STArray mLiterals;
     private CompileInfo mCompileInfo;
     private BytecodeArray mBytecode;
-    private BytecodeWriter mBytecodeWriter;
     private STArray mTemporaries;
     
     protected STExecutableObject() {
@@ -26,7 +25,6 @@ public abstract class STExecutableObject extends STObject {
         mBytecode = new BytecodeArray();
         mTemporaries = STArray.create();
         mCompileInfo = null;
-        mBytecodeWriter = new BytecodeWriter(mBytecode);
     }
     
     public CompileInfo getCompileInfo() {
@@ -35,11 +33,6 @@ public abstract class STExecutableObject extends STObject {
     
     public void setCompileInfo(CompileInfo info) {
          mCompileInfo = info;
-         mBytecodeWriter.setCompileInfo(info);
-    }
-    
-    public BytecodeWriter getBytecodeWriter() {
-        return mBytecodeWriter;
     }
     
     public int placeLiteral(STObject obj) {
