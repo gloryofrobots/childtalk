@@ -3,6 +3,9 @@
 .settings
 .classpath
 .idea
+.gradle/
+build/
+*.swp
 # Package Files #
 *.jar
 *.war
