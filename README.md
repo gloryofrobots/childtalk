@@ -7,7 +7,7 @@ Project do not developed now.
 Childtalk was my first completed interpreter. I try to write it in clear and good style, but ,as always, bugs and fixes do their job well.
 
 Childtalk is based on <a href = 'http://code.google.com/p/syx/'>Smalltalk YX</a>.
-Actually parser and lexer module is Java versions of Syx parser and lexer, but I add abstract syntax tree state between parser and compiler,
+Actually parser and lexer is Java versions of Syx parser and lexer, but I add abstract syntax tree state between parser and compiler,
 and build compiler around visitor pattern. (It has very good explanation in  Andrew Appel books). Also all runtime modules totally different from syx or even different from almost all smalltalk systems I study. At first I write their like lisp system, but than I understand simple rule: your runtime structure must be very close to your language. So I have already changed a lot of code. Than i decided to rewrite everything everywhere. And at last i decided to leave Childtalk as this. However it was a funny month when I write Childtalk code and sleep poorly.
 
 <h4>FEATURES</h4>
@@ -21,10 +21,11 @@ and build compiler around visitor pattern. (It has very good explanation in  And
 
 <h4>PROBLEMS AND FAILS</h4>
 <ul>
-<li> It`s slow. Very slow. I decided to completely ignore perfomance factor. So, sorry fo that </li>
+<li> It`s slow. Very slow. I decided to completely ignore perfomance factor. So, sorry fo that. </li>
 <li> Only fake green thread processes avalaible.</li>
 <li> No filestream and stdiostream support. It`s not very hard to add it, of course. </li>
-<li> Image creation based on Java serialization. I simply serialize image instances without optimisations.</li> 
+<li> Image creation based on Java serialization. I simply serialize image instances without optimisations.</li>
+<li> Static initializers "initialize" for classes not called automatically. </li>
 </ul>
 
 <h4>Syntax</h4>
