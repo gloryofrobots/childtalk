@@ -1,24 +1,19 @@
 childtalk
 ==========
 
-Simple Smalltalk dialect written on Java for self-education reasons.<br />
+Simple Smalltalk dialect written on Java for self-educational reasons.
 
-Project do not developed now.
+Project is not developing now.
 
-Childtalk was my first completed interpreter. I try to write it in clear and good style,&nbsp;but,&nbsp;as always,&nbsp;bugs and fixes do their job well.
+Childtalk was my first completed interpreter. I tried to write it in clear and good style, but, as always, bugs and fixes do their job well.
 
-Childtalk is based on <a href = 'http://code.google.com/p/syx/'>Smalltalk YX</a>.
-Actually parser and lexer is Java versions of Syx parser and lexer, but I add abstract syntax tree state between parser and compiler,
-and build compiler around visitor pattern. (It has very good explanation in  Andrew Appel books). 
-Also all runtime modules totally different from Syx or even different from almost all smalltalk systems I study.
-At first I write their like lisp system, but than I understand simple rule:
-your runtime structure must be very close to your language. So I have already changed a lot of code.
-Than i decided to rewrite everything everywhere. And at last i decided to leave Childtalk as this. 
-However it was a funny month when I write Childtalk code and sleep poorly.
+Childtalk is based on  <a href = 'http://code.google.com/p/syx/'>Smalltalk YX</a>. Actually parser and lexer are Java versions of Syx parser and lexer, but I added AST generation between parser and compiler, and built compiler around visitor pattern (it has very good explanation in Andrew Appel books). Also all runtime modules are totally different from Syx and even different from almost all smalltalk systems I studied. At first I wrote them like lisp system, but than I understood simple rule: your runtime structure must be very close to your language. So I have already changed a lot of code. Than I decided to rewrite everything everywhere. And at last I decided to leave Childtalk as this. However it was a funny month when I wrote Childtalk code and slept poorly.
+
+
 
 <h4>FEATURES</h4>
 <ul>
-<li> Stackless. All methods and blocks run`s in serial queue.</li>
+<li> Stackless. All methods and blocks run in serial queue.</li>
 <li> Easy declarative syntax based on GNU Smalltalk </li>
 <li> Many standart smalltalk features supported. You can read tests code and see what childtalk can do.</li>
 <li> Working set of standart objects : SmallInteger, LargeInteger, Float, String, Symbol, Collection, Dictionary etc...
