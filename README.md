@@ -47,13 +47,13 @@ Robot subclass: Destroyer [
     "Instance methods"
     initialize [
     	rocketLauncher := RocketLauncher new.
-	machineGun := machineGun new.
+        machineGun := machineGun new.
     ]
 
     destroy: aTarget [
     	"Temporary variable"
     	|counter|
-	counter := 1000000000000000.
+        counter := 1000000000000000.
         1 to: counter do: [rocketLauncher fireOn: aTarget. machineGun fireOn: aTarget].
     ]
 ]
