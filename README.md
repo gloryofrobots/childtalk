@@ -5,11 +5,16 @@ Simple Smalltalk dialect written on Java for self-education reasons.<br />
 
 Project do not developed now.
 
-Childtalk was my first completed interpreter. I try to write it in clear and good style, but ,as always, bugs and fixes do their job well.
+Childtalk was my first completed interpreter. I try to write it in clear and good style,&nbsp;but,&nbsp;as always,&nbsp;bugs and fixes do their job well.
 
 Childtalk is based on <a href = 'http://code.google.com/p/syx/'>Smalltalk YX</a>.
 Actually parser and lexer is Java versions of Syx parser and lexer, but I add abstract syntax tree state between parser and compiler,
-and build compiler around visitor pattern. (It has very good explanation in  Andrew Appel books). Also all runtime modules totally different from syx or even different from almost all smalltalk systems I study. At first I write their like lisp system, but than I understand simple rule: your runtime structure must be very close to your language. So I have already changed a lot of code. Than i decided to rewrite everything everywhere. And at last i decided to leave Childtalk as this. However it was a funny month when I write Childtalk code and sleep poorly.
+and build compiler around visitor pattern. (It has very good explanation in  Andrew Appel books). 
+Also all runtime modules totally different from Syx or even different from almost all smalltalk systems I study.
+At first I write their like lisp system, but than I understand simple rule:
+your runtime structure must be very close to your language. So I have already changed a lot of code.
+Than i decided to rewrite everything everywhere. And at last i decided to leave Childtalk as this. 
+However it was a funny month when I write Childtalk code and sleep poorly.
 
 <h4>FEATURES</h4>
 <ul>
