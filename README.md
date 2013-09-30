@@ -2,6 +2,7 @@ childtalk
 ==========
 
 Simple Smalltalk dialect written on Java for self-education reasons.<br />
+
 Project do not developed now.
 
 Childtalk was my first completed interpreter. I try to write it in clear and good style, but ,as always, bugs and fixes do their job well.
@@ -28,7 +29,7 @@ and build compiler around visitor pattern. (It has very good explanation in  And
 <li> Static initializers "initialize" for classes not called automatically. </li>
 </ul>
 
-<h4>Syntax</h4>
+<h4>Syntax example</h4>
 
 ```
 Robot subclass: Destroyer [
@@ -42,7 +43,7 @@ Robot subclass: Destroyer [
     
     "Static method"
    (+) new [
-        self new intialize.
+        ^ self new intialize.
     ]
 
     "Instance methods"
@@ -55,7 +56,9 @@ Robot subclass: Destroyer [
     	"Temporary variable"
     	|counter|
         counter := 1000000000000000.
-        1 to: counter do: [rocketLauncher fireOn: aTarget. machineGun fireOn: aTarget].
+        1 to: counter do: [:i| 
+                            rocketLauncher fireOn: aTarget withNumberOfRockets: i.
+                            machineGun fireOn: aTarget].
     ]
 ]
 
@@ -68,6 +71,7 @@ Destroyer extend [
 
 "Eval block"
 Eval [
+    "Eval has temporaries too. "
      |target|
      target := Human new.
      Destroyer new destroy: target.
