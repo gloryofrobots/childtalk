@@ -1,8 +1,8 @@
 childtalk
 ==========
 
-Simple Smalltalk dialect written on Java for self-education reasons.
-Project is not developed now.
+Simple Smalltalk dialect written on Java for self-education reasons.<br />
+Project do not developed now.
 
 Childtalk was my first completed interpreter. I try to write it in clear and good style, but ,as always, bugs and fixes do their job well.
 
