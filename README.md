@@ -29,7 +29,7 @@ and build compiler around visitor pattern. (It has very good explanation in  And
 
 <h4>Syntax</h4>
 
-
+```
 Robot subclass: Destroyer [
     "I am comment"
     
@@ -71,3 +71,4 @@ Eval [
      target := Human new.
      Destroyer new destroy: target.
 ]
+```
