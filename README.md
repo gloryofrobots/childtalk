@@ -64,8 +64,8 @@ Robot subclass: Destroyer [
 
 "Extending of existed class"
 Destroyer extend [
-      sayHello [
-          'I am destroyer' printNl.
+      version [
+          ^ 'Destroyer 2.35'.
       ]
 ]
 
