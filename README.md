@@ -54,7 +54,7 @@ Robot subclass: Destroyer [
     "Instance methods"
     initialize [
     	rocketLauncher := RocketLauncher new.
-        machineGun := machineGun new.
+        machineGun := MachineGun new.
     ]
 
     destroy: aTarget [
