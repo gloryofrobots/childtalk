@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STImage;
-import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
 
 public class ImageSuite {
     private static STImage sImage;
@@ -89,10 +87,9 @@ public class ImageSuite {
         try {
             fos = BootstrapSuite.application().openFileOutputStream(imagePath);
             oos = new ObjectOutputStream(fos);
-            STClass nilClass = (STClass) image.objects().NIL;
             //nilClass.clear();
             //oos.writeObject(nilClass.getScope());
-            oos.writeObject(nilClass);
+            oos.writeObject(image);
 
         } catch (IOException e) {
             e.printStackTrace();

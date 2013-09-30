@@ -84,7 +84,7 @@ public class STObject implements Serializable {
     public void setSTClass(STClass _class) {
         
         if(_class == null) {
-            //SignalSuite.error("STObject.setSTClass. class is null");
+            SignalSuite.error("STObject.setSTClass. class is null");
             return;
         }
         

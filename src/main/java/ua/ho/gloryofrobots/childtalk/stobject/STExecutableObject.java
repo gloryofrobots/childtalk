@@ -1,6 +1,5 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileInfo;
@@ -15,7 +14,7 @@ public abstract class STExecutableObject extends STObject {
     private CompileInfo mCompileInfo;
     private BytecodeArray mBytecode;
     private STArray mTemporaries;
-    
+
     protected STExecutableObject() {
         transformToScopedObject();
         mArguments = STArray.create();
@@ -25,15 +24,15 @@ public abstract class STExecutableObject extends STObject {
         mTemporaries = STArray.create();
         mCompileInfo = null;
     }
-    
+
     public CompileInfo getCompileInfo() {
         return mCompileInfo;
     }
-    
+
     public void setCompileInfo(CompileInfo info) {
-         mCompileInfo = info;
+        mCompileInfo = info;
     }
-    
+
     public int placeLiteral(STObject obj) {
         int index = mLiterals.indexOf(obj);
         if (index < 0) {
@@ -47,18 +46,18 @@ public abstract class STExecutableObject extends STObject {
     public STObject getLiteral(int index) {
         return mLiterals.at(index);
     }
-    
-    public void addArgument(STSymbol name) throws DuplicateVariableException{
+
+    public void addArgument(STSymbol name) throws DuplicateVariableException {
         if (mArguments.has(name)) {
             throw new DuplicateVariableException(name.toString());
         }
         mArgumentsValues.add(ImageSuite.image().objects().NIL);
         mArguments.add(name);
     }
-    
-    public void setArguments(String[] names){
+
+    public void setArguments(String[] names) {
         mArguments.clear();
-        for(String name : names) {
+        for (String name : names) {
             try {
                 addArgument(STSymbol.create(name));
             } catch (DuplicateVariableException e) {
@@ -66,19 +65,19 @@ public abstract class STExecutableObject extends STObject {
             }
         }
     }
-    
-    public void addArgumentValue(int index, STObject value)  {
+
+    public void addArgumentValue(int index, STObject value) {
         mArgumentsValues.put(index, value);
     }
-    
+
     public int getCountArguments() {
         return mArguments.size();
     }
-    
+
     public STSymbol getArgument(int index) {
         return mArguments.getAndCast(index);
-   }
-    
+    }
+
     public void addTemporary(STSymbol name) throws DuplicateVariableException {
         if (mTemporaries.has(name)) {
             throw new DuplicateVariableException(name.toString());
@@ -86,56 +85,59 @@ public abstract class STExecutableObject extends STObject {
 
         mTemporaries.add(name);
     }
-    
+
     public BytecodeArray getBytecode() {
         return mBytecode;
     }
-    
-    
+
     public STScope createScope() {
         STScope scope = mScope.copySelf();
         fillScope(scope);
         return scope;
     }
-    
+
     public void fillScope(STScope scope) {
         int count = getCountArguments();
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             STSymbol varName = mArguments.getAndCast(i);
             STObject value = mArgumentsValues.at(i);
-            //System.out.println(varName.toString());
+            // System.out.println(varName.toString());
             scope.put(varName, value);
         }
         
+        //TODO move mArgumentsValues to Context
+        // clear values to avoid serialization error of homeless objects.
+        mArgumentsValues.clear();
+
         count = mTemporaries.size();
-        for(int i = 0; i < count; i++) {
-            STSymbol varName  = mTemporaries.getAndCast(i);
+        for (int i = 0; i < count; i++) {
+            STSymbol varName = mTemporaries.getAndCast(i);
             scope.put(varName, ImageSuite.image().objects().NIL);
         }
     }
 
     public abstract Routine createRoutine();
-    
-    
-    public void fillExecutable(STExecutableObject executable) throws DuplicateVariableException {
+
+    public void fillExecutable(STExecutableObject executable)
+            throws DuplicateVariableException {
         int count = getCountArguments();
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             STSymbol varName = mArguments.getAndCast(i);
             executable.addArgument(varName);
         }
-        
+
         count = mTemporaries.size();
-        for(int i = 0; i < count; i++) {
-            STSymbol varName  = mTemporaries.getAndCast(i);
+        for (int i = 0; i < count; i++) {
+            STSymbol varName = mTemporaries.getAndCast(i);
             executable.addTemporary(varName);
         }
-        
+
         count = mLiterals.size();
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             STObject literal = mLiterals.at(i);
             executable.placeLiteral(literal);
         }
-        
+
         executable.mBytecode = mBytecode;
         executable.mCompileInfo = mCompileInfo;
     }

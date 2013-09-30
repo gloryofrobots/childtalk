@@ -17,10 +17,4 @@ public class BootstrapSuite {
                 application.getOutputStream(), application.getErrorStream());
         return true;
     }
-
-    public static boolean bootstrap() {
-        PrimitivesSuite.initialisePrimitives();
-        //DebugSuite.setDebugMode(DebugSuite.DEBUG_MODE_INTERPRETER);
-        return true;
-    }
 }

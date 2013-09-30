@@ -29,11 +29,20 @@ import ua.ho.gloryofrobots.childtalk.stobject.STStack;
 import ua.ho.gloryofrobots.childtalk.stobject.STString;
 import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
 
-@SuppressWarnings("serial")
 public class PrimitivesSuite {
     private static class NumberPrimitives implements Serializable {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
         public STPrimitive add = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -46,6 +55,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive substract = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -59,6 +73,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive multiply = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -72,6 +91,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive divide = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -85,6 +109,11 @@ public class PrimitivesSuite {
         };
 
         public final STPrimitive lessThen = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -98,6 +127,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive greaterThen = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -111,6 +145,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive lessEqual = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -125,6 +164,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive greaterEqual = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -138,6 +182,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive equal = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -151,6 +200,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive notEqual = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -164,6 +218,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive mod = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -177,6 +236,11 @@ public class PrimitivesSuite {
         };
 
         public STPrimitive toSTString = new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -234,6 +298,11 @@ public class PrimitivesSuite {
     private static void initialiseProcess() {
         STClass process = ImageSuite.image().classes().Process;
         process.setPrimitive("Process_resume", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -247,6 +316,11 @@ public class PrimitivesSuite {
             }
         });
         process.setPrimitive("Process_suspend", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -264,6 +338,11 @@ public class PrimitivesSuite {
     private static void initialiseInternalDictionary() {
         STClass dict = ImageSuite.image().classes().InternalDictionary;
         dict.setPrimitive("InternalDictionary_at_put", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -277,6 +356,11 @@ public class PrimitivesSuite {
         });
 
         dict.setPrimitive("InternalDictionary_at", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -298,6 +382,11 @@ public class PrimitivesSuite {
     private static void initialiseSystem() {
         STClass system = ImageSuite.image().classes().System;
         system.setPrimitive("System_getEnv", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -308,6 +397,11 @@ public class PrimitivesSuite {
             }
         });
         system.setPrimitive("System_getProperty", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -319,6 +413,11 @@ public class PrimitivesSuite {
         });
 
         system.setPrimitive("System_quit", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -331,6 +430,11 @@ public class PrimitivesSuite {
         });
 
         system.setPrimitive("System_saveImage", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -353,6 +457,11 @@ public class PrimitivesSuite {
     private static void initialiseTranscript() {
         STClass transcript = ImageSuite.image().classes().Transcript;
         transcript.setPrimitive("Transcript_show", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -367,6 +476,11 @@ public class PrimitivesSuite {
     private static void initialiseSignal() {
         STClass signal = ImageSuite.image().classes().Signal;
         signal.setPrimitive("Signal_raise", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -376,6 +490,11 @@ public class PrimitivesSuite {
         });
 
         signal.setPrimitive("Signal_fatal", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -390,6 +509,11 @@ public class PrimitivesSuite {
     private static void initialiseContext() {
         STClass context = ImageSuite.image().classes().Context;
         context.setPrimitive("Context_echo", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -406,6 +530,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_traceback", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -423,6 +552,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_parent", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -432,6 +566,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_signalHandler", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -447,6 +586,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_handledSignal", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -461,6 +605,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_method", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -470,6 +619,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_receiver", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -479,6 +633,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_countArguments", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -489,6 +648,11 @@ public class PrimitivesSuite {
             }
         });
         context.setPrimitive("Context_handle", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -503,6 +667,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_process", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -512,6 +681,11 @@ public class PrimitivesSuite {
         });
 
         context.setPrimitive("Context_die", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -532,6 +706,11 @@ public class PrimitivesSuite {
         // TODO Auto-generated method stub
         STClass collection = ImageSuite.image().classes().Collection;
         collection.setPrimitive("Collection_size", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -541,6 +720,11 @@ public class PrimitivesSuite {
         });
 
         collection.setPrimitive("Collection_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -555,6 +739,11 @@ public class PrimitivesSuite {
         });
 
         collection.setPrimitive("Collection_growTo", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -583,6 +772,11 @@ public class PrimitivesSuite {
         });
 
         collection.setPrimitive("Collection_at", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -618,6 +812,11 @@ public class PrimitivesSuite {
         });
 
         collection.setPrimitive("Collection_at_put", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -658,6 +857,11 @@ public class PrimitivesSuite {
     private static void initialiseArray() {
         STClass array = ImageSuite.image().classes().Array;
         array.setPrimitive("Array_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -672,6 +876,11 @@ public class PrimitivesSuite {
         });
 
         array.setPrimitive("Array_add", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -691,6 +900,11 @@ public class PrimitivesSuite {
     private static void initialiseDateTime() {
         STClass dateTime = ImageSuite.image().classes().DateTime;
         dateTime.setPrimitive("DateTime_gmTime", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -721,6 +935,11 @@ public class PrimitivesSuite {
     private static void initialiseString() {
         STClass string = ImageSuite.image().classes().String;
         string.setPrimitive("String_asSymbol", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -730,6 +949,11 @@ public class PrimitivesSuite {
         });
 
         string.setPrimitive("String_hash", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -743,6 +967,11 @@ public class PrimitivesSuite {
     private static void initialiseObject() {
         STClass object = ImageSuite.image().classes().Object;
         object.setPrimitive("Object_class", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -752,6 +981,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_identityEqual", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -766,6 +1000,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_equal", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -780,6 +1019,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_hash", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -789,6 +1033,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_copy", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -797,6 +1046,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_perform", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -813,6 +1067,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_performWithArguments", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -829,6 +1088,11 @@ public class PrimitivesSuite {
         });
 
         object.setPrimitive("Object_println", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -843,6 +1107,11 @@ public class PrimitivesSuite {
     public static void initialiseBlock() {
         STClass block = ImageSuite.image().classes().Block;
         block.setPrimitive("Block_execute", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -853,6 +1122,11 @@ public class PrimitivesSuite {
         });
 
         block.setPrimitive("Block_on_do_ensure", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -876,6 +1150,11 @@ public class PrimitivesSuite {
         });
 
         block.setPrimitive("Block_newProcess", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -889,6 +1168,11 @@ public class PrimitivesSuite {
         });
 
         block.setPrimitive("Block_value", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -904,6 +1188,11 @@ public class PrimitivesSuite {
     private static void initialiseBehaviour() {
         STClass behaviour = ImageSuite.image().classes().Behaviour;
         behaviour.setPrimitive("Behavior_new", new STPrimitive() {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
 
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
@@ -929,6 +1218,11 @@ public class PrimitivesSuite {
         });
 
         behaviour.setPrimitive("Behaviour_createSubclass", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -939,6 +1233,11 @@ public class PrimitivesSuite {
         });
 
         behaviour.setPrimitive("Behavior_doesUnderstand", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -958,6 +1257,11 @@ public class PrimitivesSuite {
         STClass byteArray = ImageSuite.image().classes().ByteArray;
 
         byteArray.setPrimitive("ByteArray_concat", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -968,6 +1272,11 @@ public class PrimitivesSuite {
         });
 
         byteArray.setPrimitive("ByteArray_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -980,6 +1289,11 @@ public class PrimitivesSuite {
         });
 
         byteArray.setPrimitive("ByteArray_growTo", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -994,6 +1308,11 @@ public class PrimitivesSuite {
         });
 
         byteArray.setPrimitive("ByteArray_size", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1003,6 +1322,11 @@ public class PrimitivesSuite {
         });
 
         byteArray.setPrimitive("ByteArray_at", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1033,6 +1357,11 @@ public class PrimitivesSuite {
         });
 
         byteArray.setPrimitive("ByteArray_at_put", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1082,6 +1411,11 @@ public class PrimitivesSuite {
     private static void initialiseCharacter() {
         STClass character = ImageSuite.image().classes().Character;
         character.setPrimitive("Character_new", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1100,6 +1434,11 @@ public class PrimitivesSuite {
         });
 
         character.setPrimitive("Character_value", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1126,6 +1465,11 @@ public class PrimitivesSuite {
         floating.setPrimitive("Float_ne", sNumberPrimitives.notEqual);
         floating.setPrimitive("Float_mod", sNumberPrimitives.mod);
         floating.setPrimitive("Float_ceil", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1135,6 +1479,11 @@ public class PrimitivesSuite {
         });
 
         floating.setPrimitive("Float_floor", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1144,6 +1493,11 @@ public class PrimitivesSuite {
         });
 
         floating.setPrimitive("Float_trunc", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1153,6 +1507,11 @@ public class PrimitivesSuite {
         });
 
         floating.setPrimitive("Float_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1196,6 +1555,11 @@ public class PrimitivesSuite {
         largeInteger.setPrimitive("LargeInteger_mod", sNumberPrimitives.mod);
 
         largeInteger.setPrimitive("LargeInteger_bitAnd", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1209,6 +1573,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_bitOr", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1222,6 +1591,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_bitXor", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1235,6 +1609,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_bitShift", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1248,6 +1627,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_asFloat", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1258,6 +1642,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_clear", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1269,6 +1658,11 @@ public class PrimitivesSuite {
         });
 
         largeInteger.setPrimitive("LargeInteger_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1313,6 +1707,11 @@ public class PrimitivesSuite {
         smallInteger.setPrimitive("SmallInteger_mod", sNumberPrimitives.mod);
 
         smallInteger.setPrimitive("SmallInteger_bitAnd", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1326,6 +1725,11 @@ public class PrimitivesSuite {
         });
 
         smallInteger.setPrimitive("SmallInteger_bitOr", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1339,6 +1743,11 @@ public class PrimitivesSuite {
         });
 
         smallInteger.setPrimitive("SmallInteger_bitXor", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1352,6 +1761,11 @@ public class PrimitivesSuite {
         });
 
         smallInteger.setPrimitive("SmallInteger_bitShift", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1365,6 +1779,11 @@ public class PrimitivesSuite {
         });
 
         smallInteger.setPrimitive("SmallInteger_asFloat", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -1376,6 +1795,11 @@ public class PrimitivesSuite {
 
         smallInteger.setPrimitive("SmallInteger_asLargeInteger",
                 new STPrimitive() {
+                    /**
+                     * 
+                     */
+                    private static final long serialVersionUID = 1L;
+
                     @Override
                     protected STObject onExecute(Routine routine,
                             STObject receiver, STStack stack) {
@@ -1386,6 +1810,11 @@ public class PrimitivesSuite {
                 });
 
         smallInteger.setPrimitive("SmallInteger_newColon", new STPrimitive() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {

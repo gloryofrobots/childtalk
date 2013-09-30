@@ -1,8 +1,5 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
@@ -27,7 +24,7 @@ public class STProcess extends STObject {
     public static STProcess create() {
         STProcess obj = new STProcess();
         obj.setClassProvider(new BindingClassProvider(obj) {
-          
+
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -45,9 +42,7 @@ public class STProcess extends STObject {
     public State getState() {
         return mState;
     }
-    
-  
-    
+
     private void setState(State state) {
         mState = state;
     }
@@ -139,13 +134,13 @@ public class STProcess extends STObject {
 
         return mStack.peek();
     }
-    
+
     public void terminateFromRoutine(Routine routine) {
         DebugSuite.printTraceBackString(routine);
         terminate();
     }
-    
-    public void raiseFromRoutine(Routine routine, STObject signal) {    
+
+    public void raiseFromRoutine(Routine routine, STObject signal) {
         Routine current = routine;
         while (current != null) {
             if (current.canHandleSignal(signal)) {
@@ -161,11 +156,11 @@ public class STProcess extends STObject {
     }
 
     private void onUnhandledSignal(Routine routine, STObject signal) {
-        //TODO Process name. Good TraceBack
+        // TODO Process name. Good TraceBack
         SignalSuite.warning("Unhandled signal");
-       
+
         DebugSuite.printTraceBackString(mActiveRoutine);
         terminate();
     }
-  
+
 }

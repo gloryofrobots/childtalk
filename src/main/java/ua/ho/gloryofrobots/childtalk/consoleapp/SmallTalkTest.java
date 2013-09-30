@@ -39,7 +39,6 @@ public class SmallTalkTest {
         if(ImageSuite.loadImage(imagePath) == false) {
             error("Error loading image %s", imagePath);
         }
-        BootstrapSuite.bootstrap();
         System.out.println("RUN TESTS");
         _run(testsFolder);
     }
@@ -49,7 +48,6 @@ public class SmallTalkTest {
         ImageSuite.clear();
         ImageBuilder builder = new ImageBuilder();
         builder.buildDefaultImage(coreFolder);
-        BootstrapSuite.bootstrap();
         System.out.println("RUN TESTS AGAIN");
         _run(testsFolder);
     }
@@ -66,9 +64,9 @@ public class SmallTalkTest {
 
     public static void main(String[] args) {
         String path = System.getenv("CHILDTALK_PATH");
-        String testsFolder = "/"+path+"/st/tests/";
-        String coreFolder = "/"+path+"/st/core/";
-        String imagePath = "/"+path+"/src/main/resources/image/default.sim";
+        String testsFolder = path+"/st/tests/";
+        String coreFolder = path+"/st/core/";
+        String imagePath = path+"/src/main/resources/image/default.sim";
         
         SmallTalkTest test = new SmallTalkTest();
         test.run(testsFolder, coreFolder, imagePath);

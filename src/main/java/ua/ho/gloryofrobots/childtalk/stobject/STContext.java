@@ -15,8 +15,10 @@ public class STContext extends STObject {
     protected STExecutableObject mSignalHandler = null;
     protected STObject mHandledSignal = ImageSuite.image().objects().NIL;
     protected STExecutableObject mEnsuredBlock;
+    //private STArray mArgumentsValues;
     
     private STContext() {
+        //mArgumentsValues = STArray.create();
         transformToScopedObject();
     }
     

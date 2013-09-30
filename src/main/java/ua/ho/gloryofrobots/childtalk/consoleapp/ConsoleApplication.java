@@ -165,8 +165,6 @@ public class ConsoleApplication {
             loadDefaultImage();
         }
 
-        BootstrapSuite.bootstrap();
-
         if (opts.runFiles) {
             runFiles(opts.filesToRun);
         }
@@ -216,6 +214,7 @@ public class ConsoleApplication {
 
             return 1;
         } catch (NoSuchElementException e) {
+            println("");
             return 0;
         } catch (RuntimeException e) {
             String error = e.getMessage();
@@ -242,21 +241,14 @@ public class ConsoleApplication {
     }
 
     private void loadDefaultImage() {
-        /*
-         * String imagePath = "image/default.sim"; String childTalkPath =
-         * System.getenv("CHILDTALK_PATH"); if (childTalkPath != null) {
-         * imagePath = "/" + childTalkPath + "/" + imagePath; } else { String
-         * userPath = System.getProperty("user.dir"); if (userPath != null) {
-         * imagePath = userPath + "/" + imagePath; } }
-         */
-
         boolean result = ImageSuite
                 .loadImageFromResource(IMAGE_PATH_IN_RESOURCES);
+        
         if (!result) {
             error("Error loading default image as resource at %s",
                     IMAGE_PATH_IN_RESOURCES);
         }
-
+        
         mInitialised = true;
     }
 
@@ -277,13 +269,16 @@ public class ConsoleApplication {
 
     public static void main(String[] args) {
         ConsoleApplication app = new ConsoleApplication();
-        String[] arguments = {
+        /*String[] arguments = {
                 
                 "-f",
                 "\"/home/gloryofrobots/develop/smalltalk/childtalk/st/tests/old/expression_test.st\"",
                 "/home/gloryofrobots/develop/smalltalk/childtalk/st/tests/old/expression_test2.st",
                 "-e", "SmallTalk saveImage:'/home/gloryofrobots/develop/smalltalk/childtalk/image.sim'", "-r"};
-//SmallTalk saveImage:'/home/gloryofrobots/develop/smalltalk/childtalk/image.sim'
-        app.run(arguments);
+    */
+        //String[] arguments = {"-i","/home/gloryofrobots/develop/smalltalk/childtalk/image.sim", "-r"};
+        
+        //SmallTalk saveImage:'/home/gloryofrobots/develop/smalltalk/childtalk/image.sim'
+        app.run(args);
     }
 }

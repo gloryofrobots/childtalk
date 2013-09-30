@@ -3,6 +3,7 @@ package ua.ho.gloryofrobots.childtalk.consoleapp;
 import ua.ho.gloryofrobots.childtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.Loader;
+import ua.ho.gloryofrobots.childtalk.bootstrap.PrimitivesSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STImage;
 
 public class ImageBuilder {
@@ -37,13 +38,15 @@ public class ImageBuilder {
         loader.loadAndCompileClassesFromFolder(folder, classFiles,
                 image);
         image.initialise();
+        //initialise primitives to save their in image
+        PrimitivesSuite.initialisePrimitives();
         return image;
     }
 
     public static void main(String[] args) {
         String path = System.getenv("CHILDTALK_PATH");
-        String folder = "/"+path+"/st/core";
-        String imagePath = "/"+path+"/src/main/resources/image/default.sim";
+        String folder = path+"/st/core";
+        String imagePath = path+"/src/main/resources/image/default.sim";
         
         ///home/gloryofrobots/develop/smalltalk/childtalk/st/core
         BootstrapSuite.setApplication(new Platform());
