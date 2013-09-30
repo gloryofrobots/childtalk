@@ -1,10 +1,12 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
-import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STProcess extends STObject {
@@ -25,6 +27,9 @@ public class STProcess extends STObject {
     public static STProcess create() {
         STProcess obj = new STProcess();
         obj.setClassProvider(new BindingClassProvider(obj) {
+          
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Process;
@@ -162,4 +167,5 @@ public class STProcess extends STObject {
         DebugSuite.printTraceBackString(mActiveRoutine);
         terminate();
     }
+  
 }

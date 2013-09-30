@@ -1,7 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider
 public class STScope extends STInternalDictionary {
     private static final long serialVersionUID = 1L;
     private STScope next = null;
-    //private STScope previous = null;
     
     protected STScope() {
         super();
@@ -21,6 +19,9 @@ public class STScope extends STInternalDictionary {
     public static STScope create() {
         STScope obj = new STScope();
         obj.setClassProvider(new BindingClassProvider(obj) {
+           
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Scope;
@@ -69,7 +70,6 @@ public class STScope extends STInternalDictionary {
     
     public STObject lookup(STObject key) {
         STScope scope = this;
-        ArrayList<STObject> data = mData;
         while(scope != null) {
             STObject  value = scope.at(key);
             if(value != null) {

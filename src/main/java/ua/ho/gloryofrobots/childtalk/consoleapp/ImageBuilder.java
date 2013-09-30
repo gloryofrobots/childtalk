@@ -28,6 +28,7 @@ public class ImageBuilder {
         if(ImageSuite.saveImage(image, imagePath) == false) {
             System.err.println("Image writing error " + imagePath);
         }
+        System.out.println("Image saved at" + imagePath);
     }
 
     public  STImage buildImage(String folder, String[] classFiles) {
@@ -42,7 +43,7 @@ public class ImageBuilder {
     public static void main(String[] args) {
         String path = System.getenv("CHILDTALK_PATH");
         String folder = "/"+path+"/st/core";
-        String imagePath = "/"+path+"/image/default.sim";
+        String imagePath = "/"+path+"/src/main/resources/image/default.sim";
         
         ///home/gloryofrobots/develop/smalltalk/childtalk/st/core
         BootstrapSuite.setApplication(new Platform());

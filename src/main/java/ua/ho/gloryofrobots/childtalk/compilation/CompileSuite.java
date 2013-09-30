@@ -1,17 +1,11 @@
 package ua.ho.gloryofrobots.childtalk.compilation;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 
-import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
-import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.node.EvalNode;
 import ua.ho.gloryofrobots.childtalk.node.ProgramNode;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STImage;
-import ua.ho.gloryofrobots.childtalk.stobject.STObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STProcess;
 import ua.ho.gloryofrobots.childtalk.stobject.STScope;
 
 public class CompileSuite {

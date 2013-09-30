@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
-import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STFloating extends STNumber {
@@ -23,6 +22,9 @@ public class STFloating extends STNumber {
     public static STFloating create(double data) {
         STFloating floating = new STFloating(data);
         floating.setClassProvider(new BindingClassProvider(floating) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Float;

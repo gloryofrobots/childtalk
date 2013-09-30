@@ -12,6 +12,9 @@ public class STSymbol extends STString {
             symbol = new STSymbol(str);
             
             symbol.setClassProvider(new BindingClassProvider(symbol) {
+                
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 protected STClass _getSTClass() {
                     return ImageSuite.image().classes().Symbol;

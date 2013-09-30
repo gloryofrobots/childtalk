@@ -26,6 +26,9 @@ public class STMetaclass extends STClass {
                 creator);
 
         setPrimitive("Behaviour_createSubclass", new STPrimitive() {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -93,6 +96,9 @@ public class STMetaclass extends STClass {
         STMetaclass meta = new STMetaclass();
 
         meta.setClassProvider(new BindingClassProvider(meta) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Metaclass;

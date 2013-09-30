@@ -30,6 +30,9 @@ public class STSignal extends STObject {
     public static STSignal create() {
         STSignal obj = new STSignal();
         obj.setClassProvider(new BindingClassProvider(obj) {
+          
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Signal;

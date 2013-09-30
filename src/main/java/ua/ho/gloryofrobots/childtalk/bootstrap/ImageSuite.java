@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STImage;
+import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
 
 public class ImageSuite {
     private static STImage sImage;
@@ -43,7 +45,6 @@ public class ImageSuite {
     }
 
     public static boolean loadImageFromResource(String path) {
-        Object obj = new Object();
         InputStream stream = ImageSuite.class.getResourceAsStream(path);
         if (stream == null) {
             return false;
@@ -88,7 +89,10 @@ public class ImageSuite {
         try {
             fos = BootstrapSuite.application().openFileOutputStream(imagePath);
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(image);
+            STClass nilClass = (STClass) image.objects().NIL;
+            //nilClass.clear();
+            //oos.writeObject(nilClass.getScope());
+            oos.writeObject(nilClass);
 
         } catch (IOException e) {
             e.printStackTrace();

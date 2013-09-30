@@ -1,6 +1,5 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 
 public abstract class STNumber extends STObject {
     private static final long serialVersionUID = 1L;

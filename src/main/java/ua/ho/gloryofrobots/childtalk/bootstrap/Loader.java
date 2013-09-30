@@ -4,10 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import ua.ho.gloryofrobots.childtalk.compilation.CompileSuite;
-import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStream;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamFile;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamInterface;
-import ua.ho.gloryofrobots.childtalk.compilation.Compiler.UnsupportedNodeException;
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStream.ProgramReadException;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STImage;

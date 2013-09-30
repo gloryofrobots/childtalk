@@ -10,6 +10,9 @@ public class STString extends STByteObject {
     public static STString create(String value) {
         STString str = new STString(value);
         str.setClassProvider(new BindingClassProvider(str) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().String;

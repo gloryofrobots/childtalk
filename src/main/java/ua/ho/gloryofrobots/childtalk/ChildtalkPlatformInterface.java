@@ -13,5 +13,6 @@ public interface ChildtalkPlatformInterface {
     
     public FileInputStream openFileInputStream(String path)  throws FileNotFoundException;
     public FileOutputStream openFileOutputStream(String path)  throws FileNotFoundException;
-    public void onQuit();
+    public void onQuit(int status);
+  
 }

@@ -1,12 +1,12 @@
 package ua.ho.gloryofrobots.childtalk.inout;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
 import ua.ho.gloryofrobots.childtalk.stobject.STByteObject;
 
 public class InOutSuite {
+    @SuppressWarnings("unused")
     private static InputStream stdin;
     private static PrintStream stdout;
     private static PrintStream stderr;

@@ -5,7 +5,6 @@ import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STString;
 
 public class SignalSuite {

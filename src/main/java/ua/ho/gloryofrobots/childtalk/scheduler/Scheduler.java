@@ -1,6 +1,4 @@
 package ua.ho.gloryofrobots.childtalk.scheduler;
-import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.childtalk.stobject.STProcess;
 
 public class Scheduler {

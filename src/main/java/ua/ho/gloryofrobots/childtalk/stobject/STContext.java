@@ -1,9 +1,11 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
-import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STContext extends STObject {
@@ -21,6 +23,9 @@ public class STContext extends STObject {
     public static STContext create() {
         STContext obj = new STContext();
         obj.setClassProvider(new BindingClassProvider(obj) {
+           
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Context;
@@ -126,4 +131,15 @@ public class STContext extends STObject {
     public void setEnsuredBlock(STExecutableObject ensuredBlock) {
         this.mEnsuredBlock = ensuredBlock;
     }
+    
+    private void writeObject(ObjectOutputStream oos)
+            throws IOException {
+                // default serialization 
+            /*if(mRoutine != null) {
+                throw new RuntimeException();
+            }*/
+                oos.defaultWriteObject();
+                // write the object
+              
+            }
 }

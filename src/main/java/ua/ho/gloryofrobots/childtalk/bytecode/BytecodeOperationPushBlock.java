@@ -1,7 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
 
 import ua.ho.gloryofrobots.childtalk.stobject.STBlock;
-import ua.ho.gloryofrobots.childtalk.stobject.STContext;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STStack;
 

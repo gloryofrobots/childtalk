@@ -1,5 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.bootstrap;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -30,7 +31,7 @@ import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
 
 @SuppressWarnings("serial")
 public class PrimitivesSuite {
-    private static class NumberPrimitives {
+    private static class NumberPrimitives implements Serializable {
 
         public STPrimitive add = new STPrimitive() {
             @Override
@@ -317,6 +318,31 @@ public class PrimitivesSuite {
             }
         });
 
+        system.setPrimitive("System_quit", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STSmallInteger status = routine.getArgument(0).castToSubclass();
+                
+                SchedulingSuite.scheduler().disable();
+                BootstrapSuite.application().onQuit(status.toInt());
+                return ImageSuite.image().objects().NIL;
+            }
+        });
+
+        system.setPrimitive("System_saveImage", new STPrimitive() {
+            @Override
+            protected STObject onExecute(Routine routine, STObject receiver,
+                    STStack stack) {
+                STObject pathArg = routine.getArgument(0);
+                String path = pathArg.toString();
+                if (ImageSuite.saveCurrentImage(path) == false) {
+                    return null;
+                }
+
+                return ImageSuite.image().objects().NIL;
+            }
+        });
     }
 
     private static void initialiseNumber() {
@@ -325,8 +351,6 @@ public class PrimitivesSuite {
     }
 
     private static void initialiseTranscript() {
-        // TODO Auto-generated method stub
-
         STClass transcript = ImageSuite.image().classes().Transcript;
         transcript.setPrimitive("Transcript_show", new STPrimitive() {
             @Override
@@ -881,7 +905,7 @@ public class PrimitivesSuite {
         STClass behaviour = ImageSuite.image().classes().Behaviour;
         behaviour.setPrimitive("Behavior_new", new STPrimitive() {
 
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
                     STStack stack) {
@@ -932,7 +956,7 @@ public class PrimitivesSuite {
 
     private static void initialiseByteArray() {
         STClass byteArray = ImageSuite.image().classes().ByteArray;
-        
+
         byteArray.setPrimitive("ByteArray_concat", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,
@@ -942,7 +966,7 @@ public class PrimitivesSuite {
                 return first.merge(second);
             }
         });
-        
+
         byteArray.setPrimitive("ByteArray_newColon", new STPrimitive() {
             @Override
             protected STObject onExecute(Routine routine, STObject receiver,

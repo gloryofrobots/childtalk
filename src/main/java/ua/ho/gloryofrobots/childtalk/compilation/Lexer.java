@@ -2,12 +2,8 @@ package ua.ho.gloryofrobots.childtalk.compilation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStream.ProgramReadException;
-import ua.ho.gloryofrobots.childtalk.compilation.ProgramTextStreamInterface.PositionInfo;
-import ua.ho.gloryofrobots.childtalk.compilation.Token.Type;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 
 public class Lexer{

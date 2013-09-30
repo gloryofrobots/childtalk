@@ -5,6 +5,7 @@
 .idea
 .gradle/
 build/
+bin/
 *.swp
 # Package Files #
 *.jar

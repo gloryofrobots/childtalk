@@ -2,12 +2,12 @@ package ua.ho.gloryofrobots.childtalk.stobject.classprovider;
 
 import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STScope;
 
 public abstract class BindingClassProvider implements ClassProvider {
    
     private static final long serialVersionUID = 1L;
     
+    @SuppressWarnings("unused")
     private STObject mObject;
     private STClass mClass;
     

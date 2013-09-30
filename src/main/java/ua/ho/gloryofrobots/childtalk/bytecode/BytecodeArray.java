@@ -3,6 +3,9 @@ package ua.ho.gloryofrobots.childtalk.bytecode;
 import ua.ho.gloryofrobots.childtalk.IntArray;
 
 public class BytecodeArray extends IntArray{
+  
+    private static final long serialVersionUID = 1L;
+
     public short getHigh(int index) {
         return BytecodeUtils.unpackCommand(mData[index]);
     }

@@ -11,6 +11,9 @@ public class STDictionary extends STObject {
     public static STDictionary create() {
         STDictionary obj = new STDictionary();
         obj.setClassProvider(new BindingClassProvider(obj) {
+           
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return null;

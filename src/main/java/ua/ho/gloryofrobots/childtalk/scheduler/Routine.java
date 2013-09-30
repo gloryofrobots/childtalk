@@ -4,20 +4,11 @@ import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeArray;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STArray;
-import ua.ho.gloryofrobots.childtalk.stobject.STBlock;
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STContext;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STProcess;
-import ua.ho.gloryofrobots.childtalk.stobject.STScope;
-import ua.ho.gloryofrobots.childtalk.stobject.STSignal;
 import ua.ho.gloryofrobots.childtalk.stobject.STStack;
-import ua.ho.gloryofrobots.childtalk.stobject.STString;
-import ua.ho.gloryofrobots.childtalk.stobject.STSymbol;
-
-//[2 > 0 ifTrue: [ 2 >1 ifTrue: [^3]. ^4]] value
 
 public abstract class Routine {
     protected STProcess mProcess;
@@ -150,7 +141,6 @@ public abstract class Routine {
     }
 
     public void flushArgumentsToStack(STStack stack, int first, int last) {
-        int countArguments = mArguments.size();
         for (int i = first; i < last; i++) {
             mStack.push(mArguments.at(i));
         }
@@ -159,7 +149,7 @@ public abstract class Routine {
     public void flushArgumentsToStack(STStack stack) {
         flushArgumentsToStack(stack, 0, mArguments.size());
     }
-    
+
     private void catchArguments() {
         int countArguments = mExecutable.getCountArguments();
         mArguments = STArray.create(countArguments);
@@ -239,9 +229,9 @@ public abstract class Routine {
     protected abstract void onCompliteWithResult(STObject result);
 
     public abstract String createErrorString();
-    
-    //search method routine in routines call chain. 
-    //it`s necessary for searching context for dispatching messages to super
+
+    // search method routine in routines call chain.
+    // it`s necessary for searching context for dispatching messages to super
     public abstract Routine getLastMethodRoutine();
-       
+
 }

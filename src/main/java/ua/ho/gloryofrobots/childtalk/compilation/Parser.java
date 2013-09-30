@@ -53,14 +53,6 @@ public class Parser {
         parsingError("Unknown parsing object", mLexer.current());
     }
 
-    private void parseUnknownMethodBody(ProgramNode node)
-            throws FileEvalException {
-        EvalNode eval = new EvalNode();
-        BodyNode body = eval.getBody();
-        parseExecutableBody(body);
-        node.addNode(eval);
-    }
-
     private boolean parseEval(ProgramNode node) throws FileEvalException {
         mLexer.startTransaction();
         if (mLexer.lookup(2) == false) {

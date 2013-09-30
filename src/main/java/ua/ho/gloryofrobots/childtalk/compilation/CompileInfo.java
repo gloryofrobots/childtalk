@@ -2,14 +2,16 @@ package ua.ho.gloryofrobots.childtalk.compilation;
 import java.io.Serializable;
 
 import ua.ho.gloryofrobots.childtalk.IntArray;
-import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 
 public class CompileInfo implements Serializable{
+   
+    private static final long serialVersionUID = 1L;
+    
     public static final int UNKNOWN_POSITION = -1; 
     IntArray mPositions;
     char[] mData;
     private int mFirstIndex;
-    private int mLastIndex;
+    //private int mLastIndex;
     private boolean mIsInitialised;
     
     public CompileInfo() {
@@ -19,15 +21,13 @@ public class CompileInfo implements Serializable{
     public void intitialise(int begin, int end, ProgramTextStreamInterface stream) {
         mIsInitialised = true;
         mFirstIndex = begin;
-        mLastIndex = end;
+        //mLastIndex = end;
         mData = stream.getRange(begin, end);
     }
     
     public void setPosition(int index, int position) {
         int realPosition = position - mFirstIndex; 
-//        if(realPosition < 0) {
-//            SignalSuite.error("Negative compileInfo position");
-//        }
+        
         mPositions.set(index, realPosition);
     }
     

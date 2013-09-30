@@ -3,10 +3,6 @@ package ua.ho.gloryofrobots.childtalk.bytecode;
 import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
-import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.STContext;
-import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STStack;
 
 public abstract class BytecodeOperation {
     public class BytecodeRuntimeError extends Exception {

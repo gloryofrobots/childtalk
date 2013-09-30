@@ -18,6 +18,9 @@ public class STSmallInteger extends STNumber {
     public static STSmallInteger create(int value) {
         STSmallInteger integer = new STSmallInteger(value);
         integer.setClassProvider(new BindingClassProvider(integer) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().SmallInteger;

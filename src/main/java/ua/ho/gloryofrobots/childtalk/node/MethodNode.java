@@ -74,10 +74,6 @@ public class MethodNode extends ExecutableNode implements NodeWithMetaData,
     }
 
     public void setPrimitiveName(String mPrimitiveName) {
-        if (mPrimitiveName.length() == 0) {
-            int bdsm = 1;
-            int x = bdsm;
-        }
         this.mPrimitiveName = mPrimitiveName;
     }
 

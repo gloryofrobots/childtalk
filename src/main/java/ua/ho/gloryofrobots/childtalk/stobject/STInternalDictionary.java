@@ -12,7 +12,7 @@ public class STInternalDictionary extends STObject {
 
     protected HashMap<STObject, Integer> mBinding;
     protected ArrayList<STObject> mData;
-
+    
     protected STInternalDictionary() {
         super();
         mBinding = new HashMap<STObject, Integer>();
@@ -22,6 +22,9 @@ public class STInternalDictionary extends STObject {
     public static STInternalDictionary create() {
         STInternalDictionary obj = new STInternalDictionary();
         obj.setClassProvider(new BindingClassProvider(obj) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().InternalDictionary;

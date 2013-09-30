@@ -10,8 +10,8 @@ import ua.ho.gloryofrobots.childtalk.ChildtalkPlatformInterface;
 
 public class Platform implements ChildtalkPlatformInterface{
     @Override
-    public void onQuit() {
-        System.exit(0);
+    public void onQuit(int status) {
+        System.exit(status);
     }
 
     @Override

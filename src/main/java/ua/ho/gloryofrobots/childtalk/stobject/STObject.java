@@ -1,14 +1,11 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.ClassProvider;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.DefaultClassProvider;
 
@@ -80,14 +77,14 @@ public class STObject implements Serializable {
     }
     
     public STClass getSTClass() {
-        //We use ClassProvider for later binding default types with ST classes
-        STObject nil = ImageSuite.image().objects().NIL;
+        //ClassProvider used for later binding default types with ST classes
         return mClassProvider.getSTClass();
     }
     
     public void setSTClass(STClass _class) {
+        
         if(_class == null) {
-            SignalSuite.error("STObject.setSTClass. class is null");
+            //SignalSuite.error("STObject.setSTClass. class is null");
             return;
         }
         

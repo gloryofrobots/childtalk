@@ -4,7 +4,6 @@ import ua.ho.gloryofrobots.childtalk.bootstrap.DebugSuite;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.scheduler.SchedulingSuite;
 import ua.ho.gloryofrobots.childtalk.stobject.STClass;
-import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STStack;

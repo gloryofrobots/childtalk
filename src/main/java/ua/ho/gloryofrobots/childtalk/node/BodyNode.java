@@ -3,8 +3,6 @@ package ua.ho.gloryofrobots.childtalk.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.ho.gloryofrobots.childtalk.compilation.Token;
-
 public class BodyNode extends Node {
 
     public BodyNode() {
@@ -34,7 +32,7 @@ public class BodyNode extends Node {
         for (StatementNode node : mStatements) {
             // writer.writeln("++++++++++++++++++++++");
             node.writeRepresentation(writer);
-            if(i != size)
+            if (i != size)
                 writer.writeln("");
             i++;
         }

@@ -1,7 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.bytecode;
 
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STStack;
 

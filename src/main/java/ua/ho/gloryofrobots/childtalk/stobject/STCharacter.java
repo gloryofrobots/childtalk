@@ -19,6 +19,9 @@ public class STCharacter extends STObject {
     public static STCharacter create(char value) {
         STCharacter character = new STCharacter(value);
         character.setClassProvider(new BindingClassProvider(character) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Character;

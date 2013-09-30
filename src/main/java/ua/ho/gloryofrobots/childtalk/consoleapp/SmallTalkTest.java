@@ -4,7 +4,6 @@ import ua.ho.gloryofrobots.childtalk.bootstrap.BootstrapSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bootstrap.Loader;
 import ua.ho.gloryofrobots.childtalk.scheduler.EvalSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.STImage;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 
 public class SmallTalkTest {
@@ -69,27 +68,9 @@ public class SmallTalkTest {
         String path = System.getenv("CHILDTALK_PATH");
         String testsFolder = "/"+path+"/st/tests/";
         String coreFolder = "/"+path+"/st/core/";
-        String imagePath = "/"+path+"/image/default.sim";
+        String imagePath = "/"+path+"/src/main/resources/image/default.sim";
         
         SmallTalkTest test = new SmallTalkTest();
         test.run(testsFolder, coreFolder, imagePath);
     }
 }       
-
-
-//puts ("- Test class variables");
-//lexer = syx_lexer_new
-//("Object subclass: #TestClass instanceVariableNames: '' classVariableNames: 'TestVar'!"
-//"!TestClass class methodsFor: 'testing'!"
-//"initialize TestVar := 123! testVar ^TestVar ! !"
-//"!TestClass methodsFor: 'testing'!"
-//"testVar ^TestVar ! !");
-//ok = syx_cold_parse (lexer);
-//assert (ok == TRUE);
-//syx_lexer_free (lexer, FALSE);
-//
-//ret_obj = _interpret
-//("method TestClass initialize. ^TestClass testVar + TestClass new testVar");
-//assert (SYX_SMALL_INTEGER(ret_obj) == 123 + 123);
-
-

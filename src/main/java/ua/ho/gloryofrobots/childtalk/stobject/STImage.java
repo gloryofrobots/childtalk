@@ -7,6 +7,8 @@ public class STImage extends STScope {
     private static final long serialVersionUID = 1L;
     
     public  class Symbols implements Serializable{
+ 
+        private static final long serialVersionUID = 1L;
         public STSymbol SELF;
         public STSymbol SUPER;
         public STSymbol ERROR_COLON;
@@ -16,6 +18,8 @@ public class STImage extends STScope {
     }
 
     public  class Objects implements Serializable{
+        
+        private static final long serialVersionUID = 1L;
         public STMetaclass METACLASS;
         public STObject TRUE;
         public STObject FALSE;
@@ -23,6 +27,8 @@ public class STImage extends STScope {
     }
 
     public  class Classes implements Serializable{
+       
+        private static final long serialVersionUID = 1L;
         public STClass InternalDictionary;
         public STClass System;
         public STClass Number;

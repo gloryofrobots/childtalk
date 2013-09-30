@@ -1,12 +1,7 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
-import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
-import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
 import ua.ho.gloryofrobots.childtalk.stobject.classprovider.BindingClassProvider;
 
 public class STClass extends STObject {
@@ -39,6 +34,9 @@ public class STClass extends STObject {
         STClass klass = new STClass();
         klass.setName(name);
         klass.setClassProvider(new BindingClassProvider(klass) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Class;
@@ -94,8 +92,6 @@ public class STClass extends STObject {
         if(obj != null) {
             return obj;
         }
-        
-        STClass th = this;
         
         STClass stclass = getSTClass();
         
@@ -196,11 +192,6 @@ public class STClass extends STObject {
     }
 
     public void addSubclass(STClass klass) {
-        // Link scopes
-        /*STScope scope = klass.getScope();
-        
-        scope.append(mScope);*/
-
         mSubclasses.add(klass);
     }
 
@@ -253,5 +244,20 @@ public class STClass extends STObject {
         }
         
         _initObject(object);
+    }
+
+    public void clear() {
+        setSTClass(null);
+        setSuperClass(null);
+        setName(null);
+        setCategory(null);
+        setClassProvider(null);
+        //mInstanceVariables = null;
+        STScope scope = getScope();
+        scope.setClassProvider(null);
+        mSubclasses = null;
+        mComment = null;
+        mInternalObjectClass = null;
+        mPrimitives = null;
     }
 }

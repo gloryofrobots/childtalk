@@ -16,6 +16,9 @@ public class STStack extends STCollection  {
     public static STStack create() {
         STStack obj = new STStack(DEFAULT_SIZE);
         obj.setClassProvider(new BindingClassProvider(obj) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                

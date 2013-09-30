@@ -3,7 +3,6 @@ package ua.ho.gloryofrobots.childtalk.stobject;
 
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeArray;
-import ua.ho.gloryofrobots.childtalk.bytecode.BytecodeWriter;
 import ua.ho.gloryofrobots.childtalk.compilation.CompileInfo;
 import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;

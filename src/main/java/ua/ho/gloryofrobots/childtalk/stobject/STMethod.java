@@ -1,7 +1,6 @@
 package ua.ho.gloryofrobots.childtalk.stobject;
 
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
-import ua.ho.gloryofrobots.childtalk.compilation.DuplicateVariableException;
 import ua.ho.gloryofrobots.childtalk.scheduler.MethodRoutine;
 import ua.ho.gloryofrobots.childtalk.scheduler.PrimitiveRoutine;
 import ua.ho.gloryofrobots.childtalk.scheduler.Routine;
@@ -29,6 +28,9 @@ public class STMethod extends STExecutableObject {
     public static STMethod create() {
         STMethod obj = new STMethod();
         obj.setClassProvider(new BindingClassProvider(obj) {
+            
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected STClass _getSTClass() {
                 return ImageSuite.image().classes().Method;

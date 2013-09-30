@@ -37,6 +37,11 @@ InternalDictionary subclass: System [
         self primitiveFailed
     ]
     
+    saveImage: path [
+        <primitive: 'System_saveImage'>
+        self primitiveFailed
+    ]
+    
     quit [
         "Quit Syx"
         ^self quit: 0

@@ -1,13 +1,9 @@
 package ua.ho.gloryofrobots.childtalk.scheduler;
 
-import javax.management.RuntimeErrorException;
-
 import ua.ho.gloryofrobots.childtalk.bootstrap.ImageSuite;
 import ua.ho.gloryofrobots.childtalk.inout.SignalSuite;
-import ua.ho.gloryofrobots.childtalk.stobject.STClass;
 import ua.ho.gloryofrobots.childtalk.stobject.STContext;
 import ua.ho.gloryofrobots.childtalk.stobject.STExecutableObject;
-import ua.ho.gloryofrobots.childtalk.stobject.STMethod;
 import ua.ho.gloryofrobots.childtalk.stobject.STObject;
 import ua.ho.gloryofrobots.childtalk.stobject.STScope;
 
