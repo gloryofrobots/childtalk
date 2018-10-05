@@ -1,7 +1,7 @@
 childtalk
 ==========
 
-Simple Smalltalk dialect written on Java for self-educational reasons.
+Simple Smalltalk dialect written in Java for self-educational reasons.
 
 Project is not developing now.
 
@@ -24,7 +24,7 @@ Childtalk is based on  <a href = 'http://code.google.com/p/syx/'>Smalltalk YX</a
 <ul>
 <li> It`s slow. Very slow. I decided to completely ignore perfomance factor. So, sorry fo that. </li>
 <li> Only fake green thread processes avalaible.</li>
-<li> No filestream and stdiostream support. It`s not very hard to add it, of course. </li>
+<li> No filestream and stdiostream support. </li>
 <li> Image creation based on Java serialization. I simply serialize image instances without optimisations.</li>
 <li> Static initializers "initialize" for classes not called automatically. </li>
 </ul>
